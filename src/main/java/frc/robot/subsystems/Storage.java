@@ -14,12 +14,16 @@ public class Storage extends MotoredGenericSubsystem {
         super(namespaceName, motor);
     }
 
-    public void pull() {
+    public void intake() {
         apply(PULL_SPEED);
     }
 
-    public void push() {
+    public void release() {
         apply(PUSH_SPEED);
+    }
+
+    public boolean hasCoral() {
+        return false;
     }
 
     @Override

@@ -7,12 +7,14 @@ import frc.robot.subsystems.Gripper;
 public class ReleaseAlgae extends Command {
 
     private static final double TIME_TO_RELEASE = 0.5;
+
     private final Gripper gripper;
-    private double lastTimeInGripper;
+
+    private double LAST_TIME_IN_GRIPPER = 0;
+
 
     public ReleaseAlgae(Gripper gripper) {
         this.gripper = gripper;
-        this.lastTimeInGripper = 0;
     }
 
     @Override
@@ -23,9 +25,9 @@ public class ReleaseAlgae extends Command {
     @Override
     public boolean isFinished() {
         if (gripper.hasAlgae()) {
-            lastTimeInGripper = Timer.getFPGATimestamp();
+            LAST_TIME_IN_GRIPPER = Timer.getFPGATimestamp();
         }
-        return Timer.getFPGATimestamp() - lastTimeInGripper >= TIME_TO_RELEASE;
+        return Timer.getFPGATimestamp() - LAST_TIME_IN_GRIPPER >= TIME_TO_RELEASE;
     }
 
     @Override

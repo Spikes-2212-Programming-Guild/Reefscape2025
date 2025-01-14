@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Gripper;
 
 public class IntakeAlgae extends Command {
-
     private final Gripper gripper;
 
     public IntakeAlgae(Gripper gripper) {

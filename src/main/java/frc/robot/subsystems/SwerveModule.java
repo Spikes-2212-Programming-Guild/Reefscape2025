@@ -67,6 +67,7 @@ public class SwerveModule extends DashboardedSubsystem {
         driveEncoderConfig = new EncoderConfig();
         createDriveConfig();
         createTurnController();
+        configureAbsoluteEncoder();
     }
 
     private void createDriveConfig() {

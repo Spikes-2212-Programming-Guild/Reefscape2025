@@ -20,7 +20,7 @@ public class Gripper extends MotoredGenericSubsystem {
         apply(PUSH_SPEED);
     }
 
-    public boolean hasCoral() {
+    public boolean hasAlgae() {
         return false;
     }
 

@@ -1,28 +1,22 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import frc.robot.subsystems.Gripper;
 
-public class IntakeAlgae extends Command {
+public class IntakeAlgae extends MoveGenericSubsystem {
+
+    private static final double INTAKE_SPEED = -0.5;
+
     private final Gripper gripper;
 
     public IntakeAlgae(Gripper gripper) {
+        super(gripper, INTAKE_SPEED);
         addRequirements(gripper);
         this.gripper = gripper;
     }
 
     @Override
-    public void execute() {
-        gripper.intake();
-    }
-
-    @Override
     public boolean isFinished() {
         return gripper.hasAlgae();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        gripper.stop();
     }
 }

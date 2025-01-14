@@ -20,8 +20,6 @@ public class ReleaseAlgae extends MoveGenericSubsystem {
         this.gripper = gripper;
     }
 
-    DriveArcadeWithPID
-
     @Override
     public boolean isFinished() {
         if (gripper.hasAlgae()) {

@@ -1,7 +1,6 @@
-"package frc.robot.subsystems;
+package frc.robot.subsystems;
 
 import com.spikes2212.command.DashboardedSubsystem;
-import com.spikes2212.dashboard.Namespace;
 import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;

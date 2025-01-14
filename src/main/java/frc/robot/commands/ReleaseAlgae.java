@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import com.spikes2212.command.drivetrains.commands.DriveArcadeWithPID;
 import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.Gripper;
@@ -13,12 +14,13 @@ public class ReleaseAlgae extends MoveGenericSubsystem {
 
     private double lastTimeInGripper;
 
-    public ReleaseAlgae(Gripper gripper, double lastTimeInGripper) {
+    public ReleaseAlgae(Gripper gripper) {
         super(gripper, RELEASE_SPEED);
         addRequirements(gripper);
         this.gripper = gripper;
-        this.lastTimeInGripper = lastTimeInGripper;
     }
+
+    DriveArcadeWithPID
 
     @Override
     public boolean isFinished() {

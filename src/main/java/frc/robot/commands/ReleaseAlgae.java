@@ -12,7 +12,7 @@ public class ReleaseAlgae extends MoveGenericSubsystem {
 
     private final Gripper gripper;
 
-    private double lastTimeInGripper;
+    private double lastTimeInGripper = 0;
 
     public ReleaseAlgae(Gripper gripper) {
         super(gripper, RELEASE_SPEED);

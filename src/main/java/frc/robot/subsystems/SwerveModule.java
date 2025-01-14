@@ -158,7 +158,7 @@ public class SwerveModule extends DashboardedSubsystem {
         return absoluteEncoder.getAbsolutePosition().getValueAsDouble() * DEGREES_IN_ROTATIONS;
     }
 
-    public void resetRelativePosition() {
+    public void resetRelativeEncoder() {
         turnEncoder.setPosition(getAbsoluteAngle());
     }
 

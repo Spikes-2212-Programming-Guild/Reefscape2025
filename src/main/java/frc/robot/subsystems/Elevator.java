@@ -35,5 +35,7 @@ public class Elevator extends SparkGenericSubsystem {
 
     @Override
     public void configureDashboard() {
+        namespace.putBoolean("min limit", minLimit::get);
+        namespace.putBoolean("max limit", maxLimit::get);
     }
 }

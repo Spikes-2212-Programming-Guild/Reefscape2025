@@ -12,7 +12,7 @@ public class Elevator extends SparkGenericSubsystem {
         SparkMaxConfig slaveConfig = new SparkMaxConfig();
         slaveConfig.inverted(true);
         slave.configure(slaveConfig, SparkBase.ResetMode.kNoResetSafeParameters,
-                SparkBase.PersistMode.kPersistParameters);
+                SparkBase.PersistMode.kNoPersistParameters);
     }
 
     @Override

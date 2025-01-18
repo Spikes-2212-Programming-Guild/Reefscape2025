@@ -21,5 +21,6 @@ public class Storage extends MotoredGenericSubsystem {
 
     @Override
     public void configureDashboard() {
+        namespace.putBoolean("laser", laser::get);
     }
 }

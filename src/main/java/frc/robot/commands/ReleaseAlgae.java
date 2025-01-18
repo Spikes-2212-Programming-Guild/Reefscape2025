@@ -11,8 +11,8 @@ import java.util.function.Supplier;
 public class ReleaseAlgae extends MoveGenericSubsystem {
 
     private static final RootNamespace namespace = new RootNamespace("release algae");
-    private static final Supplier<Double> TIME_TO_RELEASE = namespace.addConstantDouble("time to release", 0);
-    private static final Supplier<Double> RELEASE_SPEED = namespace.addConstantDouble("release speed", 0);
+    private static final Supplier<Double> TIME_TO_RELEASE = namespace.addConstantDouble("time to release", 0.5);
+    private static final Supplier<Double> RELEASE_SPEED = namespace.addConstantDouble("release speed", 0.5);
 
     private final Gripper gripper;
 

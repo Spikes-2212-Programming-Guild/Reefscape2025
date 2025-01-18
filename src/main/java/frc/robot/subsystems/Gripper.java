@@ -21,6 +21,11 @@ public class Gripper extends MotoredGenericSubsystem {
     }
 
     @Override
+    public boolean canMove(double speed) {
+        return !(speed < 0 && hasAlgae());
+    }
+
+    @Override
     public void configureDashboard() {
         namespace.putBoolean("limit", limit::get);
     }

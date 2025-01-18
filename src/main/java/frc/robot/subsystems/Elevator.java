@@ -30,7 +30,7 @@ public class Elevator extends SparkGenericSubsystem {
     }
 
     public boolean canMove(double speed) {
-        return !(speed < 0 && (isMin() || isMax()));
+        return !(isMin() || isMax());
     }
 
     @Override

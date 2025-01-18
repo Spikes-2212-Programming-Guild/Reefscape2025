@@ -17,13 +17,4 @@ public class MoveToHeight extends MoveSmartMotorControllerGenericSubsystem {
         super(elevator, pidSettings, feedForwardSettings, UnifiedControlMode.POSITION, setpoint);
         this.elevator = elevator;
     }
-
-    @Override
-    public boolean isFinished() {
-        if (elevator.isMin() || elevator.isMax()) {
-            return true;
-        }
-
-        return false;
-    }
 }

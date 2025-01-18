@@ -29,6 +29,10 @@ public class Elevator extends SparkGenericSubsystem {
         return maxLimit.get();
     }
 
+    public boolean canMove(double speed) {
+        return !(speed < 0 && (isMin() || isMax()));
+    }
+
     @Override
     public void configureDashboard() {
     }

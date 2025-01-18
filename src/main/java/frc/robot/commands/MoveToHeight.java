@@ -11,11 +11,8 @@ import java.util.function.Supplier;
 
 public class MoveToHeight extends MoveSmartMotorControllerGenericSubsystem {
 
-    private final Elevator elevator;
-
     public MoveToHeight(Elevator elevator, PIDSettings pidSettings, FeedForwardSettings feedForwardSettings,
                         Supplier<Double> setpoint) {
         super(elevator, pidSettings, feedForwardSettings, UnifiedControlMode.POSITION, setpoint);
-        this.elevator = elevator;
     }
 }

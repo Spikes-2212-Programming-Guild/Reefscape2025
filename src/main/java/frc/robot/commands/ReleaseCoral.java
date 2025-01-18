@@ -14,7 +14,6 @@ public class ReleaseCoral extends MoveGenericSubsystem {
 
     public ReleaseCoral(Storage storage) {
         super(storage, RELEASE_SPEED);
-        addRequirements(storage);
         this.storage = storage;
         this.lastTimeInStorage = 0;
     }

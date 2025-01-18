@@ -12,7 +12,6 @@ public class IntakeCoral extends MoveGenericSubsystem {
 
     public IntakeCoral(Storage storage) {
         super(storage, INTAKE_SPEED);
-        addRequirements(storage);
         this.storage = storage;
     }
 

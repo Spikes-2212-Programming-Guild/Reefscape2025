@@ -11,7 +11,6 @@ public class IntakeAlgae extends MoveGenericSubsystem {
 
     public IntakeAlgae(Gripper gripper) {
         super(gripper, INTAKE_SPEED);
-        addRequirements(gripper);
         this.gripper = gripper;
     }
 

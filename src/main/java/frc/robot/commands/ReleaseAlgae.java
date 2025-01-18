@@ -16,7 +16,6 @@ public class ReleaseAlgae extends MoveGenericSubsystem {
 
     public ReleaseAlgae(Gripper gripper) {
         super(gripper, RELEASE_SPEED);
-        addRequirements(gripper);
         this.gripper = gripper;
     }
 

@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import com.spikes2212.dashboard.RootNamespace;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Storage;
 
 import java.util.function.Supplier;
@@ -18,10 +16,4 @@ public class IntakeCoral extends MoveGenericSubsystem {
         super(storage, INTAKE_SPEED);
         this.storage = storage;
     }
-
-    @Override
-    public boolean isFinished() {
-        return storage.hasCoral();
-    }
-
 }

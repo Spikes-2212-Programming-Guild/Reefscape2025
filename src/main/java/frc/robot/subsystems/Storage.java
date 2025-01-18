@@ -4,15 +4,19 @@ import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SparkGenericSubsystem;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Storage extends MotoredGenericSubsystem {
 
-    public Storage(String namespaceName, SparkMax motor) {
+    private final DigitalInput laser;
+
+    public Storage(String namespaceName, SparkMax motor, DigitalInput laser) {
         super(namespaceName, motor);
+        this.laser = laser;
     }
 
     public boolean hasCoral() {
-        return false;
+        return (laser.get());
     }
 
     @Override

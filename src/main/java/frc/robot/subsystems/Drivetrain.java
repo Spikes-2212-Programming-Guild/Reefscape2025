@@ -9,8 +9,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystems.SwerveModule;
 
 public class Drivetrain extends DashboardedSubsystem {
-    private static final double TRACK_WIDTH = 0.61;
-    private static final double TRACK_LENGTH = 0.58;
+
+    private static final double TRACK_WIDTH = -1;
+    private static final double TRACK_LENGTH = -1;
 
     public static final Translation2d CENTER_OF_ROBOT = new Translation2d(0, 0);
     public static final Translation2d FRONT_LEFT_WHEEL_POSITION =
@@ -78,6 +79,5 @@ public class Drivetrain extends DashboardedSubsystem {
 
     @Override
     public void configureDashboard() {
-
     }
 }

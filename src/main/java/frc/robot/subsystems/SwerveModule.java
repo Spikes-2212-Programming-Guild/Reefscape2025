@@ -10,11 +10,15 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.spikes2212.command.DashboardedSubsystem;
+import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,6 +29,7 @@ public class SwerveModule extends DashboardedSubsystem {
     public static final double MAX_SPEED = 4;
     public static final double MIN_SPEED = 0.4;
     public static final double MAX_TURN = 3;
+
     private static final double DRIVE_GEAR_RATIO = 1 / 6.12;
     private static final double TURN_GEAR_RATIO = 1 / 12.8;
     private static final double WHEEL_DIAMETER = 4 * 0.0254;
@@ -32,19 +37,24 @@ public class SwerveModule extends DashboardedSubsystem {
     private static final double SECONDS_IN_MINUTE = 60;
     private static final double ABSOLUTE_POSITION = 1;
 
-
     private final TalonFX driveMotor;
     private final SparkMax turnMotor;
     private final CANcoder absoluteEncoder;
+
     private final boolean cancoderInverted;
     private final boolean driveInverted;
     private final double offset;
+
     private final RelativeEncoder turnEncoder;
+
     private final PIDSettings drivePIDSettings;
     private final PIDSettings turnPIDSettings;
     private final FeedForwardSettings driveFeedForwardSettings;
     private final FeedForwardSettings turnFeedForwardSettings;
+    private final FeedForwardController turnFeedForwardController;
+
     private final EncoderConfig turnEncoderConfig;
+    private final SparkMaxConfig sparkConfig;
     private final MotorOutputConfigs MotorOutput;
 
     public SwerveModule(String namespace, TalonFX driveMotor, SparkMax turnMotor, CANcoder absoluteEncoder,
@@ -64,22 +74,22 @@ public class SwerveModule extends DashboardedSubsystem {
         this.turnPIDSettings = turnPIDSettings;
         this.driveFeedForwardSettings = driveFeedForwardSettings;
         this.turnFeedForwardSettings = turnFeedForwardSettings;
+        this.turnFeedForwardController = new FeedForwardController(turnFeedForwardSettings,
+                FeedForwardController.DEFAULT_PERIOD);
+        this.sparkConfig = new SparkMaxConfig();
         MotorOutput = new MotorOutputConfigs();
         turnEncoderConfig = new EncoderConfig();
-        createDriveConfig();
-        createTurnController();
+        configureDriveController();
+        configureTurnController();
         configureAbsoluteEncoder();
     }
 
-    private void createDriveConfig() {
+    public void configureDriveController() {
         TalonFXConfiguration config = new TalonFXConfiguration();
         //@TODO check if this is correct
         config.Feedback.SensorToMechanismRatio = DRIVE_GEAR_RATIO * WHEEL_DIAMETER * Math.PI;
         config.Feedback.RotorToSensorRatio = (DRIVE_GEAR_RATIO * WHEEL_DIAMETER * Math.PI) / SECONDS_IN_MINUTE;
-    }
-
-
-    public void configureDriveController() {
+        driveMotor.getConfigurator().apply(config);
         Slot0Configs driveConfigs = new Slot0Configs();
         driveConfigs.kP = drivePIDSettings.getkP();
         driveConfigs.kI = drivePIDSettings.getkI();
@@ -92,15 +102,15 @@ public class SwerveModule extends DashboardedSubsystem {
                 InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive));
     }
 
-    private void createTurnController() {
+    public void configureTurnController() {
         turnEncoderConfig.positionConversionFactor(DRIVE_GEAR_RATIO * DEGREES_IN_ROTATIONS);
         turnEncoderConfig.velocityConversionFactor((TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS) / SECONDS_IN_MINUTE);
-    }
-
-    public void configureTurnController() {
         ClosedLoopConfig turnClosedLoopConfig = new ClosedLoopConfig();
         turnClosedLoopConfig.pid(turnPIDSettings.getkP(), turnPIDSettings.getkI(), turnPIDSettings.getkD());
         turnEncoderConfig.inverted(cancoderInverted);
+        sparkConfig.apply(turnClosedLoopConfig);
+        turnMotor.configure(sparkConfig, SparkBase.ResetMode.kNoResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+
     }
 
     public void configureAbsoluteEncoder() {
@@ -109,6 +119,10 @@ public class SwerveModule extends DashboardedSubsystem {
                 .withSensorDirection(cancoderInverted ? SensorDirectionValue.Clockwise_Positive :
                         SensorDirectionValue.CounterClockwise_Positive).withMagnetOffset(offset);
         absoluteEncoder.getConfigurator().apply(magnetConfigs);
+    }
+
+    private void turnConfigureFF() {
+        turnFeedForwardController.setGains(turnFeedForwardSettings);
     }
 
     private void setSpeed(double speed, boolean usePID) {
@@ -120,7 +134,10 @@ public class SwerveModule extends DashboardedSubsystem {
 
     private void setAngle(double angle) {
         configureTurnController();
-        turnMotor.getClosedLoopController().setReference(angle, SparkBase.ControlType.kVelocity);
+        turnConfigureFF();
+        double feedForward = turnFeedForwardController.calculate(angle);
+        turnMotor.getClosedLoopController().setReference(angle, SparkBase.ControlType.kVelocity, ClosedLoopSlot.kSlot0,
+                feedForward, SparkClosedLoopController.ArbFFUnits.kPercentOut);
     }
 
     public void stop() {

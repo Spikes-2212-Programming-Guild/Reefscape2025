@@ -18,7 +18,6 @@ public class RobotMap {
         int FRONT_RIGHT_ABSOLUTE_ENCODER = -1;
         int BACK_LEFT_ABSOLUTE_ENCODER = -1;
         int BACK_RIGHT_ABSOLUTE_ENCODER = -1;
-
     }
     
     public interface DIO {

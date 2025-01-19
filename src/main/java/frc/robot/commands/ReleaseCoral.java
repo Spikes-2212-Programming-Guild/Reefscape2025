@@ -9,9 +9,11 @@ import java.util.function.Supplier;
 
 public class ReleaseCoral extends MoveGenericSubsystem {
 
-    private static final RootNamespace namespace = new RootNamespace("release corral");
-    private static final Supplier<Double> TIME_TO_RELEASE = namespace.addConstantDouble("time to release", 0.5);
-    private static final Supplier<Double> RELEASE_SPEED = namespace.addConstantDouble("release speed", 0.5);
+    private static final RootNamespace NAMESPACE = new RootNamespace("release corral");
+
+    private static final Supplier<Double> TIME_TO_RELEASE = NAMESPACE.addConstantDouble("time to release", 0.5);
+    private static final Supplier<Double> RELEASE_SPEED = NAMESPACE.addConstantDouble("release speed", 0.5);
+
     private final Storage storage;
 
     private double startTime;

@@ -1,11 +1,8 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
-import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SparkGenericSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
-
 public class Storage extends MotoredGenericSubsystem {
 
     private final DigitalInput laser;
@@ -16,7 +13,7 @@ public class Storage extends MotoredGenericSubsystem {
     }
 
     public boolean hasCoral() {
-        return (laser.get());
+        return laser.get();
     }
 
     @Override

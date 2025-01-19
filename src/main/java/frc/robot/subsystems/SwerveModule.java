@@ -110,7 +110,6 @@ public class SwerveModule extends DashboardedSubsystem {
         turnEncoderConfig.inverted(cancoderInverted);
         sparkConfig.apply(turnClosedLoopConfig);
         turnMotor.configure(sparkConfig, SparkBase.ResetMode.kNoResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
-
     }
 
     public void configureAbsoluteEncoder() {

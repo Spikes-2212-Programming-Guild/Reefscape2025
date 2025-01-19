@@ -29,9 +29,6 @@ public class ReleaseCoral extends MoveGenericSubsystem {
 
     @Override
     public boolean isFinished() {
-        if (storage.hasCoral()) {
-            startTime = Timer.getFPGATimestamp();
-        }
         return Timer.getFPGATimestamp() - startTime >= TIME_TO_RELEASE.get();
     }
 }

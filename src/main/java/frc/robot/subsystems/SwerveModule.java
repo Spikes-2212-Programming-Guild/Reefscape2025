@@ -38,6 +38,7 @@ public class SwerveModule extends DashboardedSubsystem {
     private static final double ABSOLUTE_POSITION = 1;
 
     private static final double MAX_DISTANCE_TO_ROTATE = 90;
+    private static final double DEGREES_TO_FLIP = 180;
 
     private final TalonFX driveMotor;
     private final SparkMax turnMotor;
@@ -167,10 +168,10 @@ public class SwerveModule extends DashboardedSubsystem {
         double desiredAngle = normalizeAngleRelativeToEncoder(currentAngle, state.angle.getDegrees());
         while (Math.abs(desiredAngle - currentAngle) > MAX_DISTANCE_TO_ROTATE) {
             if (desiredAngle - currentAngle > 0) {
-                desiredAngle -= 180;
+                desiredAngle -= DEGREES_TO_FLIP;
             }
             else {
-                desiredAngle += 180;
+                desiredAngle += DEGREES_TO_FLIP;
             }
             state.speedMetersPerSecond *= -1;
         }

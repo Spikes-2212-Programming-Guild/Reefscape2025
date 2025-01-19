@@ -28,7 +28,7 @@ public class SwerveModule extends DashboardedSubsystem {
 
     public static final double MAX_SPEED = 4;
     public static final double MIN_SPEED = 0.4;
-    public static final double MAX_TURN = 3;
+    public static final double MAX_TURN_SPEED = 3;
 
     private static final double DRIVE_GEAR_RATIO = 1 / 6.12;
     private static final double TURN_GEAR_RATIO = 1 / 12.8;

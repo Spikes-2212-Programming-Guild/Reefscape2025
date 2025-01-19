@@ -10,15 +10,21 @@ public class Elevator extends SparkGenericSubsystem {
 
     private final DigitalInput minLimit;
     private final DigitalInput maxLimit;
+    private final double speed;
 
-    public Elevator(String namespaceName, SparkMax master, SparkMax slave, DigitalInput minLimit, DigitalInput maxLimit) {
+    public Elevator(String namespaceName, SparkMax master, SparkMax slave, DigitalInput minLimit, DigitalInput maxLimit, double speed) {
         super(namespaceName, master, slave);
         this.minLimit = minLimit;
         this.maxLimit = maxLimit;
+        this.speed = speed;
         SparkMaxConfig slaveConfig = new SparkMaxConfig();
         slaveConfig.inverted(true);
         slave.configure(slaveConfig, SparkBase.ResetMode.kNoResetSafeParameters,
                 SparkBase.PersistMode.kNoPersistParameters);
+    }
+
+    public double getSpeed() {
+        return speed;
     }
 
     public boolean isMin() {

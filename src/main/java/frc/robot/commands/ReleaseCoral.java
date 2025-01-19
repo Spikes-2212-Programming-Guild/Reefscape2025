@@ -8,6 +8,7 @@ import frc.robot.subsystems.Storage;
 import java.util.function.Supplier;
 
 public class ReleaseCoral extends MoveGenericSubsystem {
+
     private static final RootNamespace NAMESPACE = new RootNamespace("release corral");
 
     private static final Supplier<Double> TIME_TO_RELEASE = NAMESPACE.addConstantDouble("time to release", 0.5);

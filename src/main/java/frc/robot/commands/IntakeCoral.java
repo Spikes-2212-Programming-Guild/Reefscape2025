@@ -7,8 +7,8 @@ import frc.robot.subsystems.Storage;
 import java.util.function.Supplier;
 
 public class IntakeCoral extends MoveGenericSubsystem {
-    private static final RootNamespace NAMESPACE = new RootNamespace("take corral");
 
+    private static final RootNamespace NAMESPACE = new RootNamespace("take coral");
     private static final Supplier<Double> INTAKE_SPEED = NAMESPACE.addConstantDouble("intake speed", -0.5);
 
     private final Storage storage;

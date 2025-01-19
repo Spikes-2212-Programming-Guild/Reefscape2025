@@ -1,10 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
@@ -29,24 +32,23 @@ public class SwerveModule extends DashboardedSubsystem {
     private static final double SECONDS_IN_MINUTE = 60;
     private static final double ABSOLUTE_POSITION = 1;
 
+
     private final TalonFX driveMotor;
     private final SparkMax turnMotor;
     private final CANcoder absoluteEncoder;
     private final boolean cancoderInverted;
     private final boolean driveInverted;
     private final double offset;
-    private final RelativeEncoder driveEncoder;
     private final RelativeEncoder turnEncoder;
     private final PIDSettings drivePIDSettings;
     private final PIDSettings turnPIDSettings;
     private final FeedForwardSettings driveFeedForwardSettings;
     private final FeedForwardSettings turnFeedForwardSettings;
-    private final EncoderConfig driveEncoderConfig;
     private final EncoderConfig turnEncoderConfig;
+    private final MotorOutputConfigs MotorOutput;
 
     public SwerveModule(String namespace, TalonFX driveMotor, SparkMax turnMotor, CANcoder absoluteEncoder,
                         boolean cancoderInverted, boolean driveInverted, double offset,
-                        RelativeEncoder driveEncoder, RelativeEncoder turnEncoder,
                         PIDSettings drivePIDSettings, PIDSettings turnPIDSettings,
                         FeedForwardSettings driveFeedForwardSettings,
                         FeedForwardSettings turnFeedForwardSettings) {
@@ -57,22 +59,23 @@ public class SwerveModule extends DashboardedSubsystem {
         this.cancoderInverted = cancoderInverted;
         this.driveInverted = driveInverted;
         this.offset = offset;
-        this.driveEncoder = driveEncoder;
-        this.turnEncoder = turnEncoder;
+        this.turnEncoder = turnMotor.getEncoder();
         this.drivePIDSettings = drivePIDSettings;
         this.turnPIDSettings = turnPIDSettings;
         this.driveFeedForwardSettings = driveFeedForwardSettings;
         this.turnFeedForwardSettings = turnFeedForwardSettings;
+        MotorOutput = new MotorOutputConfigs();
         turnEncoderConfig = new EncoderConfig();
-        driveEncoderConfig = new EncoderConfig();
         createDriveConfig();
         createTurnController();
         configureAbsoluteEncoder();
     }
 
     private void createDriveConfig() {
-        driveEncoderConfig.positionConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER * Math.PI);
-        driveEncoderConfig.velocityConversionFactor((DRIVE_GEAR_RATIO * WHEEL_DIAMETER * Math.PI) / SECONDS_IN_MINUTE);
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        //@TODO check if this is correct
+        config.Feedback.SensorToMechanismRatio = DRIVE_GEAR_RATIO * WHEEL_DIAMETER * Math.PI;
+        config.Feedback.RotorToSensorRatio = (DRIVE_GEAR_RATIO * WHEEL_DIAMETER * Math.PI) / SECONDS_IN_MINUTE;
     }
 
 
@@ -85,7 +88,8 @@ public class SwerveModule extends DashboardedSubsystem {
         driveConfigs.kV = driveFeedForwardSettings.getkV();
         driveConfigs.kA = driveFeedForwardSettings.getkA();
         driveMotor.getConfigurator().apply(driveConfigs);
-        driveEncoderConfig.inverted(driveInverted);
+        driveMotor.getConfigurator().apply(MotorOutput.withInverted(driveInverted ?
+                InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive));
     }
 
     private void createTurnController() {
@@ -166,7 +170,6 @@ public class SwerveModule extends DashboardedSubsystem {
     @Override
     public void configureDashboard() {
         namespace.putNumber("absolute angle", this::getAbsoluteAngle);
-        namespace.putNumber("velocity", driveEncoder::getVelocity);
         namespace.putNumber("relative angle", turnEncoder::getPosition);
     }
 }

@@ -69,13 +69,13 @@ public class SwerveModule extends DashboardedSubsystem {
         this.cancoderInverted = cancoderInverted;
         this.driveInverted = driveInverted;
         this.offset = offset;
-        this.turnEncoder = turnMotor.getEncoder();
         this.drivePIDSettings = drivePIDSettings;
         this.turnPIDSettings = turnPIDSettings;
         this.driveFeedForwardSettings = driveFeedForwardSettings;
         this.turnFeedForwardSettings = turnFeedForwardSettings;
         this.turnFeedForwardController = new FeedForwardController(turnFeedForwardSettings,
                 FeedForwardController.DEFAULT_PERIOD);
+        this.turnEncoder = turnMotor.getEncoder();
         this.sparkConfig = new SparkMaxConfig();
         MotorOutput = new MotorOutputConfigs();
         turnEncoderConfig = new EncoderConfig();

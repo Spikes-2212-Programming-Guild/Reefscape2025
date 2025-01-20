@@ -6,9 +6,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.subsystems.SwerveModule;
 
 public class Drivetrain extends DashboardedSubsystem {
+
+    public static final double MAX_SPEED = 4;
+    public static final double MIN_SPEED = 0.4;
+    public static final double MAX_TURN_SPEED = 3;
 
     private static final double TRACK_WIDTH = -1;
     private static final double TRACK_LENGTH = -1;
@@ -56,7 +59,7 @@ public class Drivetrain extends DashboardedSubsystem {
             speeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
         }
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds, CENTER_OF_ROBOT);
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveModule.MAX_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_SPEED);
         frontLeft.set(states[0], usePID);
         frontRight.set(states[1], usePID);
         backLeft.set(states[2], usePID);

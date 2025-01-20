@@ -26,10 +26,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SwerveModule extends DashboardedSubsystem {
 
-    public static final double MAX_SPEED = 4;
-    public static final double MIN_SPEED = 0.4;
-    public static final double MAX_TURN_SPEED = 3;
-
     private static final double DRIVE_GEAR_RATIO = 1 / 6.12;
     private static final double TURN_GEAR_RATIO = 1 / 12.8;
     private static final double WHEEL_DIAMETER = 4 * 0.0254;
@@ -131,7 +127,7 @@ public class SwerveModule extends DashboardedSubsystem {
         if (usePID) {
             configureDriveController();
             driveMotor.setControl(new VelocityDutyCycle(speed));
-        } else driveMotor.set(speed / MAX_SPEED);
+        } else driveMotor.set(speed / Drivetrain.MAX_SPEED);
     }
 
     private void setAngle(double angle) {
@@ -148,7 +144,7 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     public void set(SwerveModuleState state, boolean usePID) {
-        if (state.speedMetersPerSecond < MIN_SPEED){
+        if (state.speedMetersPerSecond < Drivetrain.MIN_SPEED){
             stop();
             return;
         }

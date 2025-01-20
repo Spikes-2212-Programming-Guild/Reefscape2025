@@ -28,7 +28,8 @@ public class SwerveModule extends DashboardedSubsystem {
 
     private static final double DRIVE_GEAR_RATIO = 1 / 6.12;
     private static final double TURN_GEAR_RATIO = 1 / 12.8;
-    private static final double WHEEL_DIAMETER = 4 * 0.0254;
+    private static final double WHEEL_DIAMETER_INCHES = 4;
+    private static final double INCHES_TO_METERS = 0.0254;
     private static final double DEGREES_IN_ROTATIONS = 360;
     private static final double SECONDS_IN_MINUTE = 60;
     private static final double ABSOLUTE_POSITION_DISCONTINUITY_POINT = 1;
@@ -86,8 +87,10 @@ public class SwerveModule extends DashboardedSubsystem {
     public void configureDriveController() {
         TalonFXConfiguration config = new TalonFXConfiguration();
         //@TODO check if this is correct
-        config.Feedback.SensorToMechanismRatio = DRIVE_GEAR_RATIO * WHEEL_DIAMETER * Math.PI;
-        config.Feedback.RotorToSensorRatio = (DRIVE_GEAR_RATIO * WHEEL_DIAMETER * Math.PI) / SECONDS_IN_MINUTE;
+        config.Feedback.SensorToMechanismRatio = DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES
+                * INCHES_TO_METERS * Math.PI;
+        config.Feedback.RotorToSensorRatio = (DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES
+                * INCHES_TO_METERS * Math.PI) / SECONDS_IN_MINUTE;
         driveMotor.getConfigurator().apply(config);
         Slot0Configs driveConfigs = new Slot0Configs();
         driveConfigs.kP = drivePIDSettings.getkP();

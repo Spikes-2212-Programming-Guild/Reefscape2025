@@ -32,10 +32,10 @@ public class SwerveModule extends DashboardedSubsystem {
     private static final double INCHES_TO_METERS = 0.0254;
     private static final double DEGREES_IN_ROTATIONS = 360;
     private static final double SECONDS_IN_MINUTE = 60;
-    private static final double ABSOLUTE_POSITION_DISCONTINUITY_POINT = 1;
 
     private static final double MAX_DISTANCE_TO_ROTATE = 90;
     private static final double DEGREES_TO_FLIP = 180;
+    private static final double ABSOLUTE_POSITION_DISCONTINUITY_POINT = 1;
 
     private final TalonFX driveMotor;
     private final SparkMax turnMotor;

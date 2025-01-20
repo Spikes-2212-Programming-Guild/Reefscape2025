@@ -45,13 +45,13 @@ public class SwerveModule extends DashboardedSubsystem {
     private final boolean driveInverted;
     private final double offset;
 
-    private final RelativeEncoder turnEncoder;
 
     private final PIDSettings drivePIDSettings;
     private final PIDSettings turnPIDSettings;
     private final FeedForwardSettings driveFeedForwardSettings;
     private final FeedForwardSettings turnFeedForwardSettings;
     private final FeedForwardController turnFeedForwardController;
+    private final RelativeEncoder turnEncoder;
 
     private final EncoderConfig turnEncoderConfig;
     private final SparkMaxConfig sparkConfig;

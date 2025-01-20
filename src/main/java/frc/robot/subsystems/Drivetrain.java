@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class Drivetrain extends DashboardedSubsystem {
 
@@ -36,7 +37,18 @@ public class Drivetrain extends DashboardedSubsystem {
     private final SwerveModule backRight;
     private final SwerveDriveKinematics kinematics;
 
-    public Drivetrain(SwerveModule frontLeft, SwerveModule frontRight, SwerveModule backLeft,
+    private static Drivetrain instance;
+
+    public static Drivetrain getInstance() {
+        if (instance == null) {
+            instance = new Drivetrain(SwerveModuleHolder.getFrontLeft(), SwerveModuleHolder.getFrontRight(),
+                    SwerveModuleHolder.getBackLeft(), SwerveModuleHolder.getBackRight(),
+                    new AHRS(AHRS.NavXComType.kI2C));
+        }
+        return instance;
+    }
+
+    private Drivetrain(SwerveModule frontLeft, SwerveModule frontRight, SwerveModule backLeft,
                       SwerveModule backRight, AHRS gyro) {
         super(NAMESPACE_NAME);
         this.frontLeft = frontLeft;

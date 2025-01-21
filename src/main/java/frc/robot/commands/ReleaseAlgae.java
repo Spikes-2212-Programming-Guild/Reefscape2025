@@ -28,6 +28,6 @@ public class ReleaseAlgae extends MoveGenericSubsystem {
 
     @Override
     public boolean isFinished() {
-        return Timer.getFPGATimestamp() - startTime >= TIME_TO_RELEASE.get() && !gripper.hasAlgae();
+        return Timer.getFPGATimestamp() - startTime >= TIME_TO_RELEASE.get();
     }
 }

@@ -13,13 +13,10 @@ public class ReleaseCoral extends MoveGenericSubsystem {
     private static final Supplier<Double> TIME_TO_RELEASE = NAMESPACE.addConstantDouble("time to release", 0.5);
     private static final Supplier<Double> RELEASE_SPEED = NAMESPACE.addConstantDouble("release speed", 0.5);
 
-    private final Storage storage;
-
     private double startTime;
 
     public ReleaseCoral(Storage storage) {
         super(storage, RELEASE_SPEED);
-        this.storage = storage;
     }
 
     @Override

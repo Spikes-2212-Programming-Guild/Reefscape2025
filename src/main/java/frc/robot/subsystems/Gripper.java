@@ -24,6 +24,6 @@ public class Gripper extends MotoredGenericSubsystem {
 
     @Override
     public void configureDashboard() {
-        namespace.putBoolean("limit", limit::get);
+        namespace.putBoolean("algae  present", limit::get);
     }
 }

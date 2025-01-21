@@ -2,9 +2,11 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SparkGenericSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 
 public class Elevator extends SparkGenericSubsystem {
 
@@ -23,23 +25,26 @@ public class Elevator extends SparkGenericSubsystem {
 
     private final DigitalInput minLimit;
     private final DigitalInput maxLimit;
-    private final DigitalInput holeEffectLvl2;
-    private final DigitalInput holeEffectLvl3;
-    private final DigitalInput holeEffectLvl4;
+    private final DigitalInput hallEffectLvl2;
+    private final DigitalInput hallEffectLvl3;
+    private final DigitalInput hallEffectLvl4;
 
     public Elevator(String namespaceName, SparkMax master, SparkMax slave, DigitalInput minLimit,
-                    DigitalInput maxLimit, DigitalInput holeEffectLvl2, DigitalInput holeEffectLvl3,
-                    DigitalInput holeEffectLvl4) {
+                    DigitalInput maxLimit, DigitalInput hallEffectLvl2, DigitalInput hallEffectLvl3,
+                    DigitalInput hallEffectLvl4) {
         super(namespaceName, master, slave);
         this.minLimit = minLimit;
         this.maxLimit = maxLimit;
-        this.holeEffectLvl2 = holeEffectLvl2;
-        this.holeEffectLvl3 = holeEffectLvl3;
-        this.holeEffectLvl4 = holeEffectLvl4;
+        this.hallEffectLvl2 = hallEffectLvl2;
+        this.hallEffectLvl3 = hallEffectLvl3;
+        this.hallEffectLvl4 = hallEffectLvl4;
         SparkMaxConfig slaveConfig = new SparkMaxConfig();
         slaveConfig.inverted(true);
         slave.configure(slaveConfig, SparkBase.ResetMode.kNoResetSafeParameters,
                 SparkBase.PersistMode.kNoPersistParameters);
+        SparkMaxConfig masterConfig = new SparkMaxConfig();
+        EncoderConfig encoderConfig = new EncoderConfig();
+        encoderConfig.positionConversionFactor(SPINS_TO_HEIGHT);
     }
 
     public double getSpeed() {
@@ -66,8 +71,8 @@ public class Elevator extends SparkGenericSubsystem {
     public void configureDashboard() {
         namespace.putBoolean("min limit", minLimit::get);
         namespace.putBoolean("max limit", maxLimit::get);
-        namespace.putBoolean("holeEffectLvl1", holeEffectLvl2::get);
-        namespace.putBoolean("holeEffectLvl1", holeEffectLvl3::get);
-        namespace.putBoolean("holeEffectLvl1", holeEffectLvl4::get);
+        namespace.putBoolean("hallEffectLvl1", hallEffectLvl2::get);
+        namespace.putBoolean("hallEffectLvl1", hallEffectLvl3::get);
+        namespace.putBoolean("hallEffectLvl1", hallEffectLvl4::get);
     }
 }

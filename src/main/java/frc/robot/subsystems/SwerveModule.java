@@ -46,7 +46,6 @@ public class SwerveModule extends DashboardedSubsystem {
     private final boolean driveInverted;
     private final double offset;
 
-
     private final PIDSettings drivePIDSettings;
     private final PIDSettings turnPIDSettings;
     private final FeedForwardSettings driveFeedForwardSettings;

@@ -51,6 +51,7 @@ public class SwerveModule extends DashboardedSubsystem {
     private final FeedForwardSettings driveFeedForwardSettings;
     private final FeedForwardSettings turnFeedForwardSettings;
     private final FeedForwardController turnFeedForwardController;
+
     private final RelativeEncoder turnEncoder;
 
     private final EncoderConfig turnEncoderConfig;

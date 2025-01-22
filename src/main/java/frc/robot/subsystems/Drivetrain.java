@@ -43,6 +43,7 @@ public class Drivetrain extends DashboardedSubsystem {
         if (instance == null) {
             instance = new Drivetrain(SwerveModuleHolder.getFrontLeft(), SwerveModuleHolder.getFrontRight(),
                     SwerveModuleHolder.getBackLeft(), SwerveModuleHolder.getBackRight(),
+                    //TODO check in shuffleboard if this is correct
                     new AHRS(AHRS.NavXComType.kI2C));
         }
         return instance;
@@ -95,5 +96,6 @@ public class Drivetrain extends DashboardedSubsystem {
 
     @Override
     public void configureDashboard() {
+        namespace.putNumber("gyro", gyro::getAngle);
     }
 }

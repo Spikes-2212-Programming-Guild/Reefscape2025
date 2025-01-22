@@ -6,7 +6,6 @@ import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SparkGenericSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
 
 public class Elevator extends SparkGenericSubsystem {
 
@@ -25,19 +24,19 @@ public class Elevator extends SparkGenericSubsystem {
 
     private final DigitalInput minLimit;
     private final DigitalInput maxLimit;
-    private final DigitalInput hallEffectLvl2;
-    private final DigitalInput hallEffectLvl3;
-    private final DigitalInput hallEffectLvl4;
+    private final DigitalInput hallEffectL2;
+    private final DigitalInput hallEffectL3;
+    private final DigitalInput hallEffectL4;
 
     public Elevator(String namespaceName, SparkMax master, SparkMax slave, DigitalInput minLimit,
-                    DigitalInput maxLimit, DigitalInput hallEffectLvl2, DigitalInput hallEffectLvl3,
-                    DigitalInput hallEffectLvl4) {
+                    DigitalInput maxLimit, DigitalInput hallEffectL2, DigitalInput hallEffectL3,
+                    DigitalInput hallEffectL4) {
         super(namespaceName, master, slave);
         this.minLimit = minLimit;
         this.maxLimit = maxLimit;
-        this.hallEffectLvl2 = hallEffectLvl2;
-        this.hallEffectLvl3 = hallEffectLvl3;
-        this.hallEffectLvl4 = hallEffectLvl4;
+        this.hallEffectL2 = hallEffectL2;
+        this.hallEffectL3 = hallEffectL3;
+        this.hallEffectL4 = hallEffectL4;
         SparkMaxConfig slaveConfig = new SparkMaxConfig();
         slaveConfig.inverted(true);
         slave.configure(slaveConfig, SparkBase.ResetMode.kNoResetSafeParameters,
@@ -70,8 +69,8 @@ public class Elevator extends SparkGenericSubsystem {
     public void configureDashboard() {
         namespace.putBoolean("min limit", minLimit::get);
         namespace.putBoolean("max limit", maxLimit::get);
-        namespace.putBoolean("hallEffectLvl1", hallEffectLvl2::get);
-        namespace.putBoolean("hallEffectLvl1", hallEffectLvl3::get);
-        namespace.putBoolean("hallEffectLvl1", hallEffectLvl4::get);
+        namespace.putBoolean("hallEffectLvl1", hallEffectL2::get);
+        namespace.putBoolean("hallEffectLvl1", hallEffectL3::get);
+        namespace.putBoolean("hallEffectLvl1", hallEffectL4::get);
     }
 }

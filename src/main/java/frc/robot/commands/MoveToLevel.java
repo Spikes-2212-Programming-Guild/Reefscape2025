@@ -6,8 +6,6 @@ import com.spikes2212.control.PIDSettings;
 import com.spikes2212.util.UnifiedControlMode;
 import frc.robot.subsystems.Elevator;
 
-import java.util.function.Supplier;
-
 public class MoveToLevel extends MoveSmartMotorControllerGenericSubsystem {
 
     private final Elevator elevator;

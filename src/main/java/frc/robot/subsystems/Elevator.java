@@ -42,7 +42,6 @@ public class Elevator extends SparkGenericSubsystem {
         slaveConfig.inverted(true);
         slave.configure(slaveConfig, SparkBase.ResetMode.kNoResetSafeParameters,
                 SparkBase.PersistMode.kNoPersistParameters);
-        SparkMaxConfig masterConfig = new SparkMaxConfig();
         EncoderConfig encoderConfig = new EncoderConfig();
         encoderConfig.positionConversionFactor(SPINS_TO_HEIGHT);
     }

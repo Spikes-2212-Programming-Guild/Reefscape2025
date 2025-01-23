@@ -4,13 +4,30 @@
 
 package frc.robot;
 
+import com.spikes2212.dashboard.Namespace;
+import com.spikes2212.dashboard.RootNamespace;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.VisionService;
+
+import java.util.function.Supplier;
 
 public class Robot extends TimedRobot {
 
+    private final Namespace namespace;
+    private final VisionService limelight;
+
+    public Robot(Namespace namespace, VisionService limelight) {
+        this.namespace = namespace;
+        this.limelight = limelight;
+    }
+
     @Override
     public void robotInit() {
+        limelight.getRobotPose();
+        namespace.putNumber("tx", limelight.getRobotPose().getX());
+        namespace.putNumber("tx", limelight.getRobotPose().getRotation().getDegrees());
+        namespace.putNumber("ty", limelight.getRobotPose().getY());
 
     }
 

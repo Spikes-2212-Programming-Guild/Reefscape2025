@@ -74,8 +74,7 @@ public class SwerveModule extends DashboardedSubsystem {
         this.turnPIDSettings = turnPIDSettings;
         this.driveFeedForwardSettings = driveFeedForwardSettings;
         this.turnFeedForwardSettings = turnFeedForwardSettings;
-        this.turnFeedForwardController = new FeedForwardController(turnFeedForwardSettings,
-                FeedForwardController.DEFAULT_PERIOD);
+        this.turnFeedForwardController = new FeedForwardController(turnFeedForwardSettings);
         this.turnEncoder = turnMotor.getEncoder();
         this.sparkConfig = new SparkMaxConfig();
         MotorOutput = new MotorOutputConfigs();
@@ -137,7 +136,7 @@ public class SwerveModule extends DashboardedSubsystem {
     private void setAngle(double angle) {
         configureTurnController();
         turnConfigureFF();
-        double feedForward = turnFeedForwardController.calculate(angle);
+        double feedForward = turnFeedForwardController.calculate( 0,angle);
         turnMotor.getClosedLoopController().setReference(angle, SparkBase.ControlType.kVelocity, ClosedLoopSlot.kSlot0,
                 feedForward, SparkClosedLoopController.ArbFFUnits.kPercentOut);
     }

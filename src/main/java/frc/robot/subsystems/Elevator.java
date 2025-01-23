@@ -24,19 +24,14 @@ public class Elevator extends SparkGenericSubsystem {
 
     private final DigitalInput minLimit;
     private final DigitalInput maxLimit;
-    private final DigitalInput hallEffectL2;
-    private final DigitalInput hallEffectL3;
-    private final DigitalInput hallEffectL4;
+    private final DigitalInput hallEffect;
 
     public Elevator(String namespaceName, SparkMax master, SparkMax slave, DigitalInput minLimit,
-                    DigitalInput maxLimit, DigitalInput hallEffectL2, DigitalInput hallEffectL3,
-                    DigitalInput hallEffectL4) {
+                    DigitalInput maxLimit, DigitalInput hallEffect) {
         super(namespaceName, master, slave);
         this.minLimit = minLimit;
         this.maxLimit = maxLimit;
-        this.hallEffectL2 = hallEffectL2;
-        this.hallEffectL3 = hallEffectL3;
-        this.hallEffectL4 = hallEffectL4;
+        this.hallEffect = hallEffect;
         SparkMaxConfig slaveConfig = new SparkMaxConfig();
         slaveConfig.inverted(true);
         slave.configure(slaveConfig, SparkBase.ResetMode.kNoResetSafeParameters,
@@ -61,6 +56,8 @@ public class Elevator extends SparkGenericSubsystem {
         return maxLimit.get();
     }
 
+    public boolean isInHeight() {return false;}
+
     public boolean canMove(double speed) {
         return !((isMin() && speed < 0) || (isMax() && speed > 0));
     }
@@ -69,8 +66,6 @@ public class Elevator extends SparkGenericSubsystem {
     public void configureDashboard() {
         namespace.putBoolean("min limit", minLimit::get);
         namespace.putBoolean("max limit", maxLimit::get);
-        namespace.putBoolean("hallEffectLvl1", hallEffectL2::get);
-        namespace.putBoolean("hallEffectLvl1", hallEffectL3::get);
-        namespace.putBoolean("hallEffectLvl1", hallEffectL4::get);
+        namespace.putBoolean("hallEffectLvl2", hallEffect::get);
     }
 }

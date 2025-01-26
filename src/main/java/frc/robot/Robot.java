@@ -14,21 +14,11 @@ import java.util.function.Supplier;
 
 public class Robot extends TimedRobot {
 
-    private final Namespace namespace;
-    private final VisionService limelight;
-
-    public Robot(Namespace namespace, VisionService limelight) {
-        this.namespace = namespace;
-        this.limelight = limelight;
+    public Robot() {
     }
 
     @Override
     public void robotInit() {
-        limelight.getRobotPose();
-        namespace.putNumber("tx", limelight.getRobotPose().getX());
-        namespace.putNumber("tx", limelight.getRobotPose().getRotation().getDegrees());
-        namespace.putNumber("ty", limelight.getRobotPose().getY());
-
     }
 
     @Override

@@ -11,6 +11,6 @@ public class RotateStorage extends MoveSmartMotorControllerGenericSubsystem {
 
     public RotateStorage(CoralJoint coralJoint, PIDSettings pidSettings, FeedForwardSettings feedForwardSettings,
                          CoralJoint.STORAGE_POSE pose) {
-        super(coralJoint, pidSettings, feedForwardSettings, UnifiedControlMode.POSITION, ()-> pose.degree);
+        super(coralJoint, pidSettings, feedForwardSettings, UnifiedControlMode.POSITION, ()-> pose.neededPitch);
     }
 }

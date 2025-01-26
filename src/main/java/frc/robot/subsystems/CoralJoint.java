@@ -8,10 +8,10 @@ public class CoralJoint  extends SparkGenericSubsystem {
     public enum STORAGE_POSE {
         L1(-1), L2(-1), L3(-1), L4(-1);
 
-        public final double degree;
+        public final double neededPitch;
 
-        STORAGE_POSE(double degree) {
-            this.degree = degree;
+        STORAGE_POSE(double neededPitch) {
+            this.neededPitch = neededPitch;
         }
     }
 

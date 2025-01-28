@@ -6,15 +6,15 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Storage extends MotoredGenericSubsystem {
 
-    private final DigitalInput laser;
+    private final DigitalInput infrared;
 
-    public Storage(String namespaceName, SparkMax motor, DigitalInput laser) {
+    public Storage(String namespaceName, SparkMax motor, DigitalInput infrared) {
         super(namespaceName, motor);
-        this.laser = laser;
+        this.infrared = infrared;
     }
 
     public boolean hasCoral() {
-        return laser.get();
+        return infrared.get();
     }
 
     @Override
@@ -24,6 +24,6 @@ public class Storage extends MotoredGenericSubsystem {
 
     @Override
     public void configureDashboard() {
-        namespace.putBoolean("laser", laser::get);
+        namespace.putBoolean("infrared", infrared::get);
     }
 }

@@ -3,11 +3,11 @@ package frc.robot;
 public class RobotMap {
 
     public interface CAN {
-        int STORAGE = -1;
+        int STORAGE_SPARK = -1;
     }
     
     public interface DIO {
-        int INFRARED = -1;
+        int HAS_CORAL = -1;
     }
     
     public interface PWM {

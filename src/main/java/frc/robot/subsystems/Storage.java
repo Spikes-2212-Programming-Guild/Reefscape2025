@@ -13,8 +13,8 @@ public class Storage extends MotoredGenericSubsystem {
     private static Storage instance;
     public static Storage getInstance() {
         if (instance == null) {
-            instance = new Storage("storage", SparkWrapper.createSparkMax(RobotMap.CAN.STORAGE,
-                    SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.INFRARED));
+            instance = new Storage("storage", SparkWrapper.createSparkMax(RobotMap.CAN.STORAGE_SPARK,
+                    SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.HAS_CORAL));
         }
         return instance;
     }

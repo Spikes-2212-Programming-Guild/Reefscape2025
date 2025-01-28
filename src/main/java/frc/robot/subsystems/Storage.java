@@ -1,12 +1,23 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkLowLevel;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
 import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.RobotMap;
 
 public class Storage extends MotoredGenericSubsystem {
 
     private final DigitalInput infrared;
+
+    private static Storage instance;
+    public static Storage getInstance() {
+        if (instance == null) {
+            instance = new Storage("storage", SparkWrapper.createSparkMax(RobotMap.CAN.STORAGE,
+                    SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.INFRARED));
+        }
+        return instance;
+    }
 
     public Storage(String namespaceName, SparkWrapper motor, DigitalInput infrared) {
         super(namespaceName, motor);

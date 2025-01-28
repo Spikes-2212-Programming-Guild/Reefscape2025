@@ -8,7 +8,6 @@ import frc.robot.subsystems.CoralJoint;
 
 public class RotateStorage extends MoveSmartMotorControllerGenericSubsystem {
 
-    private static final double JOINT_SPEED = 0.3;
     private final CoralJoint coralJoint;
 
     public RotateStorage(CoralJoint coralJoint, PIDSettings pidSettings, FeedForwardSettings feedForwardSettings,
@@ -20,6 +19,6 @@ public class RotateStorage extends MoveSmartMotorControllerGenericSubsystem {
 
     @Override
     public boolean isFinished() {
-        return coralJoint.canMove(JOINT_SPEED) || super.isFinished();
+        return coralJoint.canMove(coralJoint.getSpeed()) || super.isFinished();
     }
 }

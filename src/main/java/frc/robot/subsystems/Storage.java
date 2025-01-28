@@ -2,13 +2,14 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
+import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Storage extends MotoredGenericSubsystem {
 
     private final DigitalInput infrared;
 
-    public Storage(String namespaceName, SparkMax motor, DigitalInput infrared) {
+    public Storage(String namespaceName, SparkWrapper motor, DigitalInput infrared) {
         super(namespaceName, motor);
         this.infrared = infrared;
     }

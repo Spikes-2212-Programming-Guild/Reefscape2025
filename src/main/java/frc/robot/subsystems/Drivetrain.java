@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Drivetrain extends DashboardedSubsystem {
 
     public static final double MAX_SPEED = 4;
-    public static final double MIN_SPEED = 0.4;
+    public static final double MIN_SPEED = 0.05;
     public static final double MAX_TURN_SPEED = 3;
 
     private static final double TRACK_WIDTH = -1;

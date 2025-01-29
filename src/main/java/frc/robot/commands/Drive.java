@@ -32,7 +32,7 @@ public class Drive extends Command {
         this.usePID = usePID;
         this.xLimiter = new SlewRateLimiter(DRIVE_ACCELERATION_LIMIT);
         this.yLimiter = new SlewRateLimiter(DRIVE_ACCELERATION_LIMIT);
-        this.rotationLimiter = new SlewRateLimiter(TURN_ACCELERATION_LIMIT);
+        rotationLimiter = new SlewRateLimiter(TURN_ACCELERATION_LIMIT);
     }
 
     @Override

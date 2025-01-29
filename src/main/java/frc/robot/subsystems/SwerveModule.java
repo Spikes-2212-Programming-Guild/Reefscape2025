@@ -67,17 +67,13 @@ public class SwerveModule extends DashboardedSubsystem {
         //@TODO check if this is correct
         driveMotor.setEncoderConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES
                 * INCHES_TO_METERS * Math.PI);
-        driveMotor.configurePID(drivePIDSettings);
-        driveMotor.configureFF(driveFeedForwardSettings);
         driveMotor.setInverted(driveInverted);
     }
 
     public void configureTurnController() {
         turnMotor.setPositionConversionFactor(TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS);
         turnMotor.setVelocityConversionFactor((TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS) / SECONDS_IN_MINUTE);
-        turnMotor.configurePID(turnPIDSettings);
         turnMotor.setInverted(cancoderInverted);
-        turnMotor.configureFF(turnFeedForwardSettings);
     }
 
     public void configureAbsoluteEncoder() {

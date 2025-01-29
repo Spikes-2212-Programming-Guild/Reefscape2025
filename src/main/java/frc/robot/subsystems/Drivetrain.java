@@ -14,8 +14,8 @@ public class Drivetrain extends DashboardedSubsystem {
     public static final double MIN_SPEED = 0.05;
     public static final double MAX_TURN_SPEED = 3;
 
-    private static final double TRACK_WIDTH = -1;
-    private static final double TRACK_LENGTH = -1;
+    private static final double TRACK_WIDTH = 60;
+    private static final double TRACK_LENGTH = 60;
 
     private static final Translation2d CENTER_OF_ROBOT = new Translation2d(0, 0);
     private static final Translation2d FRONT_LEFT_WHEEL_POSITION =

@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.dashboard.RootNamespace;
@@ -34,13 +35,13 @@ public class SwerveModuleHolder {
     private static final double BACK_RIGHT_OFFSET = -1;
 
     private static final PIDSettings drivePIDSettings = namespace.addPIDNamespace("drive",
-            new PIDSettings(-1, -1, -1, -1, -1));
+            new PIDSettings(-1, -1, -1, -1, -1, -1));
     private static final PIDSettings turnPIDSettings = namespace.addPIDNamespace("turn",
-            new PIDSettings(-1, -1, -1, -1, -1));
+            new PIDSettings(-1, -1, -1, -1, -1, -1));
     private static final FeedForwardSettings driveFeedForwardSettings = namespace.addFeedForwardNamespace(
-            "drive", new FeedForwardSettings(-1, -1, -1, -1));
+            "drive", new FeedForwardSettings(-1, -1, -1, -1, FeedForwardController.ControlMode.LINEAR_VELOCITY));
     private static final FeedForwardSettings turnFeedForwardSettings = namespace.addFeedForwardNamespace(
-            "turn", new FeedForwardSettings(-1, -1, -1, -1));
+            "turn", new FeedForwardSettings(-1, -1, -1, -1, FeedForwardController.ControlMode.LINEAR_POSITION));
 
     private static SwerveModule frontLeft;
     private static SwerveModule frontRight;

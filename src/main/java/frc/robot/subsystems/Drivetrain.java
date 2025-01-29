@@ -93,6 +93,6 @@ public class Drivetrain extends DashboardedSubsystem {
 
     @Override
     public void configureDashboard() {
-        namespace.putNumber("gyro", gyro::getAngle);
+        namespace.putNumber("gyro yaw", gyro::getAngle);
     }
 }

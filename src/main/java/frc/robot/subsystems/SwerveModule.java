@@ -105,8 +105,6 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     private void setAngle(double angle) {
-        configureTurnController();
-        double feedForward = turnFeedForwardController.calculate( 0,angle);
         turnMotor.pidSet(UnifiedControlMode.POSITION, angle, turnPIDSettings, turnFeedForwardSettings,
                 true);
     }

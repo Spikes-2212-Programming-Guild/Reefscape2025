@@ -29,7 +29,6 @@ public class Drivetrain extends DashboardedSubsystem {
 
     private static final String NAMESPACE_NAME = "drivetrain";
 
-
     private final SwerveModule frontLeft;
     private final SwerveModule frontRight;
     private final SwerveModule backLeft;

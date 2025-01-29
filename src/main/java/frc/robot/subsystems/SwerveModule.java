@@ -41,11 +41,6 @@ public class SwerveModule extends DashboardedSubsystem {
     private final PIDSettings turnPIDSettings;
     private final FeedForwardSettings driveFeedForwardSettings;
     private final FeedForwardSettings turnFeedForwardSettings;
-    private final FeedForwardController turnFeedForwardController;
-
-    private final EncoderConfig turnEncoderConfig;
-    private final SparkMaxConfig sparkConfig;
-    private final MotorOutputConfigs MotorOutput;
 
     public SwerveModule(String namespace, TalonFXWrapper driveMotor, SparkWrapper turnMotor, CANcoder absoluteEncoder,
                         boolean cancoderInverted, boolean driveInverted, double offset,
@@ -63,10 +58,6 @@ public class SwerveModule extends DashboardedSubsystem {
         this.turnPIDSettings = turnPIDSettings;
         this.driveFeedForwardSettings = driveFeedForwardSettings;
         this.turnFeedForwardSettings = turnFeedForwardSettings;
-        this.turnFeedForwardController = new FeedForwardController(turnFeedForwardSettings);
-        this.sparkConfig = new SparkMaxConfig();
-        MotorOutput = new MotorOutputConfigs();
-        turnEncoderConfig = new EncoderConfig();
         configureDriveController();
         configureTurnController();
         configureAbsoluteEncoder();

@@ -9,7 +9,7 @@ public class RobotMap {
     
     public interface DIO {
 
-        int HAS_CORAL = -1;
+        int STORAGE_INFRARED = -1;
     }
     
     public interface PWM {

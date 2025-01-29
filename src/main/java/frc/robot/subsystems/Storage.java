@@ -15,7 +15,7 @@ public class Storage extends MotoredGenericSubsystem {
     public static Storage getInstance() {
         if (instance == null) {
             instance = new Storage(NAME_SPACE_NAME, SparkWrapper.createSparkMax(RobotMap.CAN.STORAGE_SPARK,
-                    SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.HAS_CORAL));
+                    SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.STORAGE_INFRARED));
         }
         return instance;
     }

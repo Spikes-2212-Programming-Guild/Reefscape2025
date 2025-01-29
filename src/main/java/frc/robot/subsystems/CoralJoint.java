@@ -9,7 +9,7 @@ import frc.robot.RobotMap;
 public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum STORAGE_POSE {
-        L1(-1), L2(-1), L3(-1), L4(-1);
+        INTAKE(-1), PLACEMENT(-1), RESTING(-1);
 
         public final double neededPitch;
 

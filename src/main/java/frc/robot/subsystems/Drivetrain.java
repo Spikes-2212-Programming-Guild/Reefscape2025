@@ -42,7 +42,6 @@ public class Drivetrain extends DashboardedSubsystem {
         if (instance == null) {
             instance = new Drivetrain(SwerveModuleHolder.getFrontLeft(), SwerveModuleHolder.getFrontRight(),
                     SwerveModuleHolder.getBackLeft(), SwerveModuleHolder.getBackRight(),
-                    //TODO check in shuffleboard if this is correct
                     new AHRS(AHRS.NavXComType.kMXP_SPI));
         }
         return instance;

@@ -14,7 +14,7 @@ public class Gripper extends MotoredGenericSubsystem {
     public static Gripper getInstance() {
         if (instance == null) {
             instance = new Gripper("gripper", SparkWrapper.createSparkMax(RobotMap.CAN.GRIPPER_SPARK,
-                    SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.GRIPPER_INFRARED));
+                    SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.GRIPPER_LIMIT));
         }
         return instance;
     }

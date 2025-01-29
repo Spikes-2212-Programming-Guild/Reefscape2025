@@ -13,6 +13,7 @@ public class Gripper extends MotoredGenericSubsystem {
     private final DigitalInput limit;
 
     private static Gripper instance;
+
     public static Gripper getInstance() {
         if (instance == null) {
             instance = new Gripper(NAMESPACE_NAME, SparkWrapper.createSparkMax(RobotMap.CAN.GRIPPER_SPARK,

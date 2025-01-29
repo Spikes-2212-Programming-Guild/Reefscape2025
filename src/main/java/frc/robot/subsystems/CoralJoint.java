@@ -9,6 +9,7 @@ import frc.robot.RobotMap;
 public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum STORAGE_POSE {
+
         INTAKE(-1), PLACEMENT(-1), RESTING(-1);
 
         public final double neededPitch;
@@ -16,8 +17,10 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         STORAGE_POSE(double neededPitch) {
             this.neededPitch = neededPitch;
         }
-
     }
+
+    private static final String NAMESPACE_NAME = "coral joint";
+
     private final DigitalInput minLimit;
     private final DigitalInput maxLimit;
 
@@ -25,9 +28,9 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public static CoralJoint getInstance() {
         if (instance == null) {
-            instance = new CoralJoint("coral joint", new DigitalInput(RobotMap.CAN.CORAL_JOINT_MIN_LIMIT),
-                    new DigitalInput(RobotMap.CAN.CORAL_JOINT_MAX_LIMIT), SparkWrapper.createSparkMax(RobotMap.CAN.CORAL_JOINT_SPARK,
-                    SparkLowLevel.MotorType.kBrushless));
+            instance = new CoralJoint(NAMESPACE_NAME, new DigitalInput(RobotMap.CAN.CORAL_JOINT_MIN_LIMIT),
+                    new DigitalInput(RobotMap.CAN.CORAL_JOINT_MAX_LIMIT),
+                    SparkWrapper.createSparkMax(RobotMap.CAN.CORAL_JOINT_SPARK, SparkLowLevel.MotorType.kBrushless));
         }
         return instance;
     }

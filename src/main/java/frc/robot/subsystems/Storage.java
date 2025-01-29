@@ -8,12 +8,13 @@ import frc.robot.RobotMap;
 
 public class Storage extends MotoredGenericSubsystem {
 
+    private static final String NAME_SPACE_NAME = "storage";
     private final DigitalInput infrared;
 
     private static Storage instance;
     public static Storage getInstance() {
         if (instance == null) {
-            instance = new Storage("storage", SparkWrapper.createSparkMax(RobotMap.CAN.STORAGE_SPARK,
+            instance = new Storage(NAME_SPACE_NAME, SparkWrapper.createSparkMax(RobotMap.CAN.STORAGE_SPARK,
                     SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.HAS_CORAL));
         }
         return instance;

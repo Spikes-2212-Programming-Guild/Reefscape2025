@@ -3,10 +3,12 @@ package frc.robot;
 public class RobotMap {
 
     public interface CAN {
+
         int GRIPPER_SPARK = -1;
     }
     
-    public interface DIO {
+    public interface DIO
+    {
         int GRIPPER_LIMIT = -1;
     }
     

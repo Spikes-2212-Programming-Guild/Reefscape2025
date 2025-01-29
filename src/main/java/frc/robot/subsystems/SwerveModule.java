@@ -108,7 +108,7 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     public void configureTurnController() {
-        turnEncoderConfig.positionConversionFactor(DRIVE_GEAR_RATIO * DEGREES_IN_ROTATIONS);
+        turnEncoderConfig.positionConversionFactor(TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS);
         turnEncoderConfig.velocityConversionFactor((TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS) / SECONDS_IN_MINUTE);
         ClosedLoopConfig turnClosedLoopConfig = new ClosedLoopConfig();
         turnClosedLoopConfig.pid(turnPIDSettings.getkP(), turnPIDSettings.getkI(), turnPIDSettings.getkD());

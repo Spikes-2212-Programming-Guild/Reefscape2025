@@ -37,13 +37,13 @@ public class SwerveModuleHolder {
     private static final double BACK_RIGHT_OFFSET = -1;
 
     private static final PIDSettings drivePIDSettings = namespace.addPIDNamespace("drive",
-            new PIDSettings(-1, -1, -1, -1, -1, -1));
+            new PIDSettings(0, 0, 0, 0, 0,0));
     private static final PIDSettings turnPIDSettings = namespace.addPIDNamespace("turn",
-            new PIDSettings(-1, -1, -1, -1, -1, -1));
+            new PIDSettings(0, 0, 0, 0, 0,0));
     private static final FeedForwardSettings driveFeedForwardSettings = namespace.addFeedForwardNamespace(
-            "drive", new FeedForwardSettings(-1, -1, -1, -1, FeedForwardController.ControlMode.LINEAR_VELOCITY));
+            "drive", new FeedForwardSettings(0, 0, 0, 0, FeedForwardController.ControlMode.LINEAR_VELOCITY));
     private static final FeedForwardSettings turnFeedForwardSettings = namespace.addFeedForwardNamespace(
-            "turn", new FeedForwardSettings(-1, -1, -1, -1, FeedForwardController.ControlMode.LINEAR_POSITION));
+            "turn", new FeedForwardSettings(0, 0, 0, 0, FeedForwardController.ControlMode.LINEAR_POSITION));
 
     private static SwerveModule frontLeft;
     private static SwerveModule frontRight;

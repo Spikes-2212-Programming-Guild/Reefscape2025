@@ -7,7 +7,7 @@ public class RobotMap {
     }
     
     public interface DIO {
-        int HAS_ALGAE = -1;
+        int GRIPPER_INFRARED = -1;
     }
     
     public interface PWM {

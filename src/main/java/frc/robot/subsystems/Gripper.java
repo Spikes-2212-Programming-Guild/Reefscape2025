@@ -8,12 +8,14 @@ import frc.robot.RobotMap;
 
 public class Gripper extends MotoredGenericSubsystem {
 
+    private static final String NAMESPACE_NAME = "gripper";
+
     private final DigitalInput limit;
 
     private static Gripper instance;
     public static Gripper getInstance() {
         if (instance == null) {
-            instance = new Gripper("gripper", SparkWrapper.createSparkMax(RobotMap.CAN.GRIPPER_SPARK,
+            instance = new Gripper(NAMESPACE_NAME, SparkWrapper.createSparkMax(RobotMap.CAN.GRIPPER_SPARK,
                     SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.GRIPPER_LIMIT));
         }
         return instance;

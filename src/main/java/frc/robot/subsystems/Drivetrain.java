@@ -84,7 +84,7 @@ public class Drivetrain extends DashboardedSubsystem {
         backRight.stop();
     }
 
-    public void resetRelativeEncoder() {
+    public void resetRelativeEncoders() {
         frontLeft.resetRelativeEncoder();
         frontRight.resetRelativeEncoder();
         backLeft.resetRelativeEncoder();

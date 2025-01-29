@@ -25,13 +25,14 @@ public class Drive extends Command {
     public Drive(Drivetrain drivetrain, Supplier<Double> xSpeed, Supplier<Double> ySpeed,
                  Supplier<Double> rotationsSpeed, boolean fieldRelative, boolean usePID) {
         this.drivetrain = drivetrain;
+        addRequirements(drivetrain);
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.rotationsSpeed = rotationsSpeed;
         this.fieldRelative = fieldRelative;
         this.usePID = usePID;
-        this.xLimiter = new SlewRateLimiter(DRIVE_ACCELERATION_LIMIT);
-        this.yLimiter = new SlewRateLimiter(DRIVE_ACCELERATION_LIMIT);
+        xLimiter = new SlewRateLimiter(DRIVE_ACCELERATION_LIMIT);
+        yLimiter = new SlewRateLimiter(DRIVE_ACCELERATION_LIMIT);
         rotationLimiter = new SlewRateLimiter(TURN_ACCELERATION_LIMIT);
     }
 

@@ -1,13 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.revrobotics.spark.config.EncoderConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.spikes2212.command.DashboardedSubsystem;
-import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.util.UnifiedControlMode;
@@ -15,6 +11,8 @@ import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+
+import static java.lang.Math.abs;
 
 public class SwerveModule extends DashboardedSubsystem {
 
@@ -102,7 +100,7 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     public void set(SwerveModuleState state, boolean usePID) {
-        if (state.speedMetersPerSecond < Drivetrain.MIN_SPEED) {
+        if (Math.abs(state.speedMetersPerSecond) < Drivetrain.MIN_SPEED) {
             stop();
             return;
         }
@@ -120,7 +118,7 @@ public class SwerveModule extends DashboardedSubsystem {
 
     private SwerveModuleState optimize(SwerveModuleState state, double currentAngle) {
         double desiredAngle = normalizeAngleRelativeToEncoder(currentAngle, state.angle.getDegrees());
-        while (Math.abs(desiredAngle - currentAngle) > MAX_DISTANCE_TO_ROTATE) {
+        while (abs(desiredAngle - currentAngle) > MAX_DISTANCE_TO_ROTATE) {
             if (desiredAngle - currentAngle > 0) {
                 desiredAngle -= DEGREES_TO_FLIP;
             } else {desiredAngle += DEGREES_TO_FLIP;}

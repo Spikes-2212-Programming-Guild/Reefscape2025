@@ -22,7 +22,7 @@ public class Storage extends MotoredGenericSubsystem {
         return instance;
     }
 
-    public Storage(String namespaceName, SparkWrapper motor, DigitalInput infrared) {
+    private Storage(String namespaceName, SparkWrapper motor, DigitalInput infrared) {
         super(namespaceName, motor);
         this.infrared = infrared;
     }

@@ -102,7 +102,7 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     public void set(SwerveModuleState state, boolean usePID) {
-        if (state.speedMetersPerSecond < Drivetrain.MIN_SPEED){
+        if (state.speedMetersPerSecond < Drivetrain.MIN_SPEED) {
             stop();
             return;
         }
@@ -123,10 +123,7 @@ public class SwerveModule extends DashboardedSubsystem {
         while (Math.abs(desiredAngle - currentAngle) > MAX_DISTANCE_TO_ROTATE) {
             if (desiredAngle - currentAngle > 0) {
                 desiredAngle -= DEGREES_TO_FLIP;
-            }
-            else {
-                desiredAngle += DEGREES_TO_FLIP;
-            }
+            } else {desiredAngle += DEGREES_TO_FLIP;}
             state.speedMetersPerSecond *= -1;
         }
         return new SwerveModuleState(state.speedMetersPerSecond, Rotation2d.fromDegrees(desiredAngle));

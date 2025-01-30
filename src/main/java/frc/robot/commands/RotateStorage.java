@@ -6,15 +6,22 @@ import com.spikes2212.control.PIDSettings;
 import com.spikes2212.util.UnifiedControlMode;
 import frc.robot.subsystems.CoralJoint;
 
+import java.util.function.Supplier;
+
 public class RotateStorage extends MoveSmartMotorControllerGenericSubsystem {
 
     private final CoralJoint coralJoint;
 
     public RotateStorage(CoralJoint coralJoint, PIDSettings pidSettings, FeedForwardSettings feedForwardSettings,
-                         CoralJoint.STORAGE_POSE pose) {
+                         Supplier<Double> setpoint) {
         super(coralJoint, pidSettings, feedForwardSettings, UnifiedControlMode.POSITION,
-                () -> pose.neededPitch, true);
+                setpoint, true);
         this.coralJoint = coralJoint;
+    }
+
+    public RotateStorage(CoralJoint coralJoint, PIDSettings pidSettings, FeedForwardSettings feedForwardSettings,
+                         CoralJoint.STORAGE_POSE pose) {
+        this(coralJoint, pidSettings, feedForwardSettings, () -> pose.neededPitch);
     }
 
     @Override

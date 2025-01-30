@@ -56,6 +56,7 @@ public class Drivetrain extends DashboardedSubsystem {
         this.gyro = gyro;
         kinematics = new SwerveDriveKinematics(FRONT_LEFT_WHEEL_POSITION,
                 FRONT_RIGHT_WHEEL_POSITION, BACK_LEFT_WHEEL_POSITION, BACK_RIGHT_WHEEL_POSITION);
+        configureDashboard();
     }
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative,

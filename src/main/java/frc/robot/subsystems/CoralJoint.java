@@ -30,8 +30,8 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         if (instance == null) {
             instance = new CoralJoint(NAMESPACE_NAME,
                     SparkWrapper.createSparkMax(RobotMap.CAN.CORAL_JOINT_SPARK, SparkLowLevel.MotorType.kBrushless),
-                    new DigitalInput(RobotMap.CAN.CORAL_JOINT_MIN_LIMIT),
-                    new DigitalInput(RobotMap.CAN.CORAL_JOINT_MAX_LIMIT));
+                    new DigitalInput(RobotMap.DIO.CORAL_JOINT_MIN_LIMIT),
+                    new DigitalInput(RobotMap.DIO.CORAL_JOINT_MAX_LIMIT));
         }
         return instance;
     }

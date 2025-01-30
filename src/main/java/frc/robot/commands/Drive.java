@@ -14,7 +14,7 @@ public class Drive extends Command {
     private final Drivetrain drivetrain;
     private final Supplier<Double> xSpeed;
     private final Supplier<Double> ySpeed;
-    private final Supplier<Double> rotationsSpeed;
+    private final Supplier<Double> rotationSpeed;
     private final boolean fieldRelative;
     private final boolean usePID;
 
@@ -23,12 +23,12 @@ public class Drive extends Command {
     private final SlewRateLimiter rotationLimiter;
 
     public Drive(Drivetrain drivetrain, Supplier<Double> xSpeed, Supplier<Double> ySpeed,
-                 Supplier<Double> rotationsSpeed, boolean fieldRelative, boolean usePID) {
+                 Supplier<Double> rotationSpeed, boolean fieldRelative, boolean usePID) {
         this.drivetrain = drivetrain;
         addRequirements(drivetrain);
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
-        this.rotationsSpeed = rotationsSpeed;
+        this.rotationSpeed = rotationSpeed;
         this.fieldRelative = fieldRelative;
         this.usePID = usePID;
         xLimiter = new SlewRateLimiter(DRIVE_ACCELERATION_LIMIT);
@@ -40,7 +40,7 @@ public class Drive extends Command {
     public void execute() {
         double xSpeed = xLimiter.calculate(this.xSpeed.get());
         double ySpeed = yLimiter.calculate(this.ySpeed.get());
-        double rotationSpeed = rotationLimiter.calculate(this.rotationsSpeed.get());
+        double rotationSpeed = rotationLimiter.calculate(this.rotationSpeed.get());
         drivetrain.drive(xSpeed, ySpeed, rotationSpeed, fieldRelative, usePID);
     }
 

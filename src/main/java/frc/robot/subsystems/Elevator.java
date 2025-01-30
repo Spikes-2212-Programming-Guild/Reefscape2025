@@ -4,10 +4,12 @@ import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SparkGenericSubsystem;
+import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
+import com.spikes2212.util.smartmotorcontrollers.SmartMotorController;
+import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 
-public class Elevator extends SparkGenericSubsystem {
+public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ReefLevel {
         L1(-1), L2(-1), L3(-1), L4(-1);
@@ -22,30 +24,31 @@ public class Elevator extends SparkGenericSubsystem {
     private static final double GEAR_RATIO = (14 / 50.0) * (16 / 50.0);
     private static final double SPINS_TO_HEIGHT = 2 / (GEAR_RATIO * 41.2 * Math.PI);
 
+    private final SparkWrapper master;
+
     private final DigitalInput minLimit;
     private final DigitalInput maxLimit;
     private final DigitalInput hallEffect;
 
-    public Elevator(String namespaceName, SparkMax master, SparkMax slave, DigitalInput minLimit,
+    public Elevator(String namespaceName, SparkWrapper master, SparkWrapper slave, DigitalInput minLimit,
                     DigitalInput maxLimit, DigitalInput hallEffect) {
         super(namespaceName, master, slave);
+        this.master = master;
         this.minLimit = minLimit;
         this.maxLimit = maxLimit;
         this.hallEffect = hallEffect;
-        SparkMaxConfig slaveConfig = new SparkMaxConfig();
-        slaveConfig.inverted(true);
-        slave.configure(slaveConfig, SparkBase.ResetMode.kNoResetSafeParameters,
-                SparkBase.PersistMode.kNoPersistParameters);
+        slave.setInverted(true);
+
         EncoderConfig encoderConfig = new EncoderConfig();
         encoderConfig.positionConversionFactor(SPINS_TO_HEIGHT);
     }
 
     public double getSpeed() {
-        return master.getEncoder().getVelocity();
+        return master.getVelocity();
     }
 
     public double getPosition() {
-        return master.getEncoder().getPosition() * SPINS_TO_HEIGHT;
+        return master.getPosition() * SPINS_TO_HEIGHT;
     }
 
     public boolean isMin() {

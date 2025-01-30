@@ -12,8 +12,6 @@ import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
-import static java.lang.Math.abs;
-
 public class SwerveModule extends DashboardedSubsystem {
 
     private static final double DRIVE_GEAR_RATIO = 1 / 6.12;
@@ -119,7 +117,7 @@ public class SwerveModule extends DashboardedSubsystem {
 
     private SwerveModuleState optimize(SwerveModuleState state, double currentAngle) {
         double desiredAngle = normalizeAngleRelativeToEncoder(currentAngle, state.angle.getDegrees());
-        while (abs(desiredAngle - currentAngle) > MAX_DISTANCE_TO_ROTATE) {
+        while (Math.abs(desiredAngle - currentAngle) > MAX_DISTANCE_TO_ROTATE) {
             if (desiredAngle - currentAngle > 0) {
                 desiredAngle -= DEGREES_TO_FLIP;
             } else {

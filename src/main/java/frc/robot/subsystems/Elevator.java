@@ -1,18 +1,14 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.EncoderConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
-import com.spikes2212.util.smartmotorcontrollers.SmartMotorController;
 import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ReefLevel {
-        L1(-1), L2(-1), L3(-1), L4(-1);
+        processor(-1), feeder(-1), L1(-1), L2(-1), L3(-1), L4(-1);
 
         public final double height;
 

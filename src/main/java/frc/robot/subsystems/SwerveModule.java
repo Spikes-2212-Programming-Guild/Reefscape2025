@@ -59,6 +59,7 @@ public class SwerveModule extends DashboardedSubsystem {
         configureDriveController();
         configureTurnController();
         configureAbsoluteEncoder();
+        configureDashboard();
     }
 
     public void configureDriveController() {

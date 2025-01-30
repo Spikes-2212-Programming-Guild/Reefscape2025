@@ -17,7 +17,15 @@ public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
         this.bottomLimit = bottomLimit;
     }
 
-    public boolean canMove(double speeds){
-        return (speeds > 0 && topLimit.get())||(speeds < 0 && bottomLimit.get());
+    public boolean canMove(double speeds) {
+        return (speeds > 0 && topLimit.get()) || (speeds < 0 && bottomLimit.get());
+    }
+
+    public void moveJoint(double speeds){
+
+    }
+
+    public void stop(){
+
     }
 }

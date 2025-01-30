@@ -9,4 +9,12 @@ public class AlgaeJoint extends Command {
     public void execute() {
         super.execute();
     }
+
+    public boolean isFinished(){
+
+    }
+
+    public boolean end(boolean interrupted){
+
+    }
 }

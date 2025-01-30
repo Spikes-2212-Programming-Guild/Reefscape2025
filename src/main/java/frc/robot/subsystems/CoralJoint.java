@@ -40,6 +40,8 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         super(namespaceName, spark);
         this.minLimit = minLimit;
         this.maxLimit = maxLimit;
+
+        configureDashboard();
     }
 
     public boolean canMove(double speed) {

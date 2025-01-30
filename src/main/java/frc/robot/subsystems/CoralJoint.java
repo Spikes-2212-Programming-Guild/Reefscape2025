@@ -6,6 +6,8 @@ import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
 
+import java.util.function.Supplier;
+
 public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum STORAGE_POSE {
@@ -40,7 +42,6 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         super(namespaceName, spark);
         this.minLimit = minLimit;
         this.maxLimit = maxLimit;
-
         configureDashboard();
     }
 

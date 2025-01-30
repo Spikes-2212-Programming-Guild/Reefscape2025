@@ -6,6 +6,7 @@ import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.util.UnifiedControlMode;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorLevels;
 
 import java.util.function.Supplier;
 
@@ -17,6 +18,12 @@ public class MoveToHeight extends MoveSmartMotorControllerGenericSubsystem {
                         Supplier<Double> setpoint) {
         super(elevator, pidSettings, feedForwardSettings, UnifiedControlMode.POSITION, setpoint, true);
         this.elevator = elevator;
+    }
+
+    public MoveToHeight(Elevator elevator, PIDSettings pidSettings, FeedForwardSettings feedForwardSettings, Elevator elevator1,
+                        Elevator.ElevatorLevels elevatorLevels) {
+        this(elevator, pidSettings, feedForwardSettings, () -> elevatorLevels.height);
+
     }
 
     @Override

@@ -5,14 +5,17 @@ import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.Sma
 import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 
+import java.util.function.Supplier;
+
 public class Elevator extends SmartMotorControllerGenericSubsystem {
 
-    public enum ReefLevel {
+
+    public enum ElevatorLevels {
         processor(-1), feeder(-1), L1(-1), L2(-1), L3(-1), L4(-1);
 
         public final double height;
 
-        ReefLevel(double height) {
+        ElevatorLevels(double height) {
             this.height = height;
         }
     }

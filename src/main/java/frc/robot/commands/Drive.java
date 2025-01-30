@@ -24,8 +24,8 @@ public class Drive extends Command {
 
     public Drive(Drivetrain drivetrain, Supplier<Double> xSpeed, Supplier<Double> ySpeed,
                  Supplier<Double> rotationSpeed, boolean fieldRelative, boolean usePID) {
-        this.drivetrain = drivetrain;
         addRequirements(drivetrain);
+        this.drivetrain = drivetrain;
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.rotationSpeed = rotationSpeed;

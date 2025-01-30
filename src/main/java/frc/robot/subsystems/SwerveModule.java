@@ -121,7 +121,9 @@ public class SwerveModule extends DashboardedSubsystem {
         while (abs(desiredAngle - currentAngle) > MAX_DISTANCE_TO_ROTATE) {
             if (desiredAngle - currentAngle > 0) {
                 desiredAngle -= DEGREES_TO_FLIP;
-            } else {desiredAngle += DEGREES_TO_FLIP;}
+            } else {
+                desiredAngle += DEGREES_TO_FLIP;
+            }
             state.speedMetersPerSecond *= -1;
         }
         return new SwerveModuleState(state.speedMetersPerSecond, Rotation2d.fromDegrees(desiredAngle));

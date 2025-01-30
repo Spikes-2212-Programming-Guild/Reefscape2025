@@ -25,6 +25,7 @@ public class Storage extends MotoredGenericSubsystem {
     private Storage(String namespaceName, SparkWrapper motor, DigitalInput infrared) {
         super(namespaceName, motor);
         this.infrared = infrared;
+        configureDashboard();
     }
 
     public boolean hasCoral() {

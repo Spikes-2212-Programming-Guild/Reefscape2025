@@ -10,10 +10,10 @@ public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
 
     private static final String NAMESPACE_NAME = "storage";
 
-    private static AlgaeJoint instance;
-
     private final DigitalInput topLimit;
     private final DigitalInput bottomLimit;
+
+    private static AlgaeJoint instance;
 
     public static AlgaeJoint getInstance() {
         if (instance == null) {

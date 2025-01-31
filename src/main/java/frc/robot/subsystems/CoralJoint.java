@@ -38,7 +38,7 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         return instance;
     }
 
-    public CoralJoint(String namespaceName, SparkWrapper spark, DigitalInput minLimit, DigitalInput maxLimit) {
+    private CoralJoint(String namespaceName, SparkWrapper spark, DigitalInput minLimit, DigitalInput maxLimit) {
         super(namespaceName, spark);
         this.minLimit = minLimit;
         this.maxLimit = maxLimit;

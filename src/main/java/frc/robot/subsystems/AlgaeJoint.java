@@ -25,7 +25,7 @@ public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
         return instance;
     }
 
-    public AlgaeJoint(SparkWrapper spark, DigitalInput topLimit, DigitalInput bottomLimit) {
+    private AlgaeJoint(SparkWrapper spark, DigitalInput topLimit, DigitalInput bottomLimit) {
         super(NAMESPACE_NAME, spark);
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;

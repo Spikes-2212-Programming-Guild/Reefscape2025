@@ -91,6 +91,10 @@ public class Drivetrain extends DashboardedSubsystem {
         backRight.resetRelativeEncoder();
     }
 
+    public void resetGyro() {
+        gyro.reset();
+    }
+
     @Override
     public void configureDashboard() {
         namespace.putNumber("gyro yaw", gyro::getAngle);

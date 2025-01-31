@@ -9,8 +9,8 @@ public class RobotMap {
     
     public interface DIO {
 
-        int TOP_LIMITER = -1;
-        int BOTTOM_LIMITER = -1;
+        int ALGAE_TOP_LIMIT = -1;
+        int ALGAE_BOTTOM_LIMIT = -1;
     }
     
     public interface PWM {

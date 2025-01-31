@@ -46,21 +46,21 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         return master.getPosition() * SPINS_TO_HEIGHT;
     }
 
-    public boolean isMin() {
+    public boolean isBottom() {
         return bottomLimit.get();
     }
 
-    public boolean isMax() {
+    public boolean isTop() {
         return topLimit.get();
     }
 
     public boolean canMove(double speed) {
-        return !((isMin() && speed < 0) || (isMax() && speed > 0));
+        return !((isBottom() && speed < 0) || (isTop() && speed > 0));
     }
 
     @Override
     public void configureDashboard() {
-        namespace.putBoolean("min limit", bottomLimit::get);
-        namespace.putBoolean("max limit", topLimit::get);
+        namespace.putBoolean("bottom limit", bottomLimit::get);
+        namespace.putBoolean("top limit", topLimit::get);
     }
 }

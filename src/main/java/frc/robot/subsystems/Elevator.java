@@ -60,16 +60,16 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         return master.getVelocity();
     }
 
-    public boolean isTop() {
+    public boolean atTop() {
         return topLimit.get();
     }
 
-    public boolean isBottom() {
+    public boolean atBottom() {
         return bottomLimit.get();
     }
 
     public boolean canMove(double speed) {
-        return !((isTop() && speed > 0) || (isBottom() && speed < 0));
+        return !((atTop() && speed > 0) || (atBottom() && speed < 0));
     }
 
     @Override

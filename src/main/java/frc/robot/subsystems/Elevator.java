@@ -23,15 +23,15 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     private final SparkWrapper master;
 
-    private final DigitalInput bottomLimit;
     private final DigitalInput topLimit;
+    private final DigitalInput bottomLimit;
 
-    public Elevator(String namespaceName, SparkWrapper master, SparkWrapper slave, DigitalInput bottomLimit,
-                    DigitalInput topLimit) {
+    public Elevator(String namespaceName, SparkWrapper master, SparkWrapper slave, DigitalInput topLimit,
+                    DigitalInput bottomLimit) {
         super(namespaceName, master, slave);
         this.master = master;
-        this.bottomLimit = bottomLimit;
         this.topLimit = topLimit;
+        this.bottomLimit = bottomLimit;
         slave.setInverted(true);
 
         master.setPositionConversionFactor(SPINS_TO_HEIGHT);

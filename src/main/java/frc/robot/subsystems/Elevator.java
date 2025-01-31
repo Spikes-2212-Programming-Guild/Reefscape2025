@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ElevatorLevels {
-
+        //@Todo check with mechanics if the processor and feeder require the same heights
         PROCESSOR(-1), FEEDER(-1), L1(-1), L2(-1), L3(-1), L4(-1);
 
         public final double height;
@@ -20,6 +20,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     private static final double GEAR_RATIO = (14 / 50.0) * (16 / 50.0);
     private static final double SPINS_TO_HEIGHT = 2 / (GEAR_RATIO * 41.2 * Math.PI);
+    private static final double SECONDS_IN_MINUTES = 60;
 
     private final SparkWrapper master;
 
@@ -33,8 +34,8 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
         slave.setInverted(true);
-
         master.setPositionConversionFactor(SPINS_TO_HEIGHT);
+        master.setVelocityConversionFactor(SPINS_TO_HEIGHT / SECONDS_IN_MINUTES);
     }
 
     public double getSpeed() {

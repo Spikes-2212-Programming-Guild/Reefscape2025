@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ElevatorLevels {
-        processor(-1), feeder(-1), L1(-1), L2(-1), L3(-1), L4(-1);
+
+        PROCESSOR(-1), FEEDER(-1), L1(-1), L2(-1), L3(-1), L4(-1);
 
         public final double height;
 
@@ -22,15 +23,15 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     private final SparkWrapper master;
 
-    private final DigitalInput minLimit;
-    private final DigitalInput maxLimit;
+    private final DigitalInput bottomLimit;
+    private final DigitalInput topLimit;
 
-    public Elevator(String namespaceName, SparkWrapper master, SparkWrapper slave, DigitalInput minLimit,
-                    DigitalInput maxLimit) {
+    public Elevator(String namespaceName, SparkWrapper master, SparkWrapper slave, DigitalInput bottomLimit,
+                    DigitalInput topLimit) {
         super(namespaceName, master, slave);
         this.master = master;
-        this.minLimit = minLimit;
-        this.maxLimit = maxLimit;
+        this.bottomLimit = bottomLimit;
+        this.topLimit = topLimit;
         slave.setInverted(true);
 
         EncoderConfig encoderConfig = new EncoderConfig();
@@ -46,14 +47,12 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
     }
 
     public boolean isMin() {
-        return minLimit.get();
+        return bottomLimit.get();
     }
 
     public boolean isMax() {
-        return maxLimit.get();
+        return topLimit.get();
     }
-
-    public boolean isInHeight() {return false;}
 
     public boolean canMove(double speed) {
         return !((isMin() && speed < 0) || (isMax() && speed > 0));
@@ -61,7 +60,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     @Override
     public void configureDashboard() {
-        namespace.putBoolean("min limit", minLimit::get);
-        namespace.putBoolean("max limit", maxLimit::get);
+        namespace.putBoolean("min limit", bottomLimit::get);
+        namespace.putBoolean("max limit", topLimit::get);
     }
 }

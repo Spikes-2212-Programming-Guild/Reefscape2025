@@ -6,7 +6,6 @@ import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.util.UnifiedControlMode;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Elevator.ElevatorLevels;
 
 import java.util.function.Supplier;
 

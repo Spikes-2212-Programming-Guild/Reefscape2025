@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 
 public class Elevator extends SmartMotorControllerGenericSubsystem {
 
-
     public enum ElevatorLevels {
         processor(-1), feeder(-1), L1(-1), L2(-1), L3(-1), L4(-1);
 
@@ -27,15 +26,13 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     private final DigitalInput minLimit;
     private final DigitalInput maxLimit;
-    private final DigitalInput hallEffect;
 
     public Elevator(String namespaceName, SparkWrapper master, SparkWrapper slave, DigitalInput minLimit,
-                    DigitalInput maxLimit, DigitalInput hallEffect) {
+                    DigitalInput maxLimit) {
         super(namespaceName, master, slave);
         this.master = master;
         this.minLimit = minLimit;
         this.maxLimit = maxLimit;
-        this.hallEffect = hallEffect;
         slave.setInverted(true);
 
         EncoderConfig encoderConfig = new EncoderConfig();
@@ -68,6 +65,5 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
     public void configureDashboard() {
         namespace.putBoolean("min limit", minLimit::get);
         namespace.putBoolean("max limit", maxLimit::get);
-        namespace.putBoolean("hallEffectLvl2", hallEffect::get);
     }
 }

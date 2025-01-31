@@ -6,8 +6,6 @@ import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
 
-import java.util.function.Supplier;
-
 public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum STORAGE_POSE {
@@ -23,8 +21,8 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     private static final String NAMESPACE_NAME = "coral joint";
 
-    private final DigitalInput minLimit;
-    private final DigitalInput maxLimit;
+    private final DigitalInput bottomLimit;
+    private final DigitalInput topLimit;
 
     private static CoralJoint instance;
 
@@ -32,20 +30,20 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         if (instance == null) {
             instance = new CoralJoint(NAMESPACE_NAME,
                     SparkWrapper.createSparkMax(RobotMap.CAN.CORAL_JOINT_SPARK, SparkLowLevel.MotorType.kBrushless),
-                    new DigitalInput(RobotMap.DIO.CORAL_JOINT_MIN_LIMIT),
-                    new DigitalInput(RobotMap.DIO.CORAL_JOINT_MAX_LIMIT));
+                    new DigitalInput(RobotMap.DIO.CORAL_JOINT_TOP_LIMIT),
+                    new DigitalInput(RobotMap.DIO.CORAL_JOINT_BOTTOM_LIMIT));
         }
         return instance;
     }
 
-    private CoralJoint(String namespaceName, SparkWrapper spark, DigitalInput minLimit, DigitalInput maxLimit) {
+    private CoralJoint(String namespaceName, SparkWrapper spark, DigitalInput bottomLimit, DigitalInput topLimit) {
         super(namespaceName, spark);
-        this.minLimit = minLimit;
-        this.maxLimit = maxLimit;
+        this.bottomLimit = bottomLimit;
+        this.topLimit = topLimit;
         configureDashboard();
     }
 
     public boolean canMove(double speed) {
-        return (minLimit.get() && speed > 0) || (maxLimit.get() && speed < 0);
+        return (bottomLimit.get() && speed > 0) || (topLimit.get() && speed < 0);
     }
 }

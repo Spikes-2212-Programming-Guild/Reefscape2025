@@ -8,8 +8,8 @@ public class RobotMap {
     }
     public interface DIO {
 
-        int CORAL_JOINT_MIN_LIMIT = -1;
-        int CORAL_JOINT_MAX_LIMIT = -1;
+        int CORAL_JOINT_TOP_LIMIT = -1;
+        int CORAL_JOINT_BOTTOM_LIMIT = -1;
     }
     
     public interface PWM {

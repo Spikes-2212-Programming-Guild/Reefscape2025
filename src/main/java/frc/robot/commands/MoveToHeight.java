@@ -28,6 +28,6 @@ public class MoveToHeight extends MoveSmartMotorControllerGenericSubsystem {
 
     @Override
     public boolean isFinished() {
-        return super.isFinished() || elevator.canMove(elevator.getSpeed());
+        return super.isFinished() || !elevator.canMove(elevator.getSpeed());
     }
 }

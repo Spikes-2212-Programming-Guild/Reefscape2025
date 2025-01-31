@@ -5,8 +5,6 @@ import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.Sma
 import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 
-import java.util.function.Supplier;
-
 public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ElevatorLevels {

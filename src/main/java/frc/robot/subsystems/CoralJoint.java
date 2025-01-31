@@ -21,8 +21,8 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     private static final String NAMESPACE_NAME = "coral joint";
 
-    private final DigitalInput bottomLimit;
     private final DigitalInput topLimit;
+    private final DigitalInput bottomLimit;
 
     private static CoralJoint instance;
 
@@ -36,10 +36,10 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         return instance;
     }
 
-    private CoralJoint(String namespaceName, SparkWrapper spark, DigitalInput bottomLimit, DigitalInput topLimit) {
+    private CoralJoint(String namespaceName, SparkWrapper spark, DigitalInput topLimit, DigitalInput bottomLimit) {
         super(namespaceName, spark);
-        this.bottomLimit = bottomLimit;
         this.topLimit = topLimit;
+        this.bottomLimit = bottomLimit;
         configureDashboard();
     }
 

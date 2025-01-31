@@ -22,11 +22,10 @@ public class MoveToHeight extends MoveSmartMotorControllerGenericSubsystem {
     public MoveToHeight(Elevator elevator, PIDSettings pidSettings, FeedForwardSettings feedForwardSettings,
                         Elevator.ElevatorLevels elevatorLevels) {
         this(elevator, pidSettings, feedForwardSettings, () -> elevatorLevels.height);
-
     }
 
     @Override
     public boolean isFinished() {
-        return super.isFinished() || !elevator.canMove(elevator.getSpeed());
+        return super.isFinished() || !elevator.canMove(elevator.getVelocity());
     }
 }

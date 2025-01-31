@@ -26,7 +26,6 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
     private static final double SECONDS_IN_MINUTES = 60;
 
     private final SparkWrapper master;
-
     private final DigitalInput topLimit;
     private final DigitalInput bottomLimit;
 
@@ -48,34 +47,34 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         this.master = master;
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
-        slave.setInverted(true);
         master.setPositionConversionFactor(SPINS_TO_HEIGHT);
         master.setVelocityConversionFactor(SPINS_TO_HEIGHT / SECONDS_IN_MINUTES);
-    }
-
-    public double getSpeed() {
-        return master.getVelocity();
+        slave.setInverted(true);
     }
 
     public double getPosition() {
         return master.getPosition();
     }
 
-    public boolean isBottom() {
-        return bottomLimit.get();
+    public double getVelocity() {
+        return master.getVelocity();
     }
 
     public boolean isTop() {
         return topLimit.get();
     }
 
+    public boolean isBottom() {
+        return bottomLimit.get();
+    }
+
     public boolean canMove(double speed) {
-        return !((isBottom() && speed < 0) || (isTop() && speed > 0));
+        return !((isTop() && speed > 0) || (isBottom() && speed < 0));
     }
 
     @Override
     public void configureDashboard() {
-        namespace.putBoolean("bottom limit", bottomLimit::get);
         namespace.putBoolean("top limit", topLimit::get);
+        namespace.putBoolean("bottom limit", bottomLimit::get);
     }
 }

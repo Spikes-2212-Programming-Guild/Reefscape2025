@@ -34,8 +34,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         this.topLimit = topLimit;
         slave.setInverted(true);
 
-        EncoderConfig encoderConfig = new EncoderConfig();
-        encoderConfig.positionConversionFactor(SPINS_TO_HEIGHT);
+        master.setPositionConversionFactor(SPINS_TO_HEIGHT);
     }
 
     public double getSpeed() {

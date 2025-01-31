@@ -1,9 +1,10 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.SparkLowLevel;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
 import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.RobotMap;
 
 public class Elevator extends SmartMotorControllerGenericSubsystem {
 
@@ -18,6 +19,8 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         }
     }
 
+    private static final String NAMESPACE_NAME = "elevator";
+
     private static final double GEAR_RATIO = (14 / 50.0) * (16 / 50.0);
     private static final double SPINS_TO_HEIGHT = 2 / (GEAR_RATIO * 41.2 * Math.PI);
     private static final double SECONDS_IN_MINUTES = 60;
@@ -26,6 +29,18 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     private final DigitalInput topLimit;
     private final DigitalInput bottomLimit;
+
+    private static Elevator instance;
+
+    public static Elevator getInstance() {
+        if (instance == null) {
+            instance = new Elevator(NAMESPACE_NAME, SparkWrapper.createSparkMax(RobotMap.CAN.ELEVATOR_MASTER_SPARK,
+                    SparkLowLevel.MotorType.kBrushless), SparkWrapper.createSparkMax(RobotMap.CAN.ELEVATOR_SLAVE_SPARK,
+                    SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.ELEVATOR_TOP_LIMIT),
+                    new DigitalInput(RobotMap.DIO.ELEVATOR_BOTTOM_LIMIT));
+        }
+        return instance;
+    }
 
     public Elevator(String namespaceName, SparkWrapper master, SparkWrapper slave, DigitalInput topLimit,
                     DigitalInput bottomLimit) {
@@ -43,7 +58,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
     }
 
     public double getPosition() {
-        return master.getPosition() * SPINS_TO_HEIGHT;
+        return master.getPosition();
     }
 
     public boolean isBottom() {

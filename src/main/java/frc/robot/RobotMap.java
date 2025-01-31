@@ -4,7 +4,7 @@ public class RobotMap {
 
     public interface CAN {
 
-        int ALGAE_SPARK = -1;
+        int ALGAE_JOINT_SPARK = -1;
     }
     
     public interface DIO {

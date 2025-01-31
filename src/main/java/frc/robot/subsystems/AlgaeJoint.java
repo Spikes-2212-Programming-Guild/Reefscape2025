@@ -18,7 +18,7 @@ public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
 
     public static AlgaeJoint getInstance() {
         if (instance == null){
-            instance = new AlgaeJoint(SparkWrapper.createSparkMax(RobotMap.CAN.ALGAE_SPARK,
+            instance = new AlgaeJoint(SparkWrapper.createSparkMax(RobotMap.CAN.ALGAE_JOINT_SPARK,
                     SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.ALGAE_TOP_LIMIT),
                     new DigitalInput(RobotMap.DIO.ALGAE_BOTTOM_LIMIT));
         }

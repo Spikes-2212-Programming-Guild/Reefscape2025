@@ -85,7 +85,6 @@ dependencies {
     implementation group: 'com.ctre.phoenix6', name: 'wpiapi-java', version: '24.0.0-beta-8'
     implementation group: 'com.ctre.phoenix', name: 'api-java', version: '5.32.0-beta-5'
     implementation group: 'com.ctre.phoenix', name: 'wpiapi-java', version: '5.31.0'
-    implementation 'com.github.Spikes-2212-Programming-Guild:SpikesLib2:update-wpilib-25-SNAPSHOT'
 }
 
 test {

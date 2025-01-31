@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkMax;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
 import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -17,7 +16,7 @@ public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
     private final DigitalInput bottomLimit;
 
     public static AlgaeJoint getInstance() {
-        if (instance == null){
+        if (instance == null) {
             instance = new AlgaeJoint(SparkWrapper.createSparkMax(RobotMap.CAN.ALGAE_JOINT_SPARK,
                     SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.ALGAE_TOP_LIMIT),
                     new DigitalInput(RobotMap.DIO.ALGAE_BOTTOM_LIMIT));

@@ -6,19 +6,19 @@ public class RobotMap {
 
         int ALGAE_JOINT_SPARK = -1;
     }
-    
+
     public interface DIO {
 
         int ALGAE_TOP_LIMIT = -1;
         int ALGAE_BOTTOM_LIMIT = -1;
     }
-    
+
     public interface PWM {
 
     }
-    
+
     public interface AIN {
-    
+
     }
 
     public interface PCM {

@@ -9,6 +9,15 @@ public class VisionService extends Limelight {
 
     private final Limelight limelight;
 
+    private static VisionService instance;
+
+    public static VisionService getInstance() {
+        if (instance == null) {
+            instance = new VisionService(new Limelight("limelight"));
+        }
+        return instance;
+    }
+
     public VisionService(Limelight limelight) {
         this.limelight = limelight;
     }

@@ -31,9 +31,9 @@ public class Drive extends Command {
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.rotationSpeed = rotationSpeed;
+        this.fieldRelative = fieldRelative;
         this.usePID = usePID;
         this.limitAcceleration = limitAcceleration;
-        this.fieldRelative = fieldRelative;
         xLimiter = new SlewRateLimiter(DRIVE_ACCELERATION_LIMIT);
         yLimiter = new SlewRateLimiter(DRIVE_ACCELERATION_LIMIT);
         rotationLimiter = new SlewRateLimiter(TURN_ACCELERATION_LIMIT);

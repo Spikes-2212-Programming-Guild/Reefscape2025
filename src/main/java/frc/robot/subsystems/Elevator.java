@@ -22,7 +22,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
     private static final String NAMESPACE_NAME = "elevator";
 
     private static final double GEAR_RATIO = (14 / 50.0) * (16 / 50.0);
-    private static final double SPINS_TO_HEIGHT = 2 / (GEAR_RATIO * 41.2 * Math.PI);
+    private static final double HEIGHT_PER_ROTATION = 2 / (GEAR_RATIO * 41.2 * Math.PI);
     private static final double SECONDS_IN_MINUTES = 60;
 
     private final SparkWrapper master;
@@ -47,8 +47,8 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         this.master = master;
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
-        master.setPositionConversionFactor(SPINS_TO_HEIGHT);
-        master.setVelocityConversionFactor(SPINS_TO_HEIGHT / SECONDS_IN_MINUTES);
+        master.setPositionConversionFactor(HEIGHT_PER_ROTATION);
+        master.setVelocityConversionFactor(HEIGHT_PER_ROTATION / SECONDS_IN_MINUTES);
         slave.setInverted(true);
     }
 

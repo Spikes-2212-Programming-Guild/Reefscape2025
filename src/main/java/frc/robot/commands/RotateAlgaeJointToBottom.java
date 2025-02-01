@@ -9,9 +9,9 @@ import java.util.function.Supplier;
 public class RotateAlgaeJointToBottom extends MoveGenericSubsystem {
 
     private static final RootNamespace NAMESPACE = new RootNamespace("rotate algae joint to bottom");
-    private static final Supplier<Double> INTAKE_SPEED = NAMESPACE.addConstantDouble("intake speed", -0.5);
+    private static final Supplier<Double> SPEED = NAMESPACE.addConstantDouble("intake speed", -0.5);
 
     public RotateAlgaeJointToBottom(GenericSubsystem subsystem) {
-        super(subsystem, INTAKE_SPEED);
+        super(subsystem, SPEED);
     }
 }

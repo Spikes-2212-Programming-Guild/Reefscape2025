@@ -20,8 +20,8 @@ public class MoveToHeight extends MoveSmartMotorControllerGenericSubsystem {
     }
 
     public MoveToHeight(Elevator elevator, PIDSettings pidSettings, FeedForwardSettings feedForwardSettings,
-                        Elevator.ElevatorLevels elevatorLevels) {
-        this(elevator, pidSettings, feedForwardSettings, () -> elevatorLevels.height);
+                        Elevator.ElevatorLevel elevatorLevel) {
+        this(elevator, pidSettings, feedForwardSettings, () -> elevatorLevel.height);
     }
 
     @Override

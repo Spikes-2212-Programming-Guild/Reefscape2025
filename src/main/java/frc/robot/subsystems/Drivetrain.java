@@ -66,6 +66,14 @@ public class Drivetrain extends DashboardedSubsystem {
         configureDashboard();
     }
 
+    @Override
+    public void periodic() {
+        currentPose = odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
+                frontLeft.getModulePosition(), frontRight.getModulePosition(),
+                backLeft.getModulePosition(), backRight.getModulePosition()
+        });
+    }
+
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative,
                       boolean usePID) {
         ChassisSpeeds speeds;
@@ -100,14 +108,6 @@ public class Drivetrain extends DashboardedSubsystem {
 
     public void resetGyro() {
         gyro.reset();
-    }
-
-    @Override
-    public void periodic() {
-        currentPose = odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
-                frontLeft.getModulePosition(), frontRight.getModulePosition(),
-                backLeft.getModulePosition(), backRight.getModulePosition()
-        });
     }
 
     @Override

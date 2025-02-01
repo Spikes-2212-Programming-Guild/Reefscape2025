@@ -28,11 +28,12 @@ public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
         super(NAMESPACE_NAME, spark);
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
+        configureDashboard();
     }
 
     @Override
     public boolean canMove(double speed) {
-        return (speed < 0 && topLimit.get()) || (speed > 0 && bottomLimit.get());
+        return !((speed > 0 && topLimit.get()) || (speed < 0 && bottomLimit.get()));
     }
 
     @Override

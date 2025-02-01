@@ -61,8 +61,8 @@ public class Drivetrain extends DashboardedSubsystem {
         kinematics = new SwerveDriveKinematics(FRONT_LEFT_WHEEL_POSITION,
                 FRONT_RIGHT_WHEEL_POSITION, BACK_LEFT_WHEEL_POSITION, BACK_RIGHT_WHEEL_POSITION);
         odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), new SwerveModulePosition[]{
-                frontLeft.getSwerveModulePosition(), frontRight.getSwerveModulePosition(),
-                 backLeft.getSwerveModulePosition(), backRight.getSwerveModulePosition()});
+                frontLeft.getModulePosition(), frontRight.getModulePosition(),
+                 backLeft.getModulePosition(), backRight.getModulePosition()});
         configureDashboard();
     }
 
@@ -105,8 +105,8 @@ public class Drivetrain extends DashboardedSubsystem {
     @Override
     public void periodic() {
         currentPose = odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
-                frontLeft.getSwerveModulePosition(), frontRight.getSwerveModulePosition(),
-                backLeft.getSwerveModulePosition(), backRight.getSwerveModulePosition()
+                frontLeft.getModulePosition(), frontRight.getModulePosition(),
+                backLeft.getModulePosition(), backRight.getModulePosition()
         });
     }
 

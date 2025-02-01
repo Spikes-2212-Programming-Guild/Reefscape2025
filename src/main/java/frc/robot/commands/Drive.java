@@ -54,6 +54,7 @@ public class Drive extends Command {
         drivetrain.drive(xSpeed, ySpeed, rotationSpeed, fieldRelative, usePID);
     }
 
+    @Override
     public void end(boolean interrupted) {
         drivetrain.stop();
     }

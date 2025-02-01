@@ -33,6 +33,7 @@ public class Drivetrain extends DashboardedSubsystem {
     private final SwerveModule backLeft;
     private final SwerveModule backRight;
     private final AHRS gyro;
+
     private final SwerveDriveKinematics kinematics;
 
     private static Drivetrain instance;

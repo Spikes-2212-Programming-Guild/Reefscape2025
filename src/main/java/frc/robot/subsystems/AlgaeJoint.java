@@ -41,5 +41,4 @@ public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
         namespace.putBoolean("top limit", topLimit::get);
         namespace.putBoolean("bottom limit", bottomLimit::get);
     }
-
 }

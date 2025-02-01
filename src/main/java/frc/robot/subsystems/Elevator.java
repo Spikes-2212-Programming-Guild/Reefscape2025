@@ -8,13 +8,13 @@ import frc.robot.RobotMap;
 
 public class Elevator extends SmartMotorControllerGenericSubsystem {
 
-    public enum ElevatorLevels {
-        //@Todo check with mechanics if the processor and feeder require the same heights as other levels
+    public enum ElevatorLevel {
+
         PROCESSOR(-1), FEEDER(-1), L1(-1), L2(-1), L3(-1), L4(-1);
 
         public final double height;
 
-        ElevatorLevels(double height) {
+        ElevatorLevel(double height) {
             this.height = height;
         }
     }

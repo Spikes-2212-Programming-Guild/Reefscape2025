@@ -17,11 +17,11 @@ public class Drive extends Command {
     private final Supplier<Double> rotationSpeed;
     private final boolean fieldRelative;
     private final boolean usePID;
+    private final boolean limitAcceleration;
 
     private final SlewRateLimiter xLimiter;
     private final SlewRateLimiter yLimiter;
     private final SlewRateLimiter rotationLimiter;
-    private final boolean limitAcceleration;
 
     public Drive(Drivetrain drivetrain, Supplier<Double> xSpeed, Supplier<Double> ySpeed,
                  Supplier<Double> rotationSpeed, boolean fieldRelative, boolean usePID,

@@ -25,6 +25,7 @@ public class Gripper extends MotoredGenericSubsystem {
     public Gripper(String namespaceName, SparkWrapper motor, DigitalInput limit) {
         super(namespaceName, motor);
         this.limit = limit;
+        configureDashboard();
     }
 
     public boolean hasAlgae() {

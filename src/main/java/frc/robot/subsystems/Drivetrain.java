@@ -2,10 +2,9 @@ package frc.robot.subsystems;
 
 import com.spikes2212.command.DashboardedSubsystem;
 import com.studica.frc.AHRS;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
 
 public class Drivetrain extends DashboardedSubsystem {
 
@@ -34,7 +33,10 @@ public class Drivetrain extends DashboardedSubsystem {
     private final SwerveModule backRight;
     private final AHRS gyro;
 
+    private final SwerveDriveOdometry odometry;
     private final SwerveDriveKinematics kinematics;
+
+    private static Pose2d pose2d;
 
     private static Drivetrain instance;
 
@@ -48,15 +50,19 @@ public class Drivetrain extends DashboardedSubsystem {
     }
 
     private Drivetrain(SwerveModule frontLeft, SwerveModule frontRight, SwerveModule backLeft,
-                      SwerveModule backRight, AHRS gyro) {
+                       SwerveModule backRight, AHRS gyro) {
         super(NAMESPACE_NAME);
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.backLeft = backLeft;
         this.backRight = backRight;
         this.gyro = gyro;
+        this.pose2d = new Pose2d();
         kinematics = new SwerveDriveKinematics(FRONT_LEFT_WHEEL_POSITION,
                 FRONT_RIGHT_WHEEL_POSITION, BACK_LEFT_WHEEL_POSITION, BACK_RIGHT_WHEEL_POSITION);
+        odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), new SwerveModulePosition[]{
+                frontLeft.getSwerveModulePosition(), frontRight.getSwerveModulePosition(),
+                 backLeft.getSwerveModulePosition(), backRight.getSwerveModulePosition()});
         configureDashboard();
     }
 
@@ -94,6 +100,14 @@ public class Drivetrain extends DashboardedSubsystem {
 
     public void resetGyro() {
         gyro.reset();
+    }
+
+    @Override
+    public void periodic() {
+        pose2d = odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
+                frontLeft.getSwerveModulePosition(), frontRight.getSwerveModulePosition(),
+                backLeft.getSwerveModulePosition(), backRight.getSwerveModulePosition()
+        });
     }
 
     @Override

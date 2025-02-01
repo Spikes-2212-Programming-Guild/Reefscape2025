@@ -9,7 +9,9 @@ import com.spikes2212.control.PIDSettings;
 import com.spikes2212.util.UnifiedControlMode;
 import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SwerveModule extends DashboardedSubsystem {
@@ -134,6 +136,10 @@ public class SwerveModule extends DashboardedSubsystem {
 
     public void resetRelativeEncoder() {
         turnMotor.setPosition(getAbsoluteAngle());
+    }
+
+    public SwerveModulePosition getSwerveModulePosition() {
+        return new SwerveModulePosition(driveMotor.getPosition(), Rotation2d.fromDegrees(turnMotor.getPosition()));
     }
 
     @Override

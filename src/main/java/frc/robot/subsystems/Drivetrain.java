@@ -36,7 +36,7 @@ public class Drivetrain extends DashboardedSubsystem {
     private final SwerveDriveOdometry odometry;
     private final SwerveDriveKinematics kinematics;
 
-    private static Pose2d currentPose;
+    private Pose2d currentPose;
 
     private static Drivetrain instance;
 

@@ -6,18 +6,18 @@ public class RobotMap {
 
         int GRIPPER_VICTOR = -1;
     }
-    
-    public interface DIO
-    {
+
+    public interface DIO {
+
         int GRIPPER_LIMIT = -1;
     }
-    
+
     public interface PWM {
 
     }
-    
+
     public interface AIN {
-    
+
     }
 
     public interface PCM {

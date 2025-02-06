@@ -20,7 +20,7 @@ public class VisionService {
         return instance;
     }
 
-    public VisionService(String limelightName) {
+    private VisionService(String limelightName) {
         limelight = new Limelight(limelightName);
     }
 

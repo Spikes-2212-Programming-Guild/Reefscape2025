@@ -2,7 +2,6 @@ package frc.robot.util;
 
 import com.spikes2212.util.Limelight;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
@@ -34,6 +33,9 @@ public class VisionService {
     }
 
     public Pose2d getFieldRelativePose() {
+        if (limelight.getRobotPose() == null) {
+            return null;
+        }
         return limelight.getRobotPose().toPose2d();
     }
 }

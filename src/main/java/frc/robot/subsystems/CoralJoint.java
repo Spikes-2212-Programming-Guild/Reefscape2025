@@ -47,4 +47,9 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
     public boolean canMove(double speed) {
         return (bottomLimit.get() && speed > 0) || (topLimit.get() && speed < 0);
     }
+
+    public void configureDashboard() {
+        namespace.putBoolean("top limit", topLimit::get);
+        namespace.putBoolean("bottom limit", bottomLimit::get);
+    }
 }

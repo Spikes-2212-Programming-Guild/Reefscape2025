@@ -25,7 +25,6 @@ public class IntakeAlgae extends MoveGenericSubsystem {
 
     @Override
     public boolean isFinished() {
-        super.isFinished();
-        return Timer.getFPGATimestamp() - startTime >= TIME_TO_INTAKE.get();
+        return super.isFinished() && Timer.getFPGATimestamp() - startTime >= TIME_TO_INTAKE.get();
     }
 }

@@ -22,7 +22,7 @@ public class Gripper extends MotoredGenericSubsystem {
         return instance;
     }
 
-    public Gripper(String namespaceName, WPI_VictorSPX victor, DigitalInput limit) {
+    private Gripper(String namespaceName, WPI_VictorSPX victor, DigitalInput limit) {
         super(namespaceName, victor);
         this.limit = limit;
         victor.setNeutralMode(NeutralMode.Brake);

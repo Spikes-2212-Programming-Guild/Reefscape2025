@@ -4,7 +4,7 @@ public class RobotMap {
 
     public interface CAN {
 
-        int GRIPPER_SPARK = -1;
+        int GRIPPER_VICTOR = -1;
     }
     
     public interface DIO

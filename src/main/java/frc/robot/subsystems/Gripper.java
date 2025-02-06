@@ -1,14 +1,14 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkLowLevel;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
-import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
 
 public class Gripper extends MotoredGenericSubsystem {
 
     private static final String NAMESPACE_NAME = "gripper";
+    private static WPI_VictorSPX WPI_VictorSPX;
 
     private final DigitalInput limit;
 
@@ -16,13 +16,13 @@ public class Gripper extends MotoredGenericSubsystem {
 
     public static Gripper getInstance() {
         if (instance == null) {
-            instance = new Gripper(NAMESPACE_NAME, SparkWrapper.createSparkMax(RobotMap.CAN.GRIPPER_SPARK,
-                    SparkLowLevel.MotorType.kBrushless), new DigitalInput(RobotMap.DIO.GRIPPER_LIMIT));
+            instance = new Gripper(NAMESPACE_NAME, WPI_VictorSPX = new WPI_VictorSPX(RobotMap.CAN.GRIPPER_VICTOR),
+                    new DigitalInput(RobotMap.DIO.GRIPPER_LIMIT));
         }
         return instance;
     }
 
-    public Gripper(String namespaceName, SparkWrapper motor, DigitalInput limit) {
+    public Gripper(String namespaceName, WPI_VictorSPX motor, DigitalInput limit) {
         super(namespaceName, motor);
         this.limit = limit;
         configureDashboard();

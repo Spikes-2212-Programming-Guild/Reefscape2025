@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -21,9 +22,10 @@ public class Gripper extends MotoredGenericSubsystem {
         return instance;
     }
 
-    public Gripper(String namespaceName, WPI_VictorSPX motor, DigitalInput limit) {
-        super(namespaceName, motor);
+    public Gripper(String namespaceName, WPI_VictorSPX victor, DigitalInput limit) {
+        super(namespaceName, victor);
         this.limit = limit;
+        victor.setNeutralMode(NeutralMode.Brake);
         configureDashboard();
     }
 

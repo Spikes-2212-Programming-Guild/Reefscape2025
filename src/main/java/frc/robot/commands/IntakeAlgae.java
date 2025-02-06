@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 public class IntakeAlgae extends MoveGenericSubsystem {
 
     private static final RootNamespace NAMESPACE = new RootNamespace("intake algae");
-    private static final Supplier<Double> INTAKE_SPEED = NAMESPACE.addConstantDouble("intake speed", 0.9);
+    private static final Supplier<Double> INTAKE_SPEED = NAMESPACE.addConstantDouble("intake speed", 0.2);
     private static final Supplier<Double> TIME_TO_INTAKE = NAMESPACE.addConstantDouble("time to intake", 0.5);
 
     private double startTime;
@@ -25,6 +25,7 @@ public class IntakeAlgae extends MoveGenericSubsystem {
 
     @Override
     public boolean isFinished() {
+        super.isFinished();
         return Timer.getFPGATimestamp() - startTime >= TIME_TO_INTAKE.get();
     }
 }

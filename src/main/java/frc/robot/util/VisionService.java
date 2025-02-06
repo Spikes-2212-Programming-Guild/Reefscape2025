@@ -7,21 +7,21 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class VisionService {
 
+    private static final String LIMELIGHT_NAME = "limelight";
+
     private final Limelight limelight;
 
     private static VisionService instance;
 
-    private static final String LIMELIGHT_NAME = "limelight";
-
     public static VisionService getInstance() {
         if (instance == null) {
-            instance = new VisionService(new Limelight(LIMELIGHT_NAME));
+            instance = new VisionService(LIMELIGHT_NAME);
         }
         return instance;
     }
 
-    public VisionService(Limelight limelight) {
-        this.limelight = limelight;
+    public VisionService(String limelightName) {
+        limelight = new Limelight(limelightName);
     }
 
     public Pose2d getTargetRelativePose() {

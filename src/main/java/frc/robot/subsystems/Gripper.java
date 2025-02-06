@@ -8,7 +8,6 @@ import frc.robot.RobotMap;
 public class Gripper extends MotoredGenericSubsystem {
 
     private static final String NAMESPACE_NAME = "gripper";
-    private static WPI_VictorSPX WPI_VictorSPX;
 
     private final DigitalInput limit;
 
@@ -16,7 +15,7 @@ public class Gripper extends MotoredGenericSubsystem {
 
     public static Gripper getInstance() {
         if (instance == null) {
-            instance = new Gripper(NAMESPACE_NAME, WPI_VictorSPX = new WPI_VictorSPX(RobotMap.CAN.GRIPPER_VICTOR),
+            instance = new Gripper(NAMESPACE_NAME, new WPI_VictorSPX(RobotMap.CAN.GRIPPER_VICTOR),
                     new DigitalInput(RobotMap.DIO.GRIPPER_LIMIT));
         }
         return instance;
@@ -34,7 +33,7 @@ public class Gripper extends MotoredGenericSubsystem {
 
     @Override
     public boolean canMove(double speed) {
-        return !(speed < 0 && hasAlgae());
+        return !(speed > 0 && hasAlgae());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.SparkMax;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
 import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -23,6 +24,7 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     private final DigitalInput topLimit;
     private final DigitalInput bottomLimit;
+    private final SparkWrapper spark;
 
     private static CoralJoint instance;
 
@@ -40,6 +42,7 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         super(namespaceName, spark);
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
+        this.spark = spark;
         configureDashboard();
     }
 
@@ -48,8 +51,19 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         return (bottomLimit.get() && speed > 0) || (topLimit.get() && speed < 0);
     }
 
+    public void calibrateEncoderPosition() {
+        if (topLimit.get()) {
+            spark.setPosition(STORAGE_POSE.RESTING.neededPitch);
+        }
+
+        else if (bottomLimit.get()) {
+            spark.setPosition(STORAGE_POSE.PLACEMENT.neededPitch);
+        }
+    }
+
     public void configureDashboard() {
         namespace.putBoolean("top limit", topLimit::get);
         namespace.putBoolean("bottom limit", bottomLimit::get);
+        namespace.putNumber("storage pose", spark::getPosition);
     }
 }

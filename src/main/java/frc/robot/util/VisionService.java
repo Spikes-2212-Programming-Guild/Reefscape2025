@@ -11,9 +11,11 @@ public class VisionService {
 
     private static VisionService instance;
 
+    private static final String LIMELIGHT_NAME = "limelight";
+
     public static VisionService getInstance() {
         if (instance == null) {
-            instance = new VisionService(new Limelight("limelight"));
+            instance = new VisionService(new Limelight(LIMELIGHT_NAME));
         }
         return instance;
     }

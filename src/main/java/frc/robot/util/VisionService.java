@@ -22,7 +22,7 @@ public class VisionService {
         this.limelight = limelight;
     }
 
-    public Pose2d getRelativePose() {
+    public Pose2d getTargetRelativePose() {
         double[] result =  limelight.getEntry("targetpose_robotspace").getDoubleArray(new double[0]);
         if (limelight.getID() >= 0) {
             Translation2d translation2d = new Translation2d(result[0], result[1]);

@@ -4,10 +4,8 @@
 
 package frc.robot;
 
-import com.spikes2212.dashboard.RootNamespace;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.util.VisionService;
 
 public class Robot extends TimedRobot {
 

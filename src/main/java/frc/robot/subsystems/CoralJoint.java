@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkMax;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
 import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -22,9 +21,9 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     private static final String NAMESPACE_NAME = "coral joint";
 
+    private final SparkWrapper spark;
     private final DigitalInput topLimit;
     private final DigitalInput bottomLimit;
-    private final SparkWrapper spark;
 
     private static CoralJoint instance;
 
@@ -40,9 +39,9 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     private CoralJoint(String namespaceName, SparkWrapper spark, DigitalInput topLimit, DigitalInput bottomLimit) {
         super(namespaceName, spark);
+        this.spark = spark;
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
-        this.spark = spark;
         configureDashboard();
     }
 

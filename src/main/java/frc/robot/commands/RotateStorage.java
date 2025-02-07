@@ -26,6 +26,6 @@ public class RotateStorage extends MoveSmartMotorControllerGenericSubsystem {
 
     @Override
     public boolean isFinished() {
-        return coralJoint.canMove(coralJoint.getSpeed()) || super.isFinished();
+        return !(coralJoint.canMove(coralJoint.getSpeed())) || super.isFinished();
     }
 }

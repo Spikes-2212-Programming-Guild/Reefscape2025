@@ -48,7 +48,7 @@ public class Drivetrain extends DashboardedSubsystem {
         if (instance == null) {
             instance = new Drivetrain(SwerveModuleHolder.getFrontLeft(), SwerveModuleHolder.getFrontRight(),
                     SwerveModuleHolder.getBackLeft(), SwerveModuleHolder.getBackRight(),
-                    new AHRS(AHRS.NavXComType.kI2C));
+                    new AHRS(AHRS.NavXComType.kMXP_SPI));
         }
         return instance;
     }

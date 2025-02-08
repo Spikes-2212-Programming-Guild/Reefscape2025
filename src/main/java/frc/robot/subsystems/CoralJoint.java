@@ -20,6 +20,7 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
     }
 
     private static final String NAMESPACE_NAME = "coral joint";
+    private static final double GEAR_RATIO = 1;
 
     private final SparkWrapper spark;
     private final DigitalInput topLimit;
@@ -42,6 +43,7 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         this.spark = spark;
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
+        spark.setVelocityConversionFactor(GEAR_RATIO);
         configureDashboard();
     }
 

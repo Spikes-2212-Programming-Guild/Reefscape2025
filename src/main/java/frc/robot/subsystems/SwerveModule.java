@@ -2,27 +2,18 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.spikes2212.command.DashboardedSubsystem;
 import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
+import com.spikes2212.util.UnifiedControlMode;
+import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
+import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SwerveModule extends DashboardedSubsystem {
@@ -38,8 +29,8 @@ public class SwerveModule extends DashboardedSubsystem {
     private static final double DEGREES_TO_FLIP = 180;
     private static final double ABSOLUTE_POSITION_DISCONTINUITY_POINT = 1;
 
-    private final TalonFX driveMotor;
-    private final SparkMax turnMotor;
+    private final TalonFXWrapper driveMotor;
+    private final SparkWrapper turnMotor;
     private final CANcoder absoluteEncoder;
 
     private final boolean cancoderInverted;
@@ -52,13 +43,11 @@ public class SwerveModule extends DashboardedSubsystem {
     private final FeedForwardSettings turnFeedForwardSettings;
     private final FeedForwardController turnFeedForwardController;
 
-    private final RelativeEncoder turnEncoder;
-
     private final EncoderConfig turnEncoderConfig;
     private final SparkMaxConfig sparkConfig;
     private final MotorOutputConfigs MotorOutput;
 
-    public SwerveModule(String namespace, TalonFX driveMotor, SparkMax turnMotor, CANcoder absoluteEncoder,
+    public SwerveModule(String namespace, TalonFXWrapper driveMotor, SparkWrapper turnMotor, CANcoder absoluteEncoder,
                         boolean cancoderInverted, boolean driveInverted, double offset,
                         PIDSettings drivePIDSettings, PIDSettings turnPIDSettings,
                         FeedForwardSettings driveFeedForwardSettings,
@@ -75,7 +64,6 @@ public class SwerveModule extends DashboardedSubsystem {
         this.driveFeedForwardSettings = driveFeedForwardSettings;
         this.turnFeedForwardSettings = turnFeedForwardSettings;
         this.turnFeedForwardController = new FeedForwardController(turnFeedForwardSettings);
-        this.turnEncoder = turnMotor.getEncoder();
         this.sparkConfig = new SparkMaxConfig();
         MotorOutput = new MotorOutputConfigs();
         turnEncoderConfig = new EncoderConfig();
@@ -85,33 +73,20 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     public void configureDriveController() {
-        TalonFXConfiguration config = new TalonFXConfiguration();
         //@TODO check if this is correct
-        config.Feedback.SensorToMechanismRatio = DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES
-                * INCHES_TO_METERS * Math.PI;
-        config.Feedback.RotorToSensorRatio = (DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES
-                * INCHES_TO_METERS * Math.PI) / SECONDS_IN_MINUTE;
-        driveMotor.getConfigurator().apply(config);
-        Slot0Configs driveConfigs = new Slot0Configs();
-        driveConfigs.kP = drivePIDSettings.getkP();
-        driveConfigs.kI = drivePIDSettings.getkI();
-        driveConfigs.kD = drivePIDSettings.getkD();
-        driveConfigs.kS = driveFeedForwardSettings.getkS();
-        driveConfigs.kV = driveFeedForwardSettings.getkV();
-        driveConfigs.kA = driveFeedForwardSettings.getkA();
-        driveMotor.getConfigurator().apply(driveConfigs);
-        driveMotor.getConfigurator().apply(MotorOutput.withInverted(driveInverted ?
-                InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive));
+        driveMotor.setEncoderConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES
+                * INCHES_TO_METERS * Math.PI);
+        driveMotor.configurePID(drivePIDSettings);
+        driveMotor.configureFF(driveFeedForwardSettings);
+        driveMotor.setInverted(driveInverted);
     }
 
     public void configureTurnController() {
-        turnEncoderConfig.positionConversionFactor(TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS);
-        turnEncoderConfig.velocityConversionFactor((TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS) / SECONDS_IN_MINUTE);
-        ClosedLoopConfig turnClosedLoopConfig = new ClosedLoopConfig();
-        turnClosedLoopConfig.pid(turnPIDSettings.getkP(), turnPIDSettings.getkI(), turnPIDSettings.getkD());
-        turnEncoderConfig.inverted(cancoderInverted);
-        sparkConfig.apply(turnClosedLoopConfig);
-        turnMotor.configure(sparkConfig, SparkBase.ResetMode.kNoResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+        turnMotor.setPositionConversionFactor(TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS);
+        turnMotor.setVelocityConversionFactor((TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS) / SECONDS_IN_MINUTE);
+        turnMotor.configurePID(turnPIDSettings);
+        turnMotor.setInverted(cancoderInverted);
+        turnMotor.configureFF(turnFeedForwardSettings);
     }
 
     public void configureAbsoluteEncoder() {
@@ -122,23 +97,16 @@ public class SwerveModule extends DashboardedSubsystem {
         absoluteEncoder.getConfigurator().apply(magnetConfigs);
     }
 
-    private void turnConfigureFF() {
-        turnFeedForwardController.setGains(turnFeedForwardSettings);
-    }
-
     private void setSpeed(double speed, boolean usePID) {
         if (usePID) {
-            configureDriveController();
-            driveMotor.setControl(new VelocityDutyCycle(speed));
+            driveMotor.pidSet(UnifiedControlMode.VELOCITY, speed, drivePIDSettings, driveFeedForwardSettings,
+                    true);
         } else driveMotor.set(speed / Drivetrain.MAX_SPEED);
     }
 
     private void setAngle(double angle) {
-        configureTurnController();
-        turnConfigureFF();
-        double feedForward = turnFeedForwardController.calculate( 0,angle);
-        turnMotor.getClosedLoopController().setReference(angle, SparkBase.ControlType.kVelocity, ClosedLoopSlot.kSlot0,
-                feedForward, SparkClosedLoopController.ArbFFUnits.kPercentOut);
+        turnMotor.pidSet(UnifiedControlMode.POSITION, angle, turnPIDSettings, turnFeedForwardSettings,
+                true);
     }
 
     public void stop() {
@@ -151,7 +119,7 @@ public class SwerveModule extends DashboardedSubsystem {
             stop();
             return;
         }
-        state = optimize(state, turnEncoder.getPosition());
+        state = optimize(state, turnMotor.getPosition());
         setAngle(state.angle.getDegrees());
         setSpeed(state.speedMetersPerSecond, usePID);
     }
@@ -182,24 +150,12 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     public void resetRelativeEncoder() {
-        turnEncoder.setPosition(getAbsoluteAngle());
+        turnMotor.setPosition(getAbsoluteAngle());
     }
-
-    public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(driveMotor.getPosition().getValueAsDouble(),
-                Rotation2d.fromDegrees(getAbsoluteAngle()));
-    }
-
-    public SwerveModuleState getState() {
-        return new SwerveModuleState(driveMotor.getVelocity().getValueAsDouble(),
-                Rotation2d.fromDegrees(getAbsoluteAngle()));
-    }
-
-
 
     @Override
     public void configureDashboard() {
         namespace.putNumber("absolute angle", this::getAbsoluteAngle);
-        namespace.putNumber("relative angle", turnEncoder::getPosition);
+        namespace.putNumber("relative angle", turnMotor::getPosition);
     }
 }

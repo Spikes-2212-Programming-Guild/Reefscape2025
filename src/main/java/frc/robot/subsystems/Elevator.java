@@ -10,7 +10,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ElevatorLevel {
 
-        PROCESSOR(-1), FEEDER(-1), L1(-1), L2(-1), L3(-1), L4(-1);
+        BOTTOM(-1), PROCESSOR(-1), FEEDER(-1), L1(-1), L2(-1), L3(-1), L4(-1), TOP(-1);
 
         public final double height;
 
@@ -70,6 +70,15 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public boolean canMove(double speed) {
         return !((atTop() && speed > 0) || (atBottom() && speed < 0));
+    }
+
+    public void calibratePosition() {
+        if (atTop()) {
+            master.setPosition(ElevatorLevel.TOP.height);
+        }
+        else if (atBottom()) {
+            master.setPosition(ElevatorLevel.BOTTOM.height);
+        }
     }
 
     @Override

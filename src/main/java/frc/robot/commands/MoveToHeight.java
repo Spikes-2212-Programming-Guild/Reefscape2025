@@ -26,8 +26,7 @@ public class MoveToHeight extends MoveSmartMotorControllerGenericSubsystem {
 
     @Override
     public void execute() {
-        if (!isFinished())
-            super.execute();
+        if (!isFinished()) {super.execute();}
     }
 
     @Override

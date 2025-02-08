@@ -21,6 +21,9 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     private static final String NAMESPACE_NAME = "coral joint";
     private static final double GEAR_RATIO = 1;
+    private static final double DEGREES_IN_ROTATIONS = 360;
+    private static final double DISTANCE_PER_PULSE = GEAR_RATIO * DEGREES_IN_ROTATIONS;
+    private static final double SECONDS_IN_MINUTE = 60;
 
     private final SparkWrapper spark;
     private final DigitalInput topLimit;
@@ -43,7 +46,8 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         this.spark = spark;
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
-        spark.setVelocityConversionFactor(GEAR_RATIO);
+        spark.setPositionConversionFactor(DISTANCE_PER_PULSE);
+        spark.setVelocityConversionFactor(DISTANCE_PER_PULSE / SECONDS_IN_MINUTE);
         configureDashboard();
     }
 
@@ -55,9 +59,7 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
     public void calibrateEncoderPosition() {
         if (topLimit.get()) {
             spark.setPosition(STORAGE_POSE.RESTING.neededPitch);
-        }
-
-        else if (bottomLimit.get()) {
+        } else if (bottomLimit.get()) {
             spark.setPosition(STORAGE_POSE.PLACEMENT.neededPitch);
         }
     }

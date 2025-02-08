@@ -4,14 +4,25 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-
+        NamedCommands.registerCommand("ElevateToL4", new InstantCommand());
+        NamedCommands.registerCommand("OuttakeCoralAngle", new InstantCommand());
+        NamedCommands.registerCommand("ReleaseCoral", new InstantCommand());
+        NamedCommands.registerCommand("ElevateToFeeder", new InstantCommand());
+        NamedCommands.registerCommand("IntakeCoralAngle", new InstantCommand());
+        NamedCommands.registerCommand("IntakeCoral", new InstantCommand());
+        NamedCommands.registerCommand("IntakeAlgaeAngle", new InstantCommand());
+        NamedCommands.registerCommand("ElevateToL3", new InstantCommand());
+        NamedCommands.registerCommand("TakeAlgae", new InstantCommand());
+        NamedCommands.registerCommand("PlaceAlgae", new InstantCommand());
     }
 
     @Override

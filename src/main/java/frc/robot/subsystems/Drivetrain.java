@@ -41,8 +41,8 @@ public class Drivetrain extends DashboardedSubsystem {
     private final AHRS gyro;
     private final SwerveDriveKinematics kinematics;
 
-    private SwerveModulePosition[] stupidPointlessArray;
     private final SwerveDriveOdometry odometry;
+    private SwerveModulePosition[] stupidPointlessArray;
     private static Drivetrain instance;
 
     public static Drivetrain getInstance() {

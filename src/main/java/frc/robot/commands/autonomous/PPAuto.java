@@ -8,5 +8,4 @@ public class PPAuto extends PathPlannerAuto{
     public PPAuto(String autoName) {
         super(autoName);
     }
-
 }

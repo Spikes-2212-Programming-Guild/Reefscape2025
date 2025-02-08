@@ -61,11 +61,11 @@ public class Drivetrain extends DashboardedSubsystem {
         this.frontRight = frontRight;
         this.backLeft = backLeft;
         this.backRight = backRight;
+        this.gyro = gyro;
         swerveModulePositions = new SwerveModulePosition[] {frontLeft.getPosition(),
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
         kinematics = new SwerveDriveKinematics(FRONT_LEFT_WHEEL_POSITION,
                 FRONT_RIGHT_WHEEL_POSITION, BACK_LEFT_WHEEL_POSITION, BACK_RIGHT_WHEEL_POSITION);
-        this.gyro = gyro;
         odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), swerveModulePositions,
                 new Pose2d());
         RobotConfig config;

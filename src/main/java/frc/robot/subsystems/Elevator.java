@@ -10,7 +10,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ElevatorLevel {
 
-        BOTTOM(0), PROCESSOR(0.18), FEEDER(0.55), L1(0.7), L2(1.2), L3(1.6), L4(1.8), TOP(2);
+        BOTTOM(-1), PROCESSOR(-1), FEEDER(-1), L1(-1), L2(-1), L3(-1), L4(-1), TOP(-1);
 
         public final double height;
 
@@ -43,8 +43,9 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public Elevator(String namespaceName, SparkWrapper master, SparkWrapper slave, DigitalInput topLimit,
                     DigitalInput bottomLimit) {
-        super(namespaceName, master, slave);
+        super(namespaceName, master);
         this.master = master;
+        slave.follow(master);
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
         master.setPositionConversionFactor(HEIGHT_PER_ROTATION);
@@ -76,8 +77,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
     public void calibratePosition() {
         if (atTop()) {
             master.setPosition(ElevatorLevel.TOP.height);
-        }
-        else if (atBottom()) {
+        } else if (atBottom()) {
             master.setPosition(ElevatorLevel.BOTTOM.height);
         }
     }
@@ -86,6 +86,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
     public void configureDashboard() {
         namespace.putBoolean("top limit", topLimit::get);
         namespace.putBoolean("bottom limit", bottomLimit::get);
-        namespace.putNumber("elevator height", getPosition());
+        namespace.putNumber("elevator height", this::getPosition);
+        namespace.putNumber("velocity", this::getVelocity);
     }
 }

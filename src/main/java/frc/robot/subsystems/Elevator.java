@@ -10,7 +10,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ElevatorLevel {
 
-        BOTTOM(-1), PROCESSOR(-1), FEEDER(-1), L1(-1), L2(-1), L3(-1), L4(-1), TOP(-1);
+        BOTTOM(0), PROCESSOR(0.18), FEEDER(0.55), L1(0.7), L2(1.2), L3(1.6), L4(1.8), TOP(2);
 
         public final double height;
 
@@ -50,6 +50,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         master.setPositionConversionFactor(HEIGHT_PER_ROTATION);
         master.setVelocityConversionFactor(HEIGHT_PER_ROTATION / SECONDS_IN_MINUTES);
         slave.setInverted(true);
+        configureDashboard();
     }
 
     public double getPosition() {

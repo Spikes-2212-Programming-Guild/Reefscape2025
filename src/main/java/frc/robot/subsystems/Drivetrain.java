@@ -62,14 +62,14 @@ public class Drivetrain extends DashboardedSubsystem {
         this.backLeft = backLeft;
         this.backRight = backRight;
         this.gyro = gyro;
-        swerveModulePositions = new SwerveModulePosition[] {frontLeft.getPosition(),
+        swerveModulePositions = new SwerveModulePosition[]{frontLeft.getPosition(),
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
         kinematics = new SwerveDriveKinematics(FRONT_LEFT_WHEEL_POSITION,
                 FRONT_RIGHT_WHEEL_POSITION, BACK_LEFT_WHEEL_POSITION, BACK_RIGHT_WHEEL_POSITION);
         odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), swerveModulePositions,
                 new Pose2d());
         RobotConfig config;
-        try{
+        try {
             config = RobotConfig.fromGUISettings();
         } catch (Exception e) {
             // Handle exception as needed
@@ -117,8 +117,7 @@ public class Drivetrain extends DashboardedSubsystem {
         if (fieldRelative) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed,
                     gyro.getRotation2d());
-        }
-        else {
+        } else {
             speeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
         }
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds, CENTER_OF_ROBOT);

@@ -8,8 +8,8 @@ import java.util.function.Supplier;
 
 public class Drive extends Command {
 
-    private final double DRIVE_ACCELERATION_LIMIT = 2;
-    private final double TURN_ACCELERATION_LIMIT = 4;
+    private static final double DRIVE_ACCELERATION_LIMIT = 2;
+    private static final double TURN_ACCELERATION_LIMIT = 4;
 
     private final Drivetrain drivetrain;
     private final Supplier<Double> xSpeed;

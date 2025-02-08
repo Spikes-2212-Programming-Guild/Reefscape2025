@@ -42,6 +42,7 @@ public class Drivetrain extends DashboardedSubsystem {
 
     private final SwerveDriveOdometry odometry;
     private SwerveModulePosition[] swervePositions;
+
     private static Drivetrain instance;
 
     public static Drivetrain getInstance() {

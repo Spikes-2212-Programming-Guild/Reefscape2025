@@ -76,5 +76,6 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
     public void configureDashboard() {
         namespace.putBoolean("top limit", topLimit::get);
         namespace.putBoolean("bottom limit", bottomLimit::get);
+        namespace.putNumber("elevator height", getPosition());
     }
 }

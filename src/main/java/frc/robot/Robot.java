@@ -10,9 +10,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
 
-    private static final RootNamespace namespace = new RootNamespace("elevator");
-
-
     @Override
     public void robotInit() {
 

@@ -41,7 +41,7 @@ public class Drivetrain extends DashboardedSubsystem {
     private final SwerveDriveKinematics kinematics;
 
     private final SwerveDriveOdometry odometry;
-    private SwerveModulePosition[] swervePositions;
+    private SwerveModulePosition[] swerveModulePositions;
 
     private static Drivetrain instance;
 
@@ -61,12 +61,12 @@ public class Drivetrain extends DashboardedSubsystem {
         this.frontRight = frontRight;
         this.backLeft = backLeft;
         this.backRight = backRight;
-        swervePositions = new SwerveModulePosition[] {frontLeft.getPosition(),
+        swerveModulePositions = new SwerveModulePosition[] {frontLeft.getPosition(),
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
         kinematics = new SwerveDriveKinematics(FRONT_LEFT_WHEEL_POSITION,
                 FRONT_RIGHT_WHEEL_POSITION, BACK_LEFT_WHEEL_POSITION, BACK_RIGHT_WHEEL_POSITION);
         this.gyro = gyro;
-        odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), swervePositions,
+        odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), swerveModulePositions,
                 new Pose2d());
         RobotConfig config;
         try{
@@ -106,9 +106,9 @@ public class Drivetrain extends DashboardedSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        swervePositions = new SwerveModulePosition[]{frontLeft.getPosition(),
+        swerveModulePositions = new SwerveModulePosition[]{frontLeft.getPosition(),
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
-        odometry.update(gyro.getRotation2d(), swervePositions);
+        odometry.update(gyro.getRotation2d(), swerveModulePositions);
     }
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative,
@@ -148,7 +148,7 @@ public class Drivetrain extends DashboardedSubsystem {
     }
 
     public void resetPose2d(Pose2d desiredPose) {
-        odometry.resetPosition(gyro.getRotation2d(), swervePositions, desiredPose);
+        odometry.resetPosition(gyro.getRotation2d(), swerveModulePositions, desiredPose);
     }
 
     public ChassisSpeeds getRobotRelativeSpeeds() {

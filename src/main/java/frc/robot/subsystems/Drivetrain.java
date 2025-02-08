@@ -7,7 +7,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.spikes2212.command.DashboardedSubsystem;
 import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -42,7 +41,7 @@ public class Drivetrain extends DashboardedSubsystem {
     private final SwerveDriveKinematics kinematics;
 
     private final SwerveDriveOdometry odometry;
-    private SwerveModulePosition[] stupidPointlessArray;
+    private SwerveModulePosition[] swervePositions;
     private static Drivetrain instance;
 
     public static Drivetrain getInstance() {
@@ -61,12 +60,12 @@ public class Drivetrain extends DashboardedSubsystem {
         this.frontRight = frontRight;
         this.backLeft = backLeft;
         this.backRight = backRight;
-        stupidPointlessArray = new SwerveModulePosition[] {frontLeft.getPosition(),
+        swervePositions = new SwerveModulePosition[] {frontLeft.getPosition(),
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
         kinematics = new SwerveDriveKinematics(FRONT_LEFT_WHEEL_POSITION,
                 FRONT_RIGHT_WHEEL_POSITION, BACK_LEFT_WHEEL_POSITION, BACK_RIGHT_WHEEL_POSITION);
         this.gyro = gyro;
-        odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), stupidPointlessArray,
+        odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), swervePositions,
                 new Pose2d());
         RobotConfig config;
         try{
@@ -106,9 +105,9 @@ public class Drivetrain extends DashboardedSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        stupidPointlessArray = new SwerveModulePosition[]{frontLeft.getPosition(),
+        swervePositions = new SwerveModulePosition[]{frontLeft.getPosition(),
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
-        odometry.update(gyro.getRotation2d(), stupidPointlessArray);
+        odometry.update(gyro.getRotation2d(), swervePositions);
     }
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative,
@@ -148,7 +147,7 @@ public class Drivetrain extends DashboardedSubsystem {
     }
 
     public void resetPose2d(Pose2d desiredPose) {
-        odometry.resetPosition(gyro.getRotation2d(), stupidPointlessArray, desiredPose);
+        odometry.resetPosition(gyro.getRotation2d(), swervePositions, desiredPose);
     }
 
     public ChassisSpeeds getRobotRelativeSpeeds() {

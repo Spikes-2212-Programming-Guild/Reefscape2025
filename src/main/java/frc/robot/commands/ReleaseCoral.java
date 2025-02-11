@@ -11,7 +11,7 @@ public class ReleaseCoral extends MoveGenericSubsystem {
 
     private static final RootNamespace NAMESPACE = new RootNamespace("release coral");
     private static final Supplier<Double> TIME_TO_RELEASE = NAMESPACE.addConstantDouble("time to release", 0.5);
-    private static final Supplier<Double> RELEASE_SPEED = NAMESPACE.addConstantDouble("release speed", 0.5);
+    private static final Supplier<Double> RELEASE_SPEED = NAMESPACE.addConstantDouble("release speed", -0.5);
 
     private double startTime;
 

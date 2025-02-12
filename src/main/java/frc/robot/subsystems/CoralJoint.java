@@ -8,13 +8,13 @@ import frc.robot.RobotMap;
 
 public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
-    public enum STORAGE_POSE {
+    public enum StoragePose {
 
         INTAKE(-1), PLACEMENT(-1), RESTING(-1);
 
         public final double neededPitch;
 
-        STORAGE_POSE(double neededPitch) {
+        StoragePose(double neededPitch) {
             this.neededPitch = neededPitch;
         }
     }
@@ -58,9 +58,9 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public void calibrateEncoderPosition() {
         if (topLimit.get()) {
-            spark.setPosition(STORAGE_POSE.RESTING.neededPitch);
+            spark.setPosition(StoragePose.RESTING.neededPitch);
         } else if (bottomLimit.get()) {
-            spark.setPosition(STORAGE_POSE.PLACEMENT.neededPitch);
+            spark.setPosition(StoragePose.PLACEMENT.neededPitch);
         }
     }
 

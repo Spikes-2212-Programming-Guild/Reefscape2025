@@ -2,8 +2,10 @@ package frc.robot.commands;
 
 import com.spikes2212.command.genericsubsystem.commands.smartmotorcontrollergenericsubsystem.
         MoveSmartMotorControllerGenericSubsystem;
+import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
+import com.spikes2212.dashboard.RootNamespace;
 import com.spikes2212.util.UnifiedControlMode;
 import frc.robot.subsystems.Elevator;
 
@@ -11,22 +13,27 @@ import java.util.function.Supplier;
 
 public class MoveToHeight extends MoveSmartMotorControllerGenericSubsystem {
 
+    private static final RootNamespace namespace = new RootNamespace("move to height");
+    private static final PIDSettings pidSettings = namespace.addPIDNamespace("move to height");
+    private static final FeedForwardSettings feedForwardSettings = namespace.addFeedForwardNamespace("move to height",
+            FeedForwardController.ControlMode.LINEAR_POSITION);
+
     private final Elevator elevator;
 
-    public MoveToHeight(Elevator elevator, PIDSettings pidSettings, FeedForwardSettings feedForwardSettings,
-                        Supplier<Double> setpoint) {
+    public MoveToHeight(Elevator elevator, Supplier<Double> setpoint) {
         super(elevator, pidSettings, feedForwardSettings, UnifiedControlMode.POSITION, setpoint, true);
         this.elevator = elevator;
     }
 
-    public MoveToHeight(Elevator elevator, PIDSettings pidSettings, FeedForwardSettings feedForwardSettings,
-                        Elevator.ElevatorLevel elevatorLevel) {
-        this(elevator, pidSettings, feedForwardSettings, () -> elevatorLevel.height);
+    public MoveToHeight(Elevator elevator, Elevator.ElevatorLevel elevatorLevel) {
+        this(elevator, () -> elevatorLevel.height);
     }
 
     @Override
     public void execute() {
-        if (!isFinished()) {super.execute();}
+        if (!isFinished()) {
+            super.execute();
+        }
     }
 
     @Override

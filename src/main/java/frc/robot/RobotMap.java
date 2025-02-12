@@ -4,6 +4,8 @@ public class RobotMap {
 
     public interface CAN {
 
+      int ELEVATOR_MASTER_SPARK = -1;
+      int ELEVATOR_SLAVE_SPARK = -1;
       int ALGAE_JOINT_SPARK = -1;
       int CORAL_JOINT_SPARK = -1;
       int GRIPPER_TALON = -1;
@@ -12,6 +14,8 @@ public class RobotMap {
   
     public interface DIO {
 
+        int ELEVATOR_TOP_LIMIT = -1;
+        int ELEVATOR_BOTTOM_LIMIT = -1;
         int ALGAE_TOP_LIMIT = -1;
         int ALGAE_BOTTOM_LIMIT = -1;
         int CORAL_JOINT_TOP_LIMIT = -1;

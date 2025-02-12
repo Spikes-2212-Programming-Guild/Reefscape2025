@@ -25,7 +25,7 @@ public class RotateStorage extends MoveSmartMotorControllerGenericSubsystem {
         this.coralJoint = coralJoint;
     }
 
-    public RotateStorage(CoralJoint coralJoint, CoralJoint.STORAGE_POSE pose) {
+    public RotateStorage(CoralJoint coralJoint, CoralJoint.StoragePose pose) {
         this(coralJoint, () -> pose.neededPitch);
     }
 

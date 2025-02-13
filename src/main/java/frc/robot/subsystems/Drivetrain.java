@@ -119,7 +119,7 @@ public class Drivetrain extends DashboardedSubsystem {
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative,
                       boolean usePID) {
-        ChassisSpeeds speeds
+        ChassisSpeeds speeds;
         if (fieldRelative) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed,
                     gyro.getRotation2d());

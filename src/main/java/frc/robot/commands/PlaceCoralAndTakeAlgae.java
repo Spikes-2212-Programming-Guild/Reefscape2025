@@ -7,6 +7,8 @@ import frc.robot.subsystems.*;
 
 public class PlaceCoralAndTakeAlgae extends SequentialCommandGroup {
 
+    private static final double speed = -0.2;
+
     public PlaceCoralAndTakeAlgae(Elevator elevator, AlgaeJoint algaeJoint, Gripper gripper,
                                   Drivetrain drivetrain, CoralJoint coralJoint, Storage storage,
                                   Elevator.ElevatorLevel level) {
@@ -17,7 +19,7 @@ public class PlaceCoralAndTakeAlgae extends SequentialCommandGroup {
                 new ParallelCommandGroup(
                         new ReleaseCoral(storage), new IntakeAlgae(gripper)),
                 new ConditionalCommand(new SequentialCommandGroup(new ParallelCommandGroup(
-                        new Drive(drivetrain, () -> -0.2, () -> 0.0, () -> 0.0, false,
+                        new Drive(drivetrain, () -> speed, () -> 0.0, () -> 0.0, false,
                                 false, false).withTimeout(0.5),
                         new RotateStorage(coralJoint, CoralJoint.StoragePose.RESTING)),
                         new MoveToHeight(elevator, Elevator.ElevatorLevel.PROCESSOR)),

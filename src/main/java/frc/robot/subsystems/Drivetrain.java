@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Drivetrain extends DashboardedSubsystem {
 
     public static final double MAX_SPEED = 4;
-    public static final double MIN_SPEED = 0.4;
+    public static final double MIN_SPEED = 0.05;
     public static final double MAX_TURN_SPEED = 3;
 
-    private static final double TRACK_WIDTH = -1;
-    private static final double TRACK_LENGTH = -1;
+    private static final double TRACK_WIDTH = 0.6;
+    private static final double TRACK_LENGTH = 0.6;
 
     private static final Translation2d CENTER_OF_ROBOT = new Translation2d(0, 0);
     private static final Translation2d FRONT_LEFT_WHEEL_POSITION =
@@ -32,7 +32,6 @@ public class Drivetrain extends DashboardedSubsystem {
 
     private static final String NAMESPACE_NAME = "drivetrain";
 
-
     private final SwerveModule frontLeft;
     private final SwerveModule frontRight;
     private final SwerveModule backLeft;
@@ -42,6 +41,8 @@ public class Drivetrain extends DashboardedSubsystem {
 
     private final SwerveDriveOdometry odometry;
     private SwerveModulePosition[] swerveModulePositions;
+
+    private Pose2d currentPose;
 
     private static Drivetrain instance;
 
@@ -68,6 +69,7 @@ public class Drivetrain extends DashboardedSubsystem {
                 FRONT_RIGHT_WHEEL_POSITION, BACK_LEFT_WHEEL_POSITION, BACK_RIGHT_WHEEL_POSITION);
         odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), swerveModulePositions,
                 new Pose2d());
+        currentPose = new Pose2d();
         RobotConfig config;
         try {
             config = RobotConfig.fromGUISettings();
@@ -101,6 +103,7 @@ public class Drivetrain extends DashboardedSubsystem {
                 },
                 this // Reference to this subsystem to set requirements
         );
+        configureDashboard();
     }
 
     @Override
@@ -108,7 +111,10 @@ public class Drivetrain extends DashboardedSubsystem {
         super.periodic();
         swerveModulePositions = new SwerveModulePosition[]{frontLeft.getPosition(),
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
-        odometry.update(gyro.getRotation2d(), swerveModulePositions);
+        currentPose = odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
+                frontLeft.getModulePosition(), frontRight.getModulePosition(),
+                backLeft.getModulePosition(), backRight.getModulePosition()
+        });
     }
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative,
@@ -135,7 +141,7 @@ public class Drivetrain extends DashboardedSubsystem {
         backRight.stop();
     }
 
-    public void resetRelativeEncoder() {
+    public void resetRelativeEncoders() {
         frontLeft.resetRelativeEncoder();
         frontRight.resetRelativeEncoder();
         backLeft.resetRelativeEncoder();
@@ -159,8 +165,13 @@ public class Drivetrain extends DashboardedSubsystem {
         drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond,
                 false, true);
     }
+      
+    public void resetGyro() {
+        gyro.reset();
+    }
 
     @Override
     public void configureDashboard() {
+        namespace.putNumber("gyro yaw", gyro::getAngle);
     }
 }

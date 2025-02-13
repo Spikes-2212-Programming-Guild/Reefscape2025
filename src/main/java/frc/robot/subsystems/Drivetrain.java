@@ -112,8 +112,8 @@ public class Drivetrain extends DashboardedSubsystem {
         swerveModulePositions = new SwerveModulePosition[]{frontLeft.getPosition(),
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
         currentPose = odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
-                frontLeft.getModulePosition(), frontRight.getModulePosition(),
-                backLeft.getModulePosition(), backRight.getModulePosition()
+                frontLeft.getPosition(), frontRight.getPosition(),
+                backLeft.getPosition(), backRight.getPosition()
         });
     }
 

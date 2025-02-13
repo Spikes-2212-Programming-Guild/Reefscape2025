@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.760204081632654,
+        "y": 3.980229591836734
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.732171786287433,
+        "y": 3.9788909963726784
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.887998102466793,
+        "y": 4.177751423149904
+      },
+      "prevControl": {
+        "x": 6.580665241888563,
+        "y": 4.172542262608721
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "coral 4"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "algae paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

@@ -138,8 +138,14 @@ public class SwerveModule extends DashboardedSubsystem {
         turnMotor.setPosition(getAbsoluteAngle());
     }
 
-    public SwerveModulePosition getModulePosition() {
-        return new SwerveModulePosition(driveMotor.getPosition(), Rotation2d.fromDegrees(turnMotor.getPosition()));
+    public SwerveModulePosition getPosition() {
+        return new SwerveModulePosition(driveMotor.getPosition(),
+                Rotation2d.fromDegrees(getAbsoluteAngle()));
+    }
+
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(driveMotor.getVelocity(),
+                Rotation2d.fromDegrees(getAbsoluteAngle()));
     }
 
     @Override

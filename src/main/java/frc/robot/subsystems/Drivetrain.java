@@ -1,10 +1,15 @@
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.spikes2212.command.DashboardedSubsystem;
 import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class Drivetrain extends DashboardedSubsystem {
 
@@ -32,9 +37,10 @@ public class Drivetrain extends DashboardedSubsystem {
     private final SwerveModule backLeft;
     private final SwerveModule backRight;
     private final AHRS gyro;
+    private final SwerveDriveKinematics kinematics;
 
     private final SwerveDriveOdometry odometry;
-    private final SwerveDriveKinematics kinematics;
+    private SwerveModulePosition[] swerveModulePositions;
 
     private Pose2d currentPose;
 
@@ -57,20 +63,57 @@ public class Drivetrain extends DashboardedSubsystem {
         this.backLeft = backLeft;
         this.backRight = backRight;
         this.gyro = gyro;
-        currentPose = new Pose2d();
+        swerveModulePositions = new SwerveModulePosition[]{frontLeft.getPosition(),
+                frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
         kinematics = new SwerveDriveKinematics(FRONT_LEFT_WHEEL_POSITION,
                 FRONT_RIGHT_WHEEL_POSITION, BACK_LEFT_WHEEL_POSITION, BACK_RIGHT_WHEEL_POSITION);
-        odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), new SwerveModulePosition[]{
-                frontLeft.getModulePosition(), frontRight.getModulePosition(),
-                 backLeft.getModulePosition(), backRight.getModulePosition()});
+        odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), swerveModulePositions,
+                new Pose2d());
+        currentPose = new Pose2d();
+        RobotConfig config;
+        try {
+            config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+            // Handle exception as needed
+            e.printStackTrace();
+            config = null;
+        }
+
+        // Configure AutoBuilder last
+        AutoBuilder.configure(
+                this::getPose2d, // Robot pose supplier
+                this::resetPose2d, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                        new PIDConstants(0.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(0.01, 0.0, 0.0) // Rotation PID constants
+                ),
+                config, // The robot configuration
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this // Reference to this subsystem to set requirements
+        );
         configureDashboard();
     }
 
     @Override
     public void periodic() {
+        super.periodic();
+        swerveModulePositions = new SwerveModulePosition[]{frontLeft.getPosition(),
+                frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
         currentPose = odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
-                frontLeft.getModulePosition(), frontRight.getModulePosition(),
-                backLeft.getModulePosition(), backRight.getModulePosition()
+                frontLeft.getPosition(), frontRight.getPosition(),
+                backLeft.getPosition(), backRight.getPosition()
         });
     }
 
@@ -80,8 +123,7 @@ public class Drivetrain extends DashboardedSubsystem {
         if (fieldRelative) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed,
                     gyro.getRotation2d());
-        }
-        else {
+        } else {
             speeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
         }
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds, CENTER_OF_ROBOT);
@@ -106,6 +148,24 @@ public class Drivetrain extends DashboardedSubsystem {
         backRight.resetRelativeEncoder();
     }
 
+    public Pose2d getPose2d() {
+        return odometry.getPoseMeters();
+    }
+
+    public void resetPose2d(Pose2d desiredPose) {
+        odometry.resetPosition(gyro.getRotation2d(), swerveModulePositions, desiredPose);
+    }
+
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        return kinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(),
+                backLeft.getState(), backRight.getState());
+    }
+
+    public void driveRobotRelative(ChassisSpeeds speeds) {
+        drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond,
+                false, true);
+    }
+      
     public void resetGyro() {
         gyro.reset();
     }

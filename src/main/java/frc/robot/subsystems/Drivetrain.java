@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.util.VisionService;
 
 public class Drivetrain extends DashboardedSubsystem {
 
@@ -40,6 +41,7 @@ public class Drivetrain extends DashboardedSubsystem {
     private final SwerveDriveKinematics kinematics;
 
     private final SwerveDriveOdometry odometry;
+    private final VisionService visionService;
     private SwerveModulePosition[] swerveModulePositions;
 
     private Pose2d currentPose;
@@ -50,19 +52,20 @@ public class Drivetrain extends DashboardedSubsystem {
         if (instance == null) {
             instance = new Drivetrain(SwerveModuleHolder.getFrontLeft(), SwerveModuleHolder.getFrontRight(),
                     SwerveModuleHolder.getBackLeft(), SwerveModuleHolder.getBackRight(),
-                    new AHRS(AHRS.NavXComType.kMXP_SPI));
+                    new AHRS(AHRS.NavXComType.kMXP_SPI), VisionService.getInstance());
         }
         return instance;
     }
 
     private Drivetrain(SwerveModule frontLeft, SwerveModule frontRight, SwerveModule backLeft,
-                       SwerveModule backRight, AHRS gyro) {
+                       SwerveModule backRight, AHRS gyro, VisionService visionService) {
         super(NAMESPACE_NAME);
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.backLeft = backLeft;
         this.backRight = backRight;
         this.gyro = gyro;
+        this.visionService = visionService;
         swerveModulePositions = new SwerveModulePosition[]{frontLeft.getPosition(),
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
         kinematics = new SwerveDriveKinematics(FRONT_LEFT_WHEEL_POSITION,
@@ -111,6 +114,12 @@ public class Drivetrain extends DashboardedSubsystem {
         super.periodic();
         swerveModulePositions = new SwerveModulePosition[]{frontLeft.getPosition(),
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
+        if (visionService.hasTarget()) {
+            if (visionService.getTargetRelativePose() != null) {
+                odometry.resetPosition(gyro.getRotation2d(), swerveModulePositions,
+                        visionService.getTargetRelativePose());
+            }
+        }
         currentPose = odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
                 frontLeft.getPosition(), frontRight.getPosition(),
                 backLeft.getPosition(), backRight.getPosition()

@@ -8,21 +8,30 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 public class Robot extends TimedRobot {
 
+    private final Elevator elevator = Elevator.getInstance();
+    private final Storage storage = Storage.getInstance();
+    private final Gripper gripper = Gripper.getInstance();
+    private final CoralJoint coralJoint = CoralJoint.getInstance();
+    private final AlgaeJoint algaeJoint = AlgaeJoint.getInstance();
+
     @Override
     public void robotInit() {
-        NamedCommands.registerCommand("ElevateToL4", new InstantCommand());
-        NamedCommands.registerCommand("OuttakeCoralAngle", new InstantCommand());
-        NamedCommands.registerCommand("ReleaseCoral", new InstantCommand());
-        NamedCommands.registerCommand("ElevateToFeeder", new InstantCommand());
-        NamedCommands.registerCommand("IntakeCoralAngle", new InstantCommand());
-        NamedCommands.registerCommand("IntakeCoral", new InstantCommand());
-        NamedCommands.registerCommand("IntakeAlgaeAngle", new InstantCommand());
-        NamedCommands.registerCommand("ElevateToL3", new InstantCommand());
-        NamedCommands.registerCommand("TakeAlgae", new InstantCommand());
-        NamedCommands.registerCommand("PlaceAlgae", new InstantCommand());
+        NamedCommands.registerCommand("ElevateToL4", new MoveToHeight(elevator, Elevator.ElevatorLevel.L4));
+        NamedCommands.registerCommand("OuttakeCoralAngle",
+                new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
+        NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
+        NamedCommands.registerCommand("ElevateToFeeder", new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER));
+        NamedCommands.registerCommand("IntakeCoralAngle", new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE));
+        NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(storage));
+        NamedCommands.registerCommand("IntakeAlgaeAngle", new RotateAlgaeJointToBottom(algaeJoint));
+        NamedCommands.registerCommand("ElevateToL3", new MoveToHeight(elevator, Elevator.ElevatorLevel.L3));
+        NamedCommands.registerCommand("TakeAlgae", new IntakeAlgae(gripper));
+        NamedCommands.registerCommand("PlaceAlgae", new ReleaseAlgae(gripper));
     }
 
     @Override

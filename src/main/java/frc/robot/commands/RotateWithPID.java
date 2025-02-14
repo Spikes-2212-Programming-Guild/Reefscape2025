@@ -30,6 +30,7 @@ public class RotateWithPID extends Command {
         this.drivetrain = drivetrain;
         this.setpoint = setpoint;
         pidController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
+        pidController.setIZone(pidSettings.getIZone());
         pidController.setTolerance(pidSettings.getTolerance());
         feedForwardController = new FeedForwardController(feedForwardSettings);
         lastTimeNotOnTarget = 0;

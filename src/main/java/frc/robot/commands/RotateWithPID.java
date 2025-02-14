@@ -28,9 +28,9 @@ public class RotateWithPID extends Command {
     public RotateWithPID(Drivetrain drivetrain, Supplier<Double> setpoint) {
         this.drivetrain = drivetrain;
         this.setpoint = setpoint;
-        this.pidController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
+        pidController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
         pidController.setTolerance(pidSettings.getTolerance());
-        this.feedForwardController = new FeedForwardController(feedForwardSettings);
+        feedForwardController = new FeedForwardController(feedForwardSettings);
     }
 
     @Override

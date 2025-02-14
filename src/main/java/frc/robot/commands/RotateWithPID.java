@@ -39,6 +39,7 @@ public class RotateWithPID extends Command {
     @Override
     public void execute() {
         pidController.setPID(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
+        pidController.setIZone(pidSettings.getIZone());
         pidController.setTolerance(pidSettings.getTolerance());
         feedForwardController.setGains(feedForwardSettings);
         drivetrain.drive(0, 0, pidController.calculate(drivetrain.getYaw(), setpoint.get()) +

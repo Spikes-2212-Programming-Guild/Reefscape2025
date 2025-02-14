@@ -50,4 +50,9 @@ public class RotateWithPID extends Command {
         }
         return pidSettings.getWaitTime() <= Timer.getFPGATimestamp() - lastTimeNotOnTarget;
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.stop();
+    }
 }

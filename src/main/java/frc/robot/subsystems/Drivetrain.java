@@ -179,6 +179,10 @@ public class Drivetrain extends DashboardedSubsystem {
         gyro.reset();
     }
 
+    public double getYaw() {
+        return gyro.getAngle();
+    }
+
     @Override
     public void configureDashboard() {
         namespace.putNumber("gyro yaw", gyro::getAngle);

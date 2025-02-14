@@ -30,8 +30,7 @@ public class RotateWithPID extends Command {
         this.setpoint = setpoint;
         this.pidController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
         pidController.setTolerance(pidSettings.getTolerance());
-        this.feedForwardController = new FeedForwardController(feedForwardSettings.getkS(),
-                feedForwardSettings.getkV(), feedForwardSettings.getControlMode());
+        this.feedForwardController = new FeedForwardController(feedForwardSettings);
     }
 
     @Override

@@ -23,7 +23,7 @@ public class RotateWithPID extends Command {
     private final Supplier<Double> setpoint;
     private final PIDController pidController;
     private final FeedForwardController feedForwardController;
-    private double lastTimeOnTarget;
+    private double lastTimeNotOnTarget;
 
     public RotateWithPID(Drivetrain drivetrain, Supplier<Double> setpoint) {
         this.drivetrain = drivetrain;
@@ -46,8 +46,8 @@ public class RotateWithPID extends Command {
     @Override
     public boolean isFinished() {
         if (!pidController.atSetpoint()) {
-            lastTimeOnTarget = Timer.getFPGATimestamp();
+            lastTimeNotOnTarget = Timer.getFPGATimestamp();
         }
-        return pidSettings.getWaitTime() >= Timer.getFPGATimestamp() - lastTimeOnTarget;
+        return pidSettings.getWaitTime() >= Timer.getFPGATimestamp() - lastTimeNotOnTarget;
     }
 }

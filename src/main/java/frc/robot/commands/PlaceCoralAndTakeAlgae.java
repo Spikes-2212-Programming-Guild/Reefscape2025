@@ -28,7 +28,7 @@ public class PlaceCoralAndTakeAlgae extends SequentialCommandGroup {
                         new ParallelCommandGroup(
                                 new RotateAlgaeJointToTop(algaeJoint),
                                 new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE),
-                                new MoveToHeight(elevator, Elevator.ElevatorLevel.BOTTOM)
+                                new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER)
                         ), gripper::hasAlgae));
 
     }

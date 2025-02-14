@@ -48,6 +48,6 @@ public class RotateWithPID extends Command {
         if (!pidController.atSetpoint()) {
             lastTimeNotOnTarget = Timer.getFPGATimestamp();
         }
-        return pidSettings.getWaitTime() >= Timer.getFPGATimestamp() - lastTimeNotOnTarget;
+        return pidSettings.getWaitTime() <= Timer.getFPGATimestamp() - lastTimeNotOnTarget;
     }
 }

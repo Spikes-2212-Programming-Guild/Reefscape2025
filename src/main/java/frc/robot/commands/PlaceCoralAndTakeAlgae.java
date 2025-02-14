@@ -7,7 +7,7 @@ import frc.robot.subsystems.*;
 
 public class PlaceCoralAndTakeAlgae extends SequentialCommandGroup {
 
-    private static final double DRIVING_BACKWARDS_SPEED = -0.2;
+    private static final double DRIVE_BACKWARDS_SPEED = -0.2;
     private static final double TIME_FOR_MOVING = 0.5;
 
     public PlaceCoralAndTakeAlgae(Elevator elevator, AlgaeJoint algaeJoint, Gripper gripper,

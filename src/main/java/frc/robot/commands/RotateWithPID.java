@@ -15,6 +15,7 @@ public class RotateWithPID extends Command {
 
     private static final RootNamespace namespace = new RootNamespace("rotate with pid");
     private static final PIDSettings pidSettings = namespace.addPIDNamespace("rotate with pid");
+
     private static final FeedForwardSettings feedForwardSettings = namespace.addFeedForwardNamespace("rotate with pid",
             FeedForwardSettings.EMPTY_FF_SETTINGS);
 

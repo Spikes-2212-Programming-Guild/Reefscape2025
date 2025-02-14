@@ -26,6 +26,7 @@ public class RotateWithPID extends Command {
     private double lastTimeNotOnTarget;
 
     public RotateWithPID(Drivetrain drivetrain, Supplier<Double> setpoint) {
+        addRequirements(drivetrain);
         this.drivetrain = drivetrain;
         this.setpoint = setpoint;
         pidController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());

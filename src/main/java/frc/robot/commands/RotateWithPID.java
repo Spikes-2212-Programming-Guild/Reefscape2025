@@ -23,7 +23,7 @@ public class RotateWithPID extends Command {
     private final PIDController pidController;
     private final FeedForwardController feedForwardController;
 
-    private double lastTimeNotOnTarget;
+    private double lastTimeNotOnTarget = 0;
 
     public RotateWithPID(Drivetrain drivetrain, Supplier<Double> setpoint) {
         this.drivetrain = drivetrain;

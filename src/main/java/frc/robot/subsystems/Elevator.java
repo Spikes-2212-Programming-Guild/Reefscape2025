@@ -6,6 +6,8 @@ import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
 
+import java.util.function.Supplier;
+
 public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ElevatorLevel {
@@ -18,6 +20,9 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
             this.height = height;
         }
     }
+
+    public static final double ELEVATOR_FORWARD_SPEED = 0.175;
+    public static final double ELEVATOR_BACKWARD_SPEED = -0.175;
 
     private static final String NAMESPACE_NAME = "elevator";
 

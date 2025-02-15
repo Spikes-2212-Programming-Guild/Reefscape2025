@@ -56,5 +56,23 @@ public class OI /*GEVALD*/{
 
         navigatorJoystick.getShareButton().onTrue(new RotateAlgaeJointToBottom(AlgaeJoint.getInstance()));
         navigatorJoystick.getOptionsButton().onTrue(new IntakeAlgae(Gripper.getInstance()));
+
+        driverJoystick.getR1Button().onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
+    }
+
+    public double getLeftX() {
+        return driverJoystick.getLeftX();
+    }
+
+    public double getLeftY() {
+        return driverJoystick.getLeftY();
+    }
+
+    public double getRightX() {
+        return driverJoystick.getRightX();
+    }
+
+    public double getRightY() {
+        return driverJoystick.getRightY();
     }
 }

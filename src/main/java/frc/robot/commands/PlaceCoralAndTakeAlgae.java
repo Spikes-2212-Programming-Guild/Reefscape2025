@@ -14,13 +14,15 @@ public class PlaceCoralAndTakeAlgae extends SequentialCommandGroup {
     public PlaceCoralAndTakeAlgae(Elevator elevator, AlgaeJoint algaeJoint, Gripper gripper,
                                   Drivetrain drivetrain, CoralJoint coralJoint, Storage storage,
                                   Elevator.ElevatorLevel level) {
-        addCommands(new ConditionalCommand(new SequentialCommandGroup(new ParallelCommandGroup(
-                        new MoveToHeight(elevator, level),
-                        new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT),
-                        new RotateAlgaeJointToBottom(algaeJoint)),
-                new ParallelCommandGroup(
-                        new ReleaseCoral(storage), new IntakeAlgae(gripper).withTimeout(GRIPPER_TIMEOUT)
-                )),
+        addCommands(new ConditionalCommand(
+                        new SequentialCommandGroup(
+                                new ParallelCommandGroup(
+                                        new MoveToHeight(elevator, level),
+                                        new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT),
+                                        new RotateAlgaeJointToBottom(algaeJoint)),
+                                new ParallelCommandGroup(
+                                        new ReleaseCoral(storage), new IntakeAlgae(gripper).withTimeout(GRIPPER_TIMEOUT)
+                                )),
                         new SequentialCommandGroup(new ParallelCommandGroup(
                                 new MoveToHeight(elevator, level),
                                 new RotateAlgaeJointToBottom(algaeJoint)),

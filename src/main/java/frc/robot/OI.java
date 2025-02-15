@@ -12,26 +12,33 @@ public class OI /*GEVALD*/{
 
     private final PlaystationControllerWrapper driverJoystick = new PlaystationControllerWrapper(0);
     private final PlaystationControllerWrapper navigatorJoystick = new PlaystationControllerWrapper(1);
+
     private boolean inAlgaeMode;
 
     public OI() {
         navigatorJoystick.getL1Button().onTrue(new ConditionalCommand(
                 new PlaceCoralAndTakeAlgae(Elevator.getInstance(), AlgaeJoint.getInstance(), Gripper.getInstance(),
                         Drivetrain.getInstance(), CoralJoint.getInstance(), Storage.getInstance(),
-                        Elevator.ElevatorLevel.L1), new PlaceOnReef(Elevator.getInstance(),
-                CoralJoint.getInstance(), Storage.getInstance(), Elevator.ElevatorLevel.L1), () -> inAlgaeMode));
+                        Elevator.ElevatorLevel.L1),
+                new PlaceOnReef(Elevator.getInstance(),
+                CoralJoint.getInstance(), Storage.getInstance(), Elevator.ElevatorLevel.L1),
+                () -> inAlgaeMode));
 
         navigatorJoystick.getR1Button().onTrue(new ConditionalCommand(
                 new PlaceCoralAndTakeAlgae(Elevator.getInstance(), AlgaeJoint.getInstance(), Gripper.getInstance(),
                         Drivetrain.getInstance(), CoralJoint.getInstance(), Storage.getInstance(),
-                        Elevator.ElevatorLevel.L2), new PlaceOnReef(Elevator.getInstance(),
-                CoralJoint.getInstance(), Storage.getInstance(), Elevator.ElevatorLevel.L2), () -> inAlgaeMode));
+                        Elevator.ElevatorLevel.L2),
+                new PlaceOnReef(Elevator.getInstance(),
+                CoralJoint.getInstance(), Storage.getInstance(), Elevator.ElevatorLevel.L2),
+                () -> inAlgaeMode));
 
         navigatorJoystick.getL2Button().onTrue(new ConditionalCommand(
                 new PlaceCoralAndTakeAlgae(Elevator.getInstance(), AlgaeJoint.getInstance(), Gripper.getInstance(),
                         Drivetrain.getInstance(), CoralJoint.getInstance(), Storage.getInstance(),
-                        Elevator.ElevatorLevel.L3), new PlaceOnReef(Elevator.getInstance(),
-                CoralJoint.getInstance(), Storage.getInstance(), Elevator.ElevatorLevel.L3), () -> inAlgaeMode));
+                        Elevator.ElevatorLevel.L3),
+                new PlaceOnReef(Elevator.getInstance(),
+                CoralJoint.getInstance(), Storage.getInstance(), Elevator.ElevatorLevel.L3),
+                () -> inAlgaeMode));
 
         navigatorJoystick.getR2Button().onTrue(new PlaceOnReef(Elevator.getInstance(), CoralJoint.getInstance(),
                 Storage.getInstance(), Elevator.ElevatorLevel.L4));

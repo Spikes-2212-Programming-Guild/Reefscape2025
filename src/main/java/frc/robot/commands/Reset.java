@@ -7,11 +7,11 @@ import frc.robot.subsystems.CoralJoint;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Storage;
 
-public class Reset extends SequentialCommandGroup {
+public class Reset extends ParallelCommandGroup {
 
     public Reset(Elevator elevator, CoralJoint coralJoint, AlgaeJoint algaeJoint) {
-        addCommands(new ParallelCommandGroup(new MoveToHeight(elevator, Elevator.ElevatorLevel.BOTTOM),
+        addCommands(new MoveToHeight(elevator, Elevator.ElevatorLevel.BOTTOM),
                 new RotateStorage(coralJoint, CoralJoint.StoragePose.RESTING),
-                new RotateAlgaeJointToBottom(algaeJoint)));
+                new RotateAlgaeJointToBottom(algaeJoint));
     }
 }

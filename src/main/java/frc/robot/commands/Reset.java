@@ -12,6 +12,6 @@ public class Reset extends ParallelCommandGroup {
     public Reset(Elevator elevator, CoralJoint coralJoint, AlgaeJoint algaeJoint) {
         addCommands(new MoveToHeight(elevator, Elevator.ElevatorLevel.BOTTOM),
                 new RotateStorage(coralJoint, CoralJoint.StoragePose.RESTING),
-                new RotateAlgaeJointToBottom(algaeJoint));
+                new RotateAlgaeJointToTop(algaeJoint));
     }
 }

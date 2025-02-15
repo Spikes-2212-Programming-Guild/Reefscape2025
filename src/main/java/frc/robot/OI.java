@@ -2,69 +2,75 @@ package frc.robot;
 
 import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import com.spikes2212.util.PlaystationControllerWrapper;
-import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
-public class OI /*GEVALD*/{
+public class OI /*GEVALD*/ {
 
     private final PlaystationControllerWrapper driverJoystick = new PlaystationControllerWrapper(0);
     private final PlaystationControllerWrapper navigatorJoystick = new PlaystationControllerWrapper(1);
+    
+    private final Elevator elevator = Elevator.getInstance();
+    private final Storage storage = Storage.getInstance();
+    private final Gripper gripper = Gripper.getInstance();
+    private final CoralJoint coralJoint = CoralJoint.getInstance();
+    private final AlgaeJoint algaeJoint = AlgaeJoint.getInstance();
+    private final Drivetrain drivetrain = Drivetrain.getInstance();
 
     private boolean inAlgaeMode;
 
     public OI() {
         navigatorJoystick.getL1Button().onTrue(new ConditionalCommand(
-                new PlaceCoralAndTakeAlgae(Elevator.getInstance(), AlgaeJoint.getInstance(), Gripper.getInstance(),
-                        Drivetrain.getInstance(), CoralJoint.getInstance(), Storage.getInstance(),
+                new PlaceCoralAndTakeAlgae(elevator, algaeJoint, gripper,
+                        drivetrain, coralJoint, storage,
                         Elevator.ElevatorLevel.L1),
-                new PlaceOnReef(Elevator.getInstance(),
-                CoralJoint.getInstance(), Storage.getInstance(), Elevator.ElevatorLevel.L1),
+                new PlaceOnReef(elevator,
+                        coralJoint, storage, Elevator.ElevatorLevel.L1),
                 () -> inAlgaeMode));
 
         navigatorJoystick.getR1Button().onTrue(new ConditionalCommand(
-                new PlaceCoralAndTakeAlgae(Elevator.getInstance(), AlgaeJoint.getInstance(), Gripper.getInstance(),
-                        Drivetrain.getInstance(), CoralJoint.getInstance(), Storage.getInstance(),
+                new PlaceCoralAndTakeAlgae(elevator, algaeJoint, gripper,
+                        drivetrain, coralJoint, storage,
                         Elevator.ElevatorLevel.L2),
-                new PlaceOnReef(Elevator.getInstance(),
-                CoralJoint.getInstance(), Storage.getInstance(), Elevator.ElevatorLevel.L2),
+                new PlaceOnReef(elevator,
+                        coralJoint, storage, Elevator.ElevatorLevel.L2),
                 () -> inAlgaeMode));
 
         navigatorJoystick.getL2Button().onTrue(new ConditionalCommand(
-                new PlaceCoralAndTakeAlgae(Elevator.getInstance(), AlgaeJoint.getInstance(), Gripper.getInstance(),
-                        Drivetrain.getInstance(), CoralJoint.getInstance(), Storage.getInstance(),
+                new PlaceCoralAndTakeAlgae(elevator, algaeJoint, gripper,
+                        drivetrain, coralJoint, storage,
                         Elevator.ElevatorLevel.L3),
-                new PlaceOnReef(Elevator.getInstance(),
-                CoralJoint.getInstance(), Storage.getInstance(), Elevator.ElevatorLevel.L3),
+                new PlaceOnReef(elevator,
+                        coralJoint, storage, Elevator.ElevatorLevel.L3),
                 () -> inAlgaeMode));
 
-        navigatorJoystick.getR2Button().onTrue(new PlaceOnReef(Elevator.getInstance(), CoralJoint.getInstance(),
-                Storage.getInstance(), Elevator.ElevatorLevel.L4));
+        navigatorJoystick.getR2Button().onTrue(new PlaceOnReef(elevator, coralJoint,
+                storage, Elevator.ElevatorLevel.L4));
 
         navigatorJoystick.getTriangleButton().onTrue(new InstantCommand(() -> inAlgaeMode = !inAlgaeMode));
-        navigatorJoystick.getSquareButton().onTrue(new IntakeCoral(Storage.getInstance()));
-        navigatorJoystick.getCircleButton().onTrue(new ReleaseAlgae(Gripper.getInstance()));
+        navigatorJoystick.getSquareButton().onTrue(new IntakeCoral(storage));
+        navigatorJoystick.getCircleButton().onTrue(new ReleaseAlgae(gripper));
 
-        navigatorJoystick.getRightStickButton().onTrue(new Reset(Elevator.getInstance(), CoralJoint.getInstance(),
-                AlgaeJoint.getInstance()));
+        navigatorJoystick.getRightStickButton().onTrue(new Reset(elevator, coralJoint,
+                algaeJoint));
 
-        navigatorJoystick.getUpButton().whileTrue(new MoveGenericSubsystem(Elevator.getInstance(),
+        navigatorJoystick.getUpButton().whileTrue(new MoveGenericSubsystem(elevator,
                 Elevator.ELEVATOR_FORWARD_SPEED));
-        navigatorJoystick.getDownButton().whileTrue(new MoveGenericSubsystem(Elevator.getInstance(),
+        navigatorJoystick.getDownButton().whileTrue(new MoveGenericSubsystem(elevator,
                 Elevator.ELEVATOR_BACKWARD_SPEED));
-        navigatorJoystick.getRightButton().whileTrue(new MoveGenericSubsystem(CoralJoint.getInstance(),
+        navigatorJoystick.getRightButton().whileTrue(new MoveGenericSubsystem(coralJoint,
                 CoralJoint.CORAL_JOINT_FORWARD_SPEED));
-        navigatorJoystick.getLeftButton().whileTrue(new MoveGenericSubsystem(CoralJoint.getInstance(),
+        navigatorJoystick.getLeftButton().whileTrue(new MoveGenericSubsystem(coralJoint,
                 CoralJoint.CORAL_JOINT_BACKWARD_SPEED));
 
-        navigatorJoystick.getLeftStickButton().onTrue(new ReleaseCoral(Storage.getInstance()));
+        navigatorJoystick.getLeftStickButton().onTrue(new ReleaseCoral(storage));
 
-        navigatorJoystick.getShareButton().onTrue(new RotateAlgaeJointToBottom(AlgaeJoint.getInstance()));
-        navigatorJoystick.getOptionsButton().onTrue(new IntakeAlgae(Gripper.getInstance()));
+        navigatorJoystick.getShareButton().onTrue(new RotateAlgaeJointToBottom(algaeJoint));
+        navigatorJoystick.getOptionsButton().onTrue(new IntakeAlgae(gripper));
 
-        driverJoystick.getR1Button().onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
+        driverJoystick.getR1Button().onTrue(new InstantCommand(drivetrain::resetGyro));
     }
 
     public double getLeftX() {

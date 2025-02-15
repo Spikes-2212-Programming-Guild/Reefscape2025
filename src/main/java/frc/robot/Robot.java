@@ -16,7 +16,7 @@ public class Robot extends TimedRobot {
     private Storage storage;
     private Gripper gripper;
     private CoralJoint coralJoint;
-    private AlgaeJoint algaeJoint;c
+    private AlgaeJoint algaeJoint;
 
     @Override
     public void robotInit() {

@@ -7,7 +7,6 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -17,7 +16,7 @@ public class Robot extends TimedRobot {
     private Storage storage;
     private Gripper gripper;
     private CoralJoint coralJoint;
-    private AlgaeJoint algaeJoint;
+    private AlgaeJoint algaeJoint;c
 
     @Override
     public void robotInit() {

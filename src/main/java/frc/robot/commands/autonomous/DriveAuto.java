@@ -11,8 +11,8 @@ public class DriveAuto extends Drive {
     private static final Supplier<Double> DRIVE_SPEED = () -> 0.5;
     private static final double DRIVE_TIME = 3;
 
-    public DriveAuto(Drivetrain drivetrain) {
-        super(drivetrain, DRIVE_SPEED, () -> 0.0, () -> 0.0, false, false, false);
+    public DriveAuto() {
+        super(Drivetrain.getInstance(), DRIVE_SPEED, () -> 0.0, () -> 0.0, false, false, false);
     }
 
     @Override

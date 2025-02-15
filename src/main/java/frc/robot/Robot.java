@@ -80,7 +80,6 @@ public class Robot extends TimedRobot {
     }
 
     private void registerNamedCommands() {
-        NamedCommands.registerCommand("ElevateToL4", new MoveToHeight(elevator, Elevator.ElevatorLevel.L4));
         NamedCommands.registerCommand("OuttakeCoralAngle",
                 new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
         NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));

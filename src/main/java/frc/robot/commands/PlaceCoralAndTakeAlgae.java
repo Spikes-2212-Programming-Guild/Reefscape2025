@@ -23,9 +23,10 @@ public class PlaceCoralAndTakeAlgae extends SequentialCommandGroup {
                                 new ParallelCommandGroup(
                                         new ReleaseCoral(storage), new IntakeAlgae(gripper).withTimeout(GRIPPER_TIMEOUT)
                                 )),
-                        new SequentialCommandGroup(new ParallelCommandGroup(
-                                new MoveToHeight(elevator, level),
-                                new RotateAlgaeJointToBottom(algaeJoint)),
+                        new SequentialCommandGroup(
+                                new ParallelCommandGroup(new MoveToHeight(elevator, level),
+                                        new RotateAlgaeJointToBottom(algaeJoint)
+                                ),
                                 new IntakeAlgae(gripper).withTimeout(GRIPPER_TIMEOUT)), storage::hasCoral),
                 new ConditionalCommand(
                         new ParallelCommandGroup(

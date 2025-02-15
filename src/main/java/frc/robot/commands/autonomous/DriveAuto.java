@@ -28,6 +28,6 @@ public class DriveAuto extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.stop();added
+        drivetrain.stop();
     }
 }

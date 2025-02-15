@@ -20,8 +20,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        initializedSubsystems();
-        namedCommands();
+        getInstances();
+        registerNamedCommands();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
 
     }
 
-    private void namedCommands() {
+    private void registerNamedCommands() {
         NamedCommands.registerCommand("ElevateToL4", new MoveToHeight(elevator, Elevator.ElevatorLevel.L4));
         NamedCommands.registerCommand("OuttakeCoralAngle",
                 new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
         NamedCommands.registerCommand("PlaceAlgae", new ReleaseAlgae(gripper));
     }
 
-    private void initializedSubsystems () {
+    private void getInstances() {
         elevator = Elevator.getInstance();
         storage = Storage.getInstance();
         gripper = Gripper.getInstance();

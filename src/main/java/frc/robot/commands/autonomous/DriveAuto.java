@@ -18,7 +18,7 @@ public class DriveAuto extends Command {
 
     @Override
     public void execute() {
-        drivetrain.drive(0.0, DRIVE_SPEED, 0.0, false, false);
+        drivetrain.drive(DRIVE_SPEED, 0.0, 0.0, false, false);
     }
 
     @Override

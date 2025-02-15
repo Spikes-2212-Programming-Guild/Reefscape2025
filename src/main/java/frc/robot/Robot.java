@@ -13,25 +13,16 @@ import frc.robot.subsystems.*;
 
 public class Robot extends TimedRobot {
 
-    private final Elevator elevator = Elevator.getInstance();
-    private final Storage storage = Storage.getInstance();
-    private final Gripper gripper = Gripper.getInstance();
-    private final CoralJoint coralJoint = CoralJoint.getInstance();
-    private final AlgaeJoint algaeJoint = AlgaeJoint.getInstance();
+    private Elevator elevator;
+    private Storage storage;
+    private Gripper gripper;
+    private CoralJoint coralJoint;
+    private AlgaeJoint algaeJoint;
 
     @Override
     public void robotInit() {
-        NamedCommands.registerCommand("ElevateToL4", new MoveToHeight(elevator, Elevator.ElevatorLevel.L4));
-        NamedCommands.registerCommand("OuttakeCoralAngle",
-                new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
-        NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
-        NamedCommands.registerCommand("ElevateToFeeder", new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER));
-        NamedCommands.registerCommand("IntakeCoralAngle", new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE));
-        NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(storage));
-        NamedCommands.registerCommand("IntakeAlgaeAngle", new RotateAlgaeJointToBottom(algaeJoint));
-        NamedCommands.registerCommand("ElevateToL3", new MoveToHeight(elevator, Elevator.ElevatorLevel.L3));
-        NamedCommands.registerCommand("TakeAlgae", new IntakeAlgae(gripper));
-        NamedCommands.registerCommand("PlaceAlgae", new ReleaseAlgae(gripper));
+        initializedSubsystems();
+        namedCommands();
     }
 
     @Override
@@ -87,5 +78,27 @@ public class Robot extends TimedRobot {
     @Override
     public void simulationPeriodic() {
 
+    }
+
+    private void namedCommands() {
+        NamedCommands.registerCommand("ElevateToL4", new MoveToHeight(elevator, Elevator.ElevatorLevel.L4));
+        NamedCommands.registerCommand("OuttakeCoralAngle",
+                new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
+        NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
+        NamedCommands.registerCommand("ElevateToFeeder", new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER));
+        NamedCommands.registerCommand("IntakeCoralAngle", new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE));
+        NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(storage));
+        NamedCommands.registerCommand("IntakeAlgaeAngle", new RotateAlgaeJointToBottom(algaeJoint));
+        NamedCommands.registerCommand("ElevateToL3", new MoveToHeight(elevator, Elevator.ElevatorLevel.L3));
+        NamedCommands.registerCommand("TakeAlgae", new IntakeAlgae(gripper));
+        NamedCommands.registerCommand("PlaceAlgae", new ReleaseAlgae(gripper));
+    }
+
+    private void initializedSubsystems () {
+        elevator = Elevator.getInstance();
+        storage = Storage.getInstance();
+        gripper = Gripper.getInstance();
+        coralJoint = CoralJoint.getInstance();
+        algaeJoint = AlgaeJoint.getInstance();
     }
 }

@@ -90,6 +90,7 @@ public class Robot extends TimedRobot {
         NamedCommands.registerCommand("ElevateToL3", new MoveToHeight(elevator, Elevator.ElevatorLevel.L3));
         NamedCommands.registerCommand("TakeAlgae", new IntakeAlgae(gripper));
         NamedCommands.registerCommand("PlaceAlgae", new ReleaseAlgae(gripper));
+//        NamedCommands.registerCommand("ElevateToL4", new MoveToHeight(elevator, Elevator.ElevatorLevel.L4));
     }
 
     private void getInstances() {

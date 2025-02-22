@@ -10,7 +10,7 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum STORAGE_POSE {
 
-        INTAKE(-1), PLACEMENT(-1), RESTING(-1);
+        INTAKE(-1), L1(-1), L2(-1), L3(-1), RESTING(-1);
 
         public final double neededPitch;
 
@@ -58,9 +58,9 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public void calibrateEncoderPosition() {
         if (topLimit.get()) {
-            spark.setPosition(STORAGE_POSE.RESTING.neededPitch);
+            spark.setPosition(STORAGE_POSE.L3.neededPitch);
         } else if (bottomLimit.get()) {
-            spark.setPosition(STORAGE_POSE.PLACEMENT.neededPitch);
+            spark.setPosition(STORAGE_POSE.RESTING.neededPitch);
         }
     }
 

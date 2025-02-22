@@ -10,19 +10,16 @@ import frc.robot.RobotMap;
 
 public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
-    public enum StoragePose {
+    public enum STORAGE_POSE {
 
         INTAKE(-1), PLACEMENT(-1), RESTING(-1);
 
         public final double neededPitch;
 
-        StoragePose(double neededPitch) {
+        STORAGE_POSE(double neededPitch) {
             this.neededPitch = neededPitch;
         }
     }
-
-    public static final double CORAL_JOINT_FORWARD_SPEED = 0.175;
-    public static final double CORAL_JOINT_BACKWARD_SPEED = -0.175;
 
     private static final String NAMESPACE_NAME = "coral joint";
     private static final double GEAR_RATIO = 1;

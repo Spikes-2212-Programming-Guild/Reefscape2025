@@ -16,10 +16,10 @@ public class Robot extends TimedRobot {
 
     RootNamespace namespace = new RootNamespace("robot");
 //    private Elevator elevator;
-    private Storage storage;
+//    private Storage storage;
     private Gripper gripper;
 //    private CoralJoint coralJoint;
-    private District2CoralJoint coralJoint;
+//    private District2CoralJoint coralJoint;
 //    private AlgaeJoint algaeJoint;
 
     @Override
@@ -102,10 +102,10 @@ public class Robot extends TimedRobot {
 
     private void getInstances() {
 //        elevator = Elevator.getInstance();
-        storage = Storage.getInstance();
+//        storage = Storage.getInstance();
         gripper = Gripper.getInstance();
 //        coralJoint = CoralJoint.getInstance();
-        coralJoint = District2CoralJoint.getInstance();
+//        coralJoint = District2CoralJoint.getInstance();
 //        algaeJoint = AlgaeJoint.getInstance();
     }
 }

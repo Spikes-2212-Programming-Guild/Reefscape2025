@@ -5,13 +5,19 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.spikes2212.util.PlaystationControllerWrapper;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
 public class Robot extends TimedRobot {
 
+    private PlaystationControllerWrapper ps = new PlaystationControllerWrapper(0);
+
+    private Drivetrain drivetrain;
     private Elevator elevator;
     private Storage storage;
     private Gripper gripper;
@@ -20,8 +26,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        getInstances();
-        registerNamedCommands();
+        drivetrain = Drivetrain.getInstance();
+        ps.getR1Button().onTrue(new InstantCommand(drivetrain::resetGyro));
+//        getInstances();
+//        registerNamedCommands();
     }
 
     @Override
@@ -41,7 +49,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-
     }
 
     @Override
@@ -51,7 +58,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-
+        drivetrain.resetRelativeEncoders();
+        drivetrain.setDefaultCommand(new Drive(drivetrain, () -> -ps.getLeftY(), () -> -ps.getLeftX(), () -> ps.getRightX() * 2,
+                true, false, false));
     }
 
     @Override

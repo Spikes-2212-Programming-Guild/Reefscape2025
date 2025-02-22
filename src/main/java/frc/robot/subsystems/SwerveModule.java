@@ -4,15 +4,17 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.spikes2212.command.DashboardedSubsystem;
+import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
+import com.spikes2212.dashboard.SpikesLogger;
 import com.spikes2212.util.UnifiedControlMode;
-import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
 import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.util.SparkWrapper;
 
 public class SwerveModule extends DashboardedSubsystem {
 
@@ -39,6 +41,8 @@ public class SwerveModule extends DashboardedSubsystem {
     private final PIDSettings turnPIDSettings;
     private final FeedForwardSettings driveFeedForwardSettings;
     private final FeedForwardSettings turnFeedForwardSettings;
+    SpikesLogger logger = new SpikesLogger();
+
 
     public SwerveModule(String namespace, TalonFXWrapper driveMotor, SparkWrapper turnMotor, CANcoder absoluteEncoder,
                         boolean cancoderInverted, boolean driveInverted, double offset,
@@ -56,6 +60,7 @@ public class SwerveModule extends DashboardedSubsystem {
         this.turnPIDSettings = turnPIDSettings;
         this.driveFeedForwardSettings = driveFeedForwardSettings;
         this.turnFeedForwardSettings = turnFeedForwardSettings;
+        turnMotor.setCurrentLimit(40);
         configureDriveController();
         configureTurnController();
         configureAbsoluteEncoder();
@@ -91,8 +96,7 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     private void setAngle(double angle) {
-        turnMotor.pidSet(UnifiedControlMode.POSITION, angle, turnPIDSettings, turnFeedForwardSettings,
-                true);
+        turnMotor.pidSet(UnifiedControlMode.POSITION, angle, turnPIDSettings, turnFeedForwardSettings, true);
     }
 
     public void stop() {
@@ -100,14 +104,19 @@ public class SwerveModule extends DashboardedSubsystem {
         turnMotor.stopMotor();
     }
 
-    public void set(SwerveModuleState state, boolean usePID) {
-        if (Math.abs(state.speedMetersPerSecond) < Drivetrain.MIN_SPEED) {
+    public void set(SwerveModuleState state, boolean usePID, boolean limitSpeed) {
+        if (Math.abs(state.speedMetersPerSecond) < Drivetrain.MIN_SPEED && limitSpeed) {
             stop();
             return;
         }
         state = optimize(state, turnMotor.getPosition());
+//        state.speedMetersPerSecond *= state.angle.minus(Rotation2d.fromDegrees(turnMotor.getPosition())).getCos();
         setAngle(state.angle.getDegrees());
         setSpeed(state.speedMetersPerSecond, usePID);
+    }
+
+    public void set(SwerveModuleState state, boolean usePID) {
+        set(state, usePID, true);
     }
 
     private double normalizeAngleRelativeToEncoder(double currentAngle, double desiredAngle) {
@@ -152,5 +161,26 @@ public class SwerveModule extends DashboardedSubsystem {
     public void configureDashboard() {
         namespace.putNumber("absolute angle", this::getAbsoluteAngle);
         namespace.putNumber("relative angle", turnMotor::getPosition);
+        namespace.putCommand("set angle to 0", new RunCommand(() -> setAngle(0)) {
+            @Override
+            public void end(boolean fuckYou) {
+                turnMotor.stopMotor();
+            }
+        });
+        namespace.putCommand("rotate", new RunCommand(() -> {
+            turnMotor.set(0.2);
+        }) {
+            @Override
+            public void end(boolean fuckYou) {
+                turnMotor.stopMotor();
+            }
+        });
+        namespace.putNumber("velocity", driveMotor::getVelocity);
+        namespace.putCommand("move", new RunCommand(() -> driveMotor.set(0.1)) {
+            @Override
+            public void end(boolean fuckYou) {
+                driveMotor.stopMotor();
+            }
+        });
     }
 }

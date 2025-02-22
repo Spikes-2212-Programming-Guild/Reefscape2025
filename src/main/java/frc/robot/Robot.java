@@ -4,26 +4,31 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+import com.spikes2212.util.PlaystationControllerWrapper;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.AlgaeJoint;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Gripper;
-import frc.robot.subsystems.Storage;
-import frc.robot.subsystems.district2.District2CoralJoint;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 public class Robot extends TimedRobot {
 
+    private PlaystationControllerWrapper ps = new PlaystationControllerWrapper(0);
+
+    private Drivetrain drivetrain;
     private Elevator elevator;
     private Storage storage;
     private Gripper gripper;
-//    private CoralJoint coralJoint;
-    private District2CoralJoint coralJoint;
+    private CoralJoint coralJoint;
     private AlgaeJoint algaeJoint;
 
     @Override
     public void robotInit() {
-        getInstances();
+        drivetrain = Drivetrain.getInstance();
+        ps.getR1Button().onTrue(new InstantCommand(drivetrain::resetGyro));
+//        getInstances();
 //        registerNamedCommands();
     }
 
@@ -44,7 +49,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-
     }
 
     @Override
@@ -54,7 +58,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-
+        drivetrain.resetRelativeEncoders();
+        drivetrain.setDefaultCommand(new Drive(drivetrain, () -> -ps.getLeftY(), () -> -ps.getLeftX(), () -> ps.getRightX() * 2,
+                true, false, false));
     }
 
     @Override
@@ -83,16 +89,16 @@ public class Robot extends TimedRobot {
     }
 
     private void registerNamedCommands() {
-//        NamedCommands.registerCommand("OuttakeCoralAngle",
-//                new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
-//        NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
-//        NamedCommands.registerCommand("ElevateToFeeder", new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER));
-//        NamedCommands.registerCommand("IntakeCoralAngle", new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE));
-//        NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(storage));
-//        NamedCommands.registerCommand("IntakeAlgaeAngle", new RotateAlgaeJointToBottom(algaeJoint));
-//        NamedCommands.registerCommand("ElevateToL3", new MoveToHeight(elevator, Elevator.ElevatorLevel.L3));
-//        NamedCommands.registerCommand("TakeAlgae", new IntakeAlgae(gripper));
-//        NamedCommands.registerCommand("PlaceAlgae", new ReleaseAlgae(gripper));
+        NamedCommands.registerCommand("OuttakeCoralAngle",
+                new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
+        NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
+        NamedCommands.registerCommand("ElevateToFeeder", new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER));
+        NamedCommands.registerCommand("IntakeCoralAngle", new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE));
+        NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(storage));
+        NamedCommands.registerCommand("IntakeAlgaeAngle", new RotateAlgaeJointToBottom(algaeJoint));
+        NamedCommands.registerCommand("ElevateToL3", new MoveToHeight(elevator, Elevator.ElevatorLevel.L3));
+        NamedCommands.registerCommand("TakeAlgae", new IntakeAlgae(gripper));
+        NamedCommands.registerCommand("PlaceAlgae", new ReleaseAlgae(gripper));
 //        NamedCommands.registerCommand("ElevateToL4", new MoveToHeight(elevator, Elevator.ElevatorLevel.L4));
     }
 
@@ -100,8 +106,7 @@ public class Robot extends TimedRobot {
         elevator = Elevator.getInstance();
         storage = Storage.getInstance();
         gripper = Gripper.getInstance();
-//        coralJoint = CoralJoint.getInstance();
-        coralJoint = District2CoralJoint.getInstance();
+        coralJoint = CoralJoint.getInstance();
         algaeJoint = AlgaeJoint.getInstance();
     }
 }

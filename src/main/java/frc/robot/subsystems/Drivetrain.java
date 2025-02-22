@@ -10,16 +10,20 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.commands.Drive;
 import frc.robot.util.VisionService;
+
+import java.util.function.Supplier;
 
 public class Drivetrain extends DashboardedSubsystem {
 
     public static final double MAX_SPEED = 4;
-    public static final double MIN_SPEED = 0.05;
+    public static final double MIN_SPEED = 0.02;
     public static final double MAX_TURN_SPEED = 3;
 
     private static final double TRACK_WIDTH = 0.6;
     private static final double TRACK_LENGTH = 0.6;
+    private final Supplier<Double> timestep = namespace.addConstantDouble("timestep", 0);
 
     private static final Translation2d CENTER_OF_ROBOT = new Translation2d(0, 0);
     private static final Translation2d FRONT_LEFT_WHEEL_POSITION =
@@ -135,6 +139,7 @@ public class Drivetrain extends DashboardedSubsystem {
         } else {
             speeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
         }
+        speeds = ChassisSpeeds.discretize(speeds, timestep.get());
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds, CENTER_OF_ROBOT);
         SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_SPEED);
         frontLeft.set(states[0], usePID);
@@ -186,5 +191,6 @@ public class Drivetrain extends DashboardedSubsystem {
     @Override
     public void configureDashboard() {
         namespace.putNumber("gyro yaw", gyro::getAngle);
+        namespace.putCommand("check skew", new Drive(this, () -> 0.0, () -> 0.5, () -> 1.0, true, false, false));
     }
 }

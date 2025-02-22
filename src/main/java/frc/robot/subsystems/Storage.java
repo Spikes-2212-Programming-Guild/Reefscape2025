@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
-import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
+import frc.robot.util.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
 

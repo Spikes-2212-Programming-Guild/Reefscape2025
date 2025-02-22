@@ -4,13 +4,24 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 public class Robot extends TimedRobot {
 
+    private Elevator elevator;
+    private Storage storage;
+    private Gripper gripper;
+    private CoralJoint coralJoint;
+    private AlgaeJoint algaeJoint;
+
     @Override
     public void robotInit() {
+        getInstances();
+        registerNamedCommands();
     }
 
     @Override
@@ -66,5 +77,27 @@ public class Robot extends TimedRobot {
     @Override
     public void simulationPeriodic() {
 
+    }
+
+    private void registerNamedCommands() {
+        NamedCommands.registerCommand("OuttakeCoralAngle",
+                new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
+        NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
+        NamedCommands.registerCommand("ElevateToFeeder", new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER));
+        NamedCommands.registerCommand("IntakeCoralAngle", new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE));
+        NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(storage));
+        NamedCommands.registerCommand("IntakeAlgaeAngle", new RotateAlgaeJointToBottom(algaeJoint));
+        NamedCommands.registerCommand("ElevateToL3", new MoveToHeight(elevator, Elevator.ElevatorLevel.L3));
+        NamedCommands.registerCommand("TakeAlgae", new IntakeAlgae(gripper));
+        NamedCommands.registerCommand("PlaceAlgae", new ReleaseAlgae(gripper));
+//        NamedCommands.registerCommand("ElevateToL4", new MoveToHeight(elevator, Elevator.ElevatorLevel.L4));
+    }
+
+    private void getInstances() {
+        elevator = Elevator.getInstance();
+        storage = Storage.getInstance();
+        gripper = Gripper.getInstance();
+        coralJoint = CoralJoint.getInstance();
+        algaeJoint = AlgaeJoint.getInstance();
     }
 }

@@ -34,7 +34,7 @@ public class Storage extends MotoredGenericSubsystem {
 
     @Override
     public boolean canMove(double speed) {
-        return !(speed < 0 && hasCoral());
+        return !(speed > 0 && hasCoral());
     }
 
     @Override

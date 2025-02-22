@@ -21,7 +21,7 @@ public class District2CoralJoint extends SmartMotorControllerGenericSubsystem {
     public static final double CORAL_JOINT_FORWARD_SPEED = 0.5;
     public static final double CORAL_JOINT_BACKWARD_SPEED = 0.5;
 
-    private static final String NAMESPACE_NAME = "coral joint";
+    private static final String NAMESPACE_NAME = "district 2 coral joint";
     private static final double GEAR_RATIO = 1;
     private static final double DEGREES_IN_ROTATIONS = 360;
     private static final double DISTANCE_PER_PULSE = GEAR_RATIO * DEGREES_IN_ROTATIONS;

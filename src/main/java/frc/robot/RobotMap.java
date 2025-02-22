@@ -22,7 +22,7 @@ public class RobotMap {
         int ELEVATOR_MASTER_SPARK = -1;
         int ELEVATOR_SLAVE_SPARK = -1;
         int ALGAE_JOINT_SPARK = -1;
-        int CORAL_JOINT_SPARK = -1;
+        int CORAL_JOINT_TALON = -1;
         int GRIPPER_TALON = -1;
         int STORAGE_SPARK = -1;
     }

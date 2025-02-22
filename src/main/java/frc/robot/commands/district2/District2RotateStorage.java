@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public class District2RotateStorage extends MoveSmartMotorControllerGenericSubsystem {
 
-    private static final RootNamespace namespace = new RootNamespace("rotate storage");
+    private static final RootNamespace namespace = new RootNamespace("district 2 rotate storage");
     private static final PIDSettings pidSettings = namespace.addPIDNamespace("rotate storage");
     private static final FeedForwardSettings feedForwardSettings = namespace.addFeedForwardNamespace("rotate storage",
             FeedForwardController.ControlMode.LINEAR_POSITION);

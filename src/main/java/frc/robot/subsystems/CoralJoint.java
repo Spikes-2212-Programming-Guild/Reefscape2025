@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLowLevel;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
 import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
+import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
 
@@ -25,7 +27,7 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
     private static final double DISTANCE_PER_PULSE = GEAR_RATIO * DEGREES_IN_ROTATIONS;
     private static final double SECONDS_IN_MINUTE = 60;
 
-    private final SparkWrapper spark;
+    private final TalonFXWrapper talonFX;
     private final DigitalInput topLimit;
     private final DigitalInput bottomLimit;
 
@@ -34,20 +36,19 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
     public static CoralJoint getInstance() {
         if (instance == null) {
             instance = new CoralJoint(NAMESPACE_NAME,
-                    SparkWrapper.createSparkMax(RobotMap.CAN.CORAL_JOINT_SPARK, SparkLowLevel.MotorType.kBrushless),
+                    new TalonFXWrapper(RobotMap.CAN.CORAL_JOINT_TALON),
                     new DigitalInput(RobotMap.DIO.CORAL_JOINT_TOP_LIMIT),
                     new DigitalInput(RobotMap.DIO.CORAL_JOINT_BOTTOM_LIMIT));
         }
         return instance;
     }
 
-    private CoralJoint(String namespaceName, SparkWrapper spark, DigitalInput topLimit, DigitalInput bottomLimit) {
-        super(namespaceName, spark);
-        this.spark = spark;
+    private CoralJoint(String namespaceName, TalonFXWrapper talonFX, DigitalInput topLimit, DigitalInput bottomLimit) {
+        super(namespaceName, talonFX);
+        this.talonFX = talonFX;
         this.topLimit = topLimit;
         this.bottomLimit = bottomLimit;
-        spark.setPositionConversionFactor(DISTANCE_PER_PULSE);
-        spark.setVelocityConversionFactor(DISTANCE_PER_PULSE / SECONDS_IN_MINUTE);
+        talonFX.setEncoderConversionFactor(DISTANCE_PER_PULSE);
         configureDashboard();
     }
 
@@ -58,15 +59,15 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public void calibrateEncoderPosition() {
         if (topLimit.get()) {
-            spark.setPosition(STORAGE_POSE.L3.neededPitch);
+            talonFX.setPosition(STORAGE_POSE.L3.neededPitch);
         } else if (bottomLimit.get()) {
-            spark.setPosition(STORAGE_POSE.RESTING.neededPitch);
+            talonFX.setPosition(STORAGE_POSE.RESTING.neededPitch);
         }
     }
 
     public void configureDashboard() {
         namespace.putBoolean("top limit", topLimit::get);
         namespace.putBoolean("bottom limit", bottomLimit::get);
-        namespace.putNumber("storage pose", spark::getPosition);
+        namespace.putNumber("storage pose", talonFX::getPosition);
     }
 }

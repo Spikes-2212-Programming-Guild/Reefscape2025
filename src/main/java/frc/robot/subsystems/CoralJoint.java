@@ -12,7 +12,7 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum StoragePose {
 
-        INTAKE(-1), L1(-1), L2(-1), L3(-1), RESTING(-1);
+        INTAKE(-1), PLACEMENT(-1), RESTING(-1);
 
         public final double neededPitch;
 
@@ -28,7 +28,6 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
     private static final double GEAR_RATIO = 1;
     private static final double DEGREES_IN_ROTATIONS = 360;
     private static final double DISTANCE_PER_PULSE = GEAR_RATIO * DEGREES_IN_ROTATIONS;
-    private static final double SECONDS_IN_MINUTE = 60;
 
     private final TalonFXWrapper talonFX;
     private final DigitalInput topLimit;
@@ -62,9 +61,9 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public void calibrateEncoderPosition() {
         if (topLimit.get()) {
-            talonFX.setPosition(STORAGE_POSE.L3.neededPitch);
-        } else if (bottomLimit.get()) {
             talonFX.setPosition(STORAGE_POSE.RESTING.neededPitch);
+        } else if (bottomLimit.get()) {
+            talonFX.setPosition(STORAGE_POSE.PLACEMENT.neededPitch);
         }
     }
 

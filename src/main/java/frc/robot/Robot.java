@@ -15,18 +15,16 @@ import frc.robot.subsystems.district2.District2CoralJoint;
 public class Robot extends TimedRobot {
 
     RootNamespace namespace = new RootNamespace("robot");
-//    private Elevator elevator;
-//    private Storage storage;
+    private Elevator elevator;
+    private Storage storage;
     private Gripper gripper;
 //    private CoralJoint coralJoint;
-//    private District2CoralJoint coralJoint;
-//    private AlgaeJoint algaeJoint;
+    private District2CoralJoint coralJoint;
+    private AlgaeJoint algaeJoint;
 
     @Override
     public void robotInit() {
         getInstances();
-        namespace.putCommand("intake algae", new IntakeAlgae(gripper));
-        namespace.putCommand("release algae", new ReleaseAlgae(gripper));
 //        registerNamedCommands();
     }
 
@@ -101,11 +99,11 @@ public class Robot extends TimedRobot {
     }
 
     private void getInstances() {
-//        elevator = Elevator.getInstance();
-//        storage = Storage.getInstance();
+        elevator = Elevator.getInstance();
+        storage = Storage.getInstance();
         gripper = Gripper.getInstance();
 //        coralJoint = CoralJoint.getInstance();
-//        coralJoint = District2CoralJoint.getInstance();
-//        algaeJoint = AlgaeJoint.getInstance();
+        coralJoint = District2CoralJoint.getInstance();
+        algaeJoint = AlgaeJoint.getInstance();
     }
 }

@@ -4,12 +4,12 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
-import com.spikes2212.dashboard.RootNamespace;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.AlgaeJoint;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.district2.District2CoralJoint;
 
 public class Robot extends TimedRobot {

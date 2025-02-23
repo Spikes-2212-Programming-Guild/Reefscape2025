@@ -14,7 +14,6 @@ import frc.robot.subsystems.district2.District2CoralJoint;
 
 public class Robot extends TimedRobot {
 
-    RootNamespace namespace = new RootNamespace("robot");
     private Elevator elevator;
     private Storage storage;
     private Gripper gripper;
@@ -30,7 +29,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        namespace.update();
         CommandScheduler.getInstance().run();
     }
 

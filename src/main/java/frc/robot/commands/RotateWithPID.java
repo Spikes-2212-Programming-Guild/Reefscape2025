@@ -44,7 +44,7 @@ public class RotateWithPID extends Command {
         feedForwardController.setGains(feedForwardSettings);
         drivetrain.drive(0, 0, pidController.calculate(drivetrain.getYaw(), setpoint.get()) +
                 feedForwardController.calculate(drivetrain.getYaw(), setpoint.get()),
-                false, false);
+                false, false, 0.02);
     }
 
     @Override

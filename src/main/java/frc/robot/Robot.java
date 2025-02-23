@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.spikes2212.util.PlaystationControllerWrapper;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -16,6 +17,8 @@ import frc.robot.subsystems.*;
 public class Robot extends TimedRobot {
 
     private PlaystationControllerWrapper ps = new PlaystationControllerWrapper(0);
+    private Joystick left = new Joystick(1);
+    private Joystick right = new Joystick(2);
 
     private Drivetrain drivetrain;
     private Elevator elevator;
@@ -59,13 +62,14 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         drivetrain.resetRelativeEncoders();
+//        drivetrain.setDefaultCommand(new Drive(drivetrain, () -> -ps.getLeftY(), () -> -ps.getLeftX(), () -> ps.getRightX() * 2,
+//                true, false, false));
         drivetrain.setDefaultCommand(new Drive(drivetrain, () -> -ps.getLeftY(), () -> -ps.getLeftX(), () -> ps.getRightX() * 2,
                 true, false, false));
     }
 
     @Override
     public void teleopPeriodic() {
-
     }
 
     @Override

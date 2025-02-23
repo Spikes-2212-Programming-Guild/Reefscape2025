@@ -42,7 +42,7 @@ public class CenterOnReef extends Command {
         // @TODO make sure this is correct
         double setpoint = goLeft ? DISTANCE_FROM_TARGET : -DISTANCE_FROM_TARGET;
         drivetrain.drive(0, pidController.calculate(drivetrain.getPose2d().getX(), setpoint) +
-                feedForwardController.calculate(drivetrain.getPose2d().getX(), setpoint), 0, false, false);
+                feedForwardController.calculate(drivetrain.getPose2d().getX(), setpoint), 0, false, false, 0.02);
     }
 
     @Override

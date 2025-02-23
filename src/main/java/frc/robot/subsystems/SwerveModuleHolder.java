@@ -15,9 +15,9 @@ public class SwerveModuleHolder {
     private static final RootNamespace namespace = new RootNamespace("swerve module holder");
 
     private static final boolean FRONT_LEFT_DRIVE_INVERTED = false;
-    private static final boolean FRONT_RIGHT_DRIVE_INVERTED = true;
+    private static final boolean FRONT_RIGHT_DRIVE_INVERTED = false;
     private static final boolean BACK_LEFT_DRIVE_INVERTED = true;
-    private static final boolean BACK_RIGHT_DRIVE_INVERTED = false;
+    private static final boolean BACK_RIGHT_DRIVE_INVERTED = true;
 
     private static final boolean FRONT_LEFT_CANCODER_INVERTED = false;
     private static final boolean FRONT_RIGHT_CANCODER_INVERTED = false;
@@ -29,10 +29,10 @@ public class SwerveModuleHolder {
     private static final String BACK_LEFT_NAMESPACE_NAME = "back left";
     private static final String BACK_RIGHT_NAMESPACE_NAME = "back right";
 
-    private static final double FRONT_LEFT_OFFSET = -0.164;
-    private static final double FRONT_RIGHT_OFFSET = -0.973;
-    private static final double BACK_LEFT_OFFSET = -0.574;
-    private static final double BACK_RIGHT_OFFSET = -0.972;
+    private static final double FRONT_LEFT_OFFSET = -0.161;
+    private static final double FRONT_RIGHT_OFFSET = -0.275;
+    private static final double BACK_LEFT_OFFSET = -0.568;
+    private static final double BACK_RIGHT_OFFSET = -0.453;
 
     private static final PIDSettings drivePIDSettings = namespace.addPIDNamespace("drive");
     private static final PIDSettings turnPIDSettings = namespace.addPIDNamespace("turn");

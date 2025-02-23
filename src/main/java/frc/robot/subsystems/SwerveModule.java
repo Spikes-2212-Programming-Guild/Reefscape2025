@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.spikes2212.command.DashboardedSubsystem;
-import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.dashboard.SpikesLogger;
@@ -106,6 +105,7 @@ public class SwerveModule extends DashboardedSubsystem {
 
     public void set(SwerveModuleState state, boolean usePID, boolean limitSpeed) {
         if (Math.abs(state.speedMetersPerSecond) < Drivetrain.MIN_SPEED && limitSpeed) {
+            logger.log(state.speedMetersPerSecond);
             stop();
             return;
         }

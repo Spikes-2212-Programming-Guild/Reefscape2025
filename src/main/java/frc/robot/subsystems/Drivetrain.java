@@ -9,6 +9,8 @@ import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.commands.Drive;
 import frc.robot.util.VisionService;
@@ -18,12 +20,11 @@ import java.util.function.Supplier;
 public class Drivetrain extends DashboardedSubsystem {
 
     public static final double MAX_SPEED = 4;
-    public static final double MIN_SPEED = 0.02;
+    public static final double MIN_SPEED = 0.06;
     public static final double MAX_TURN_SPEED = 3;
 
     private static final double TRACK_WIDTH = 0.6;
     private static final double TRACK_LENGTH = 0.6;
-    private final Supplier<Double> timestep = namespace.addConstantDouble("timestep", 0);
 
     private static final Translation2d CENTER_OF_ROBOT = new Translation2d(0, 0);
     private static final Translation2d FRONT_LEFT_WHEEL_POSITION =
@@ -46,6 +47,11 @@ public class Drivetrain extends DashboardedSubsystem {
 
     private final SwerveDriveOdometry odometry;
     private final VisionService visionService;
+    StructArrayPublisher<SwerveModuleState> currentStates = NetworkTableInstance.getDefault()
+            .getStructArrayTopic("current states", SwerveModuleState.struct).publish();
+    StructArrayPublisher<SwerveModuleState> desiredStates = NetworkTableInstance.getDefault()
+            .getStructArrayTopic("desired states", SwerveModuleState.struct).publish();
+
     private SwerveModulePosition[] swerveModulePositions;
 
     private Pose2d currentPose;
@@ -110,6 +116,22 @@ public class Drivetrain extends DashboardedSubsystem {
                 },
                 this // Reference to this subsystem to set requirements
         );
+        currentStates.set(
+                new SwerveModuleState[]{
+                        new SwerveModuleState(),
+                        new SwerveModuleState(),
+                        new SwerveModuleState(),
+                        new SwerveModuleState()
+                }
+        );
+        desiredStates.set(
+                new SwerveModuleState[]{
+                        new SwerveModuleState(),
+                        new SwerveModuleState(),
+                        new SwerveModuleState(),
+                        new SwerveModuleState()
+                }
+        );
         configureDashboard();
     }
 
@@ -131,7 +153,7 @@ public class Drivetrain extends DashboardedSubsystem {
     }
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative,
-                      boolean usePID) {
+                      boolean usePID, double timestep) {
         ChassisSpeeds speeds;
         if (fieldRelative) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed,
@@ -139,13 +161,22 @@ public class Drivetrain extends DashboardedSubsystem {
         } else {
             speeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
         }
-        speeds = ChassisSpeeds.discretize(speeds, timestep.get());
+        speeds = ChassisSpeeds.discretize(speeds, timestep);
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds, CENTER_OF_ROBOT);
         SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_SPEED);
         frontLeft.set(states[0], usePID);
         frontRight.set(states[1], usePID);
         backLeft.set(states[2], usePID);
         backRight.set(states[3], usePID);
+        currentStates.set(
+                new SwerveModuleState[]{
+                        frontLeft.getState(),
+                        frontRight.getState(),
+                        backLeft.getState(),
+                        backRight.getState()
+                }
+        );
+        desiredStates.set(states);
     }
 
     public void stop() {
@@ -177,7 +208,7 @@ public class Drivetrain extends DashboardedSubsystem {
 
     public void driveRobotRelative(ChassisSpeeds speeds) {
         drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond,
-                false, true);
+                false, true, 0.02);
     }
       
     public void resetGyro() {

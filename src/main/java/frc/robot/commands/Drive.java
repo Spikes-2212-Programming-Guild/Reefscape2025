@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
+import com.spikes2212.dashboard.SpikesLogger;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 
@@ -11,6 +13,7 @@ public class Drive extends Command {
     private static final double DRIVE_ACCELERATION_LIMIT = 2;
     private static final double TURN_ACCELERATION_LIMIT = 4;
 
+    SpikesLogger logger = new SpikesLogger();
     private final Drivetrain drivetrain;
     private final Supplier<Double> xSpeed;
     private final Supplier<Double> ySpeed;
@@ -22,6 +25,8 @@ public class Drive extends Command {
     private final SlewRateLimiter xLimiter;
     private final SlewRateLimiter yLimiter;
     private final SlewRateLimiter rotationLimiter;
+
+    double time;
 
     public Drive(Drivetrain drivetrain, Supplier<Double> xSpeed, Supplier<Double> ySpeed,
                  Supplier<Double> rotationSpeed, boolean fieldRelative, boolean usePID,
@@ -40,6 +45,11 @@ public class Drive extends Command {
     }
 
     @Override
+    public void initialize() {
+        time = Timer.getFPGATimestamp();
+    }
+
+    @Override
     public void execute() {
         double xSpeed = this.xSpeed.get();
         double ySpeed = this.ySpeed.get();
@@ -51,7 +61,9 @@ public class Drive extends Command {
             rotationSpeed = rotationLimiter.calculate(this.rotationSpeed.get());
         }
 
-        drivetrain.drive(xSpeed, ySpeed, rotationSpeed, fieldRelative, usePID);
+        drivetrain.drive(xSpeed, ySpeed, rotationSpeed, fieldRelative, usePID, Timer.getFPGATimestamp() - time);
+//        logger.log(Timer.getFPGATimestamp() - time);
+        time = Timer.getFPGATimestamp();
     }
 
     @Override

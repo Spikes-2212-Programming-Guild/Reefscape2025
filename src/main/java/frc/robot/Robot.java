@@ -4,24 +4,27 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.AlgaeJoint;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Storage;
+import frc.robot.subsystems.district2.District2CoralJoint;
 
 public class Robot extends TimedRobot {
 
     private Elevator elevator;
     private Storage storage;
     private Gripper gripper;
-    private CoralJoint coralJoint;
+//    private CoralJoint coralJoint;
+    private District2CoralJoint coralJoint;
     private AlgaeJoint algaeJoint;
 
     @Override
     public void robotInit() {
         getInstances();
-        registerNamedCommands();
+//        registerNamedCommands();
     }
 
     @Override
@@ -80,16 +83,16 @@ public class Robot extends TimedRobot {
     }
 
     private void registerNamedCommands() {
-        NamedCommands.registerCommand("OuttakeCoralAngle",
-                new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
-        NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
-        NamedCommands.registerCommand("ElevateToFeeder", new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER));
-        NamedCommands.registerCommand("IntakeCoralAngle", new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE));
-        NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(storage));
-        NamedCommands.registerCommand("IntakeAlgaeAngle", new RotateAlgaeJointToBottom(algaeJoint));
-        NamedCommands.registerCommand("ElevateToL3", new MoveToHeight(elevator, Elevator.ElevatorLevel.L3));
-        NamedCommands.registerCommand("TakeAlgae", new IntakeAlgae(gripper));
-        NamedCommands.registerCommand("PlaceAlgae", new ReleaseAlgae(gripper));
+//        NamedCommands.registerCommand("OuttakeCoralAngle",
+//                new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
+//        NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
+//        NamedCommands.registerCommand("ElevateToFeeder", new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER));
+//        NamedCommands.registerCommand("IntakeCoralAngle", new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE));
+//        NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(storage));
+//        NamedCommands.registerCommand("IntakeAlgaeAngle", new RotateAlgaeJointToBottom(algaeJoint));
+//        NamedCommands.registerCommand("ElevateToL3", new MoveToHeight(elevator, Elevator.ElevatorLevel.L3));
+//        NamedCommands.registerCommand("TakeAlgae", new IntakeAlgae(gripper));
+//        NamedCommands.registerCommand("PlaceAlgae", new ReleaseAlgae(gripper));
 //        NamedCommands.registerCommand("ElevateToL4", new MoveToHeight(elevator, Elevator.ElevatorLevel.L4));
     }
 
@@ -97,7 +100,8 @@ public class Robot extends TimedRobot {
         elevator = Elevator.getInstance();
         storage = Storage.getInstance();
         gripper = Gripper.getInstance();
-        coralJoint = CoralJoint.getInstance();
+//        coralJoint = CoralJoint.getInstance();
+        coralJoint = District2CoralJoint.getInstance();
         algaeJoint = AlgaeJoint.getInstance();
     }
 }

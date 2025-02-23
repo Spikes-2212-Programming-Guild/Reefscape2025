@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
@@ -16,13 +16,13 @@ public class Gripper extends MotoredGenericSubsystem {
 
     public static Gripper getInstance() {
         if (instance == null) {
-            instance = new Gripper(NAMESPACE_NAME, new WPI_TalonSRX(RobotMap.CAN.GRIPPER_TALON),
+            instance = new Gripper(NAMESPACE_NAME, new WPI_VictorSPX(RobotMap.CAN.GRIPPER_VICTOR),
                     new DigitalInput(RobotMap.DIO.GRIPPER_LIMIT));
         }
         return instance;
     }
 
-    private Gripper(String namespaceName, WPI_TalonSRX talon, DigitalInput limit) {
+    private Gripper(String namespaceName, WPI_VictorSPX talon, DigitalInput limit) {
         super(namespaceName, talon);
         this.limit = limit;
         talon.setNeutralMode(NeutralMode.Brake);

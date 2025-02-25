@@ -21,8 +21,8 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         }
     }
 
-    public static final double CORAL_JOINT_FORWARD_SPEED = 0.5;
-    public static final double CORAL_JOINT_BACKWARD_SPEED = 0.5;
+    public static final double CORAL_JOINT_FORWARD_SPEED = 0.1;
+    public static final double CORAL_JOINT_BACKWARD_SPEED = -0.1;
 
     private static final String NAMESPACE_NAME = "coral joint";
     private static final double GEAR_RATIO = 1;

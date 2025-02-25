@@ -6,7 +6,7 @@ import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.dashboard.RootNamespace;
-import com.spikes2212.util.smartmotorcontrollers.SparkWrapper;
+import frc.robot.util.SparkWrapper;
 import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
 import frc.robot.RobotMap;
 
@@ -16,8 +16,8 @@ public class SwerveModuleHolder {
 
     private static final boolean FRONT_LEFT_DRIVE_INVERTED = false;
     private static final boolean FRONT_RIGHT_DRIVE_INVERTED = false;
-    private static final boolean BACK_LEFT_DRIVE_INVERTED = false;
-    private static final boolean BACK_RIGHT_DRIVE_INVERTED = false;
+    private static final boolean BACK_LEFT_DRIVE_INVERTED = true;
+    private static final boolean BACK_RIGHT_DRIVE_INVERTED = true;
 
     private static final boolean FRONT_LEFT_CANCODER_INVERTED = false;
     private static final boolean FRONT_RIGHT_CANCODER_INVERTED = false;
@@ -29,13 +29,14 @@ public class SwerveModuleHolder {
     private static final String BACK_LEFT_NAMESPACE_NAME = "back left";
     private static final String BACK_RIGHT_NAMESPACE_NAME = "back right";
 
-    private static final double FRONT_LEFT_OFFSET = 0;
-    private static final double FRONT_RIGHT_OFFSET = 0;
-    private static final double BACK_LEFT_OFFSET = 0;
-    private static final double BACK_RIGHT_OFFSET = 0;
+    private static final double FRONT_LEFT_OFFSET = -0.164;
+    private static final double FRONT_RIGHT_OFFSET = -0.306;
+    private static final double BACK_LEFT_OFFSET = -0.572;
+    private static final double BACK_RIGHT_OFFSET = -0.453;
 
     private static final PIDSettings drivePIDSettings = namespace.addPIDNamespace("drive");
-    private static final PIDSettings turnPIDSettings = namespace.addPIDNamespace("turn");
+    private static final PIDSettings turnPIDSettings = namespace.addPIDNamespace("turn",
+            new PIDSettings(0.015, 0.001, 0, 10, 0, 0));
     private static final FeedForwardSettings driveFeedForwardSettings = namespace.addFeedForwardNamespace(
             "drive", new FeedForwardSettings(FeedForwardController.ControlMode.LINEAR_VELOCITY));
     private static final FeedForwardSettings turnFeedForwardSettings = namespace.addFeedForwardNamespace(

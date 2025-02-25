@@ -6,12 +6,12 @@ import frc.robot.subsystems.Drivetrain;
 
 import java.util.function.Supplier;
 
-public class DriveAuto extends Drive {
+public class JustDrive extends Drive {
 
-    private static final Supplier<Double> DRIVE_SPEED = () -> 0.5;
+    private static final Supplier<Double> DRIVE_SPEED = () -> 1.0;
     private static final double DRIVE_TIME = 3;
 
-    public DriveAuto() {
+    public JustDrive() {
         super(Drivetrain.getInstance(), DRIVE_SPEED, () -> 0.0, () -> 0.0, false, false, false);
     }
 

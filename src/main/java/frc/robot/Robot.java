@@ -4,37 +4,68 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.spikes2212.dashboard.RootNamespace;
+import com.spikes2212.util.PlaystationControllerWrapper;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.Drive;
+import frc.robot.commands.ReleaseCoral;
+import frc.robot.commands.autonomous.DriveAndPlaceL2;
+import frc.robot.commands.autonomous.JustDrive;
 import frc.robot.subsystems.AlgaeJoint;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.district2.District2CoralJoint;
 
 public class Robot extends TimedRobot {
 
-    private Elevator elevator;
+    private PlaystationControllerWrapper ps = new PlaystationControllerWrapper(0);
+//    private Joystick left = new Joystick(1);
+//    private Joystick right = new Joystick(2);
+
+
+    RootNamespace namespace = new RootNamespace("robot");
+    private Drivetrain drivetrain;
+//    private Elevator elevator;
     private Storage storage;
-    private Gripper gripper;
-//    private CoralJoint coralJoint;
+//    private Gripper gripper;
     private District2CoralJoint coralJoint;
-    private AlgaeJoint algaeJoint;
+//    private AlgaeJoint algaeJoint;
 
     @Override
     public void robotInit() {
+//        CameraServer.startAutomaticCapture(0);
+//        CameraServer.startAutomaticCapture(1);
+//        CvSink cvSink = CameraServer.getVideo();
+//        CvSource outputStream = CameraServer.putVideo("camera", 720, 1280);
+        drivetrain = Drivetrain.getInstance();
+//        new JoystickButton(right, 1).onTrue(new InstantCommand(drivetrain::resetGyro));
         getInstances();
+//        namespace.putCommand("L3", new PlaceOnL3(drivetrain, coralJoint, storage));
 //        registerNamedCommands();
     }
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+        coralJoint.calibrateEncoderPosition();
+        namespace.update();
     }
 
     @Override
     public void disabledInit() {
         CommandScheduler.getInstance().cancelAll();
+        drivetrain.setNeutralMode(NeutralModeValue.Brake);
     }
 
     @Override
@@ -44,7 +75,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-
+//        JustDrive auto = new JustDrive();
+//        DriveAndPlaceL2 auto = new DriveAndPlaceL2();
+//        auto.schedule();
     }
 
     @Override
@@ -54,12 +87,16 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-
+        OI oi = new OI();
+        drivetrain.resetRelativeEncoders();
+        drivetrain.setNeutralMode(NeutralModeValue.Coast);
+        drivetrain.setDefaultCommand(new Drive(drivetrain, () -> -oi.getLeftY() * 4, () -> -oi.getLeftX() * 4, () -> oi.getRightX() * 6,
+                true, false, false));
+//        algaeJoint.setDefaultCommand(new MoveGenericSubsystem(algaeJoint, AlgaeJoint.STABILIZATION_SPEED).onlyIf(gripper::hasAlgae));
     }
 
     @Override
     public void teleopPeriodic() {
-
     }
 
     @Override
@@ -97,11 +134,10 @@ public class Robot extends TimedRobot {
     }
 
     private void getInstances() {
-        elevator = Elevator.getInstance();
+//        elevator = Elevator.getInstance();
         storage = Storage.getInstance();
-        gripper = Gripper.getInstance();
-//        coralJoint = CoralJoint.getInstance();
+//        gripper = Gripper.getInstance();
         coralJoint = District2CoralJoint.getInstance();
-        algaeJoint = AlgaeJoint.getInstance();
+//        algaeJoint = AlgaeJoint.getInstance();
     }
 }

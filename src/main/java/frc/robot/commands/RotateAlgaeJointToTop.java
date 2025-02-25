@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 public class RotateAlgaeJointToTop extends MoveGenericSubsystem {
 
     private static final RootNamespace NAMESPACE = new RootNamespace("rotate algae joint to top");
-    private static final Supplier<Double> SPEED = NAMESPACE.addConstantDouble("intake speed", 0.5);
+    private static final Supplier<Double> SPEED = NAMESPACE.addConstantDouble("rotate speed", 0.5);
 
     public RotateAlgaeJointToTop(AlgaeJoint algaeJoint) {
         super(algaeJoint, SPEED);

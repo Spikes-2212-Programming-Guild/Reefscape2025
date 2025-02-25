@@ -5,6 +5,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
+import frc.robot.commands.IntakeAlgae;
+import frc.robot.commands.ReleaseAlgae;
 
 public class Gripper extends MotoredGenericSubsystem {
 
@@ -41,5 +43,7 @@ public class Gripper extends MotoredGenericSubsystem {
     @Override
     public void configureDashboard() {
         namespace.putBoolean("algae present", limit::get);
+        namespace.putCommand("intake algae", new IntakeAlgae(this));
+        namespace.putCommand("release algae", new ReleaseAlgae(this));
     }
 }

@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -7,11 +9,14 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.spikes2212.command.DashboardedSubsystem;
 import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.Drive;
 import frc.robot.util.VisionService;
 
@@ -47,6 +52,7 @@ public class Drivetrain extends DashboardedSubsystem {
 
     private final SwerveDriveOdometry odometry;
     private final VisionService visionService;
+    private final SysIdRoutine sysIdRoutine;
     StructArrayPublisher<SwerveModuleState> currentStates = NetworkTableInstance.getDefault()
             .getStructArrayTopic("current states", SwerveModuleState.struct).publish();
     StructArrayPublisher<SwerveModuleState> desiredStates = NetworkTableInstance.getDefault()
@@ -80,7 +86,7 @@ public class Drivetrain extends DashboardedSubsystem {
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
         kinematics = new SwerveDriveKinematics(FRONT_LEFT_WHEEL_POSITION,
                 FRONT_RIGHT_WHEEL_POSITION, BACK_LEFT_WHEEL_POSITION, BACK_RIGHT_WHEEL_POSITION);
-        odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), swerveModulePositions,
+        odometry = new SwerveDriveOdometry(kinematics, getRotation2d(), swerveModulePositions,
                 new Pose2d());
         currentPose = new Pose2d();
         RobotConfig config;
@@ -132,6 +138,10 @@ public class Drivetrain extends DashboardedSubsystem {
                         new SwerveModuleState()
                 }
         );
+        sysIdRoutine = new SysIdRoutine(
+                new SysIdRoutine.Config(null, null, null, state -> SignalLogger.writeString("state", state.toString())),
+                new SysIdRoutine.Mechanism(this::voltageMove, null, this)
+        );
         configureDashboard();
     }
 
@@ -142,11 +152,11 @@ public class Drivetrain extends DashboardedSubsystem {
                 frontRight.getPosition(), backLeft.getPosition(), backRight.getPosition()};
         if (visionService.hasTarget()) {
             if (visionService.getTargetRelativePose() != null) {
-                odometry.resetPosition(gyro.getRotation2d(), swerveModulePositions,
+                odometry.resetPosition(getRotation2d(), swerveModulePositions,
                         visionService.getTargetRelativePose());
             }
         }
-        currentPose = odometry.update(gyro.getRotation2d(), new SwerveModulePosition[] {
+        currentPose = odometry.update(getRotation2d(), new SwerveModulePosition[] {
                 frontLeft.getPosition(), frontRight.getPosition(),
                 backLeft.getPosition(), backRight.getPosition()
         });
@@ -157,7 +167,7 @@ public class Drivetrain extends DashboardedSubsystem {
         ChassisSpeeds speeds;
         if (fieldRelative) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed,
-                    gyro.getRotation2d());
+                    getRotation2d());
         } else {
             speeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
         }
@@ -179,6 +189,13 @@ public class Drivetrain extends DashboardedSubsystem {
         desiredStates.set(states);
     }
 
+    public void voltageMove(Voltage voltage) {
+        frontLeft.sysID(voltage);
+        frontRight.sysID(voltage);
+        backLeft.sysID(voltage);
+        backRight.sysID(voltage);
+    }
+
     public void stop() {
         frontLeft.stop();
         frontRight.stop();
@@ -198,7 +215,7 @@ public class Drivetrain extends DashboardedSubsystem {
     }
 
     public void resetPose2d(Pose2d desiredPose) {
-        odometry.resetPosition(gyro.getRotation2d(), swerveModulePositions, desiredPose);
+        odometry.resetPosition(getRotation2d(), swerveModulePositions, desiredPose);
     }
 
     public ChassisSpeeds getRobotRelativeSpeeds() {
@@ -216,12 +233,27 @@ public class Drivetrain extends DashboardedSubsystem {
     }
 
     public double getYaw() {
-        return gyro.getAngle();
+        return -gyro.getAngle();
+    }
+
+    public Rotation2d getRotation2d() {
+        return Rotation2d.fromDegrees(getYaw());
+    }
+
+    public void setNeutralMode(NeutralModeValue neutralMode) {
+        frontLeft.setIdleMode(neutralMode);
+        frontRight.setIdleMode(neutralMode);
+        backLeft.setIdleMode(neutralMode);
+        backRight.setIdleMode(neutralMode);
     }
 
     @Override
     public void configureDashboard() {
-        namespace.putNumber("gyro yaw", gyro::getAngle);
+        namespace.putNumber("gyro yaw", this::getYaw);
         namespace.putCommand("check skew", new Drive(this, () -> 0.0, () -> 0.5, () -> 1.0, true, false, false));
+        namespace.putCommand("quasistatic forward", sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
+        namespace.putCommand("quasistatic reverse", sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
+        namespace.putCommand("dynamic forward", sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
+        namespace.putCommand("dynamic reverse", sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
     }
 }

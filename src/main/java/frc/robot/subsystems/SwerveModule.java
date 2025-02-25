@@ -1,19 +1,27 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.spikes2212.command.DashboardedSubsystem;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
+import com.spikes2212.control.TrapezoidProfileSettings;
 import com.spikes2212.dashboard.SpikesLogger;
 import com.spikes2212.util.UnifiedControlMode;
 import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.util.SparkWrapper;
+
+import static edu.wpi.first.units.Units.Volts;
 
 public class SwerveModule extends DashboardedSubsystem {
 
@@ -59,6 +67,9 @@ public class SwerveModule extends DashboardedSubsystem {
         this.turnPIDSettings = turnPIDSettings;
         this.driveFeedForwardSettings = driveFeedForwardSettings;
         this.turnFeedForwardSettings = turnFeedForwardSettings;
+        turnMotor.configureLoop(turnPIDSettings, turnFeedForwardSettings,
+                TrapezoidProfileSettings.EMPTY_TRAPEZOID_PROFILE_SETTINGS);
+        driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(40));
         turnMotor.setCurrentLimit(40);
         configureDriveController();
         configureTurnController();
@@ -94,8 +105,17 @@ public class SwerveModule extends DashboardedSubsystem {
         } else driveMotor.set(speed / Drivetrain.MAX_SPEED);
     }
 
+    public void setIdleMode(NeutralModeValue neutralMode) {
+        driveMotor.setIdleMode(neutralMode);
+    }
+
+    public void sysID(Voltage voltage) {
+        setSpeed(voltage.in(Volts), false);
+        setAngle(0);
+    }
+
     private void setAngle(double angle) {
-        turnMotor.pidSet(UnifiedControlMode.POSITION, angle, turnPIDSettings, turnFeedForwardSettings, true);
+        turnMotor.pidSet(UnifiedControlMode.POSITION, angle, turnPIDSettings, turnFeedForwardSettings, false);
     }
 
     public void stop() {
@@ -105,7 +125,6 @@ public class SwerveModule extends DashboardedSubsystem {
 
     public void set(SwerveModuleState state, boolean usePID, boolean limitSpeed) {
         if (Math.abs(state.speedMetersPerSecond) < Drivetrain.MIN_SPEED && limitSpeed) {
-            logger.log(state.speedMetersPerSecond);
             stop();
             return;
         }

@@ -14,15 +14,16 @@ import java.util.function.Supplier;
 public class District2RotateStorage extends MoveSmartMotorControllerGenericSubsystem {
 
     private static final RootNamespace namespace = new RootNamespace("district 2 rotate storage");
-    private static final PIDSettings pidSettings = namespace.addPIDNamespace("rotate storage");
+    private static final PIDSettings pidSettings = namespace.addPIDNamespace("rotate storage",
+            new PIDSettings(1.3, 1.5, 0.13, 0, 0.02, 999));
     private static final FeedForwardSettings feedForwardSettings = namespace.addFeedForwardNamespace("rotate storage",
-            FeedForwardController.ControlMode.LINEAR_POSITION);
+            new FeedForwardSettings(0, 0, 0, 0.05, FeedForwardController.ControlMode.ANGULAR_POSITION));
 
     private final District2CoralJoint coralJoint;
 
     public District2RotateStorage(District2CoralJoint coralJoint, Supplier<Double> setpoint) {
         super(coralJoint, pidSettings, feedForwardSettings, UnifiedControlMode.POSITION,
-                setpoint, true);
+                setpoint, false);
         this.coralJoint = coralJoint;
     }
 
@@ -31,8 +32,18 @@ public class District2RotateStorage extends MoveSmartMotorControllerGenericSubsy
     }
 
     @Override
+    public void initialize() {
+        super.initialize();
+    }
+
+    @Override
     public boolean isFinished() {
         return !(coralJoint.canMove(coralJoint.getSpeed())) || super.isFinished();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
     }
 }
 

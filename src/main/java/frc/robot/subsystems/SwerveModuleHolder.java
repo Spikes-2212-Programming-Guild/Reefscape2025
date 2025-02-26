@@ -16,7 +16,7 @@ public class SwerveModuleHolder {
 
     private static final boolean FRONT_LEFT_DRIVE_INVERTED = false;
     private static final boolean FRONT_RIGHT_DRIVE_INVERTED = false;
-    private static final boolean BACK_LEFT_DRIVE_INVERTED = true;
+    private static final boolean BACK_LEFT_DRIVE_INVERTED = false;
     private static final boolean BACK_RIGHT_DRIVE_INVERTED = true;
 
     private static final boolean FRONT_LEFT_CANCODER_INVERTED = false;
@@ -31,7 +31,7 @@ public class SwerveModuleHolder {
 
     private static final double FRONT_LEFT_OFFSET = -0.164;
     private static final double FRONT_RIGHT_OFFSET = -0.306;
-    private static final double BACK_LEFT_OFFSET = -0.572;
+    private static final double BACK_LEFT_OFFSET = -0.071;
     private static final double BACK_RIGHT_OFFSET = -0.453;
 
     private static final PIDSettings drivePIDSettings = namespace.addPIDNamespace("drive");

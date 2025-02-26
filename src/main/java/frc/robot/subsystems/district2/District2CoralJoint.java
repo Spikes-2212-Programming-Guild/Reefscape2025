@@ -79,6 +79,10 @@ public class District2CoralJoint extends SmartMotorControllerGenericSubsystem {
         talonFX.set(voltage.in(Units.Volts) / RobotController.getBatteryVoltage());
     }
 
+    public double getPose() {
+        return talonFX.getPosition();
+    }
+
     @Override
     public boolean canMove(double speed) {
         return !(bottomLimit.get() && speed < 0);

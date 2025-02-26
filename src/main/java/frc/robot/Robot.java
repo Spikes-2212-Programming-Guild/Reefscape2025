@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.spikes2212.dashboard.RootNamespace;
 import com.spikes2212.util.PlaystationControllerWrapper;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Drive;
@@ -30,6 +31,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        DataLogManager.start();
         drivetrain = Drivetrain.getInstance();
         namespace.putNumber("left x", oi::getLeftX);
         namespace.putNumber("left y", oi::getLeftY);
@@ -59,8 +61,9 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         drivetrain.resetGyro();
-        JustDrive auto = new JustDrive(drivetrain);
-//        DriveAndPlaceL2 auto = new DriveAndPlaceL2(drivetrain, coralJoint, storage);
+        drivetrain.resetRelativeEncoders();
+//        JustDrive auto = new JustDrive(drivetrain);
+        DriveAndPlaceL2 auto = new DriveAndPlaceL2(drivetrain, coralJoint, storage);
         auto.schedule();
     }
 

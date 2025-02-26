@@ -30,6 +30,8 @@ public class OI /*GEVALD*/ {
 
     private boolean inAlgaeMode;
 
+    private double currentSetpoint;
+
     public OI() {
 //        navigatorJoystick.getL1Button().onTrue(new ConditionalCommand(
 //                new PlaceCoralAndTakeAlgae(elevator, algaeJoint, gripper,
@@ -51,12 +53,25 @@ public class OI /*GEVALD*/ {
         navigatorJoystick.getCircleButton().onTrue(new ReleaseCoral(storage));
 
         navigatorJoystick.getUpButton().whileTrue(new MoveGenericSubsystem(coralJoint,
-                CoralJoint.CORAL_JOINT_FORWARD_SPEED));
+                CoralJoint.CORAL_JOINT_FORWARD_SPEED) {
+            @Override
+            public void end(boolean interrupted) {
+                double setpoint = coralJoint.getPose();
+                new District2RotateStorage(coralJoint, () -> setpoint).schedule();
+            }
+        });
         navigatorJoystick.getDownButton().whileTrue(new MoveGenericSubsystem(coralJoint,
-                CoralJoint.CORAL_JOINT_BACKWARD_SPEED));
+                CoralJoint.CORAL_JOINT_BACKWARD_SPEED) {
+            @Override
+            public void end(boolean interrupted) {
+                double setpoint = coralJoint.getPose();
+                new District2RotateStorage(coralJoint, () -> setpoint).schedule();
+            }
+        });
 
         navigatorJoystick.getCrossButton().onTrue(new District2Reset(coralJoint, algaeJoint));
-        navigatorJoystick.getSquareButton().onTrue(new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.INTAKE));
+        navigatorJoystick.getSquareButton().onTrue(new District2RotateStorage(coralJoint,
+                District2CoralJoint.StoragePose.INTAKE));
         navigatorJoystick.getRightButton().onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
         new JoystickButton(rightJoystick, 1).onTrue(new InstantCommand(drivetrain::resetGyro));

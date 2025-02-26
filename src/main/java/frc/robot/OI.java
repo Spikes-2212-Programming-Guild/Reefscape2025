@@ -15,7 +15,7 @@ import frc.robot.subsystems.district2.District2CoralJoint;
 
 public class OI /*GEVALD*/ {
 
-    //    private final PlaystationControllerWrapper driverJoystick = new PlaystationControllerWrapper(0);
+    //    private final PlaystationControllerWrapper driverJoystick = new PlaystationControllerWrapper(1);
     private final PlaystationControllerWrapper navigatorJoystick = new PlaystationControllerWrapper(0);
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
@@ -49,6 +49,7 @@ public class OI /*GEVALD*/ {
 //            if (intakeCoral.isScheduled()) intakeCoral.end(true);
 //            else intakeCoral.schedule();
 //        }));
+
         navigatorJoystick.getTriangleButton().onTrue(new IntakeCoral(storage));
         navigatorJoystick.getCircleButton().onTrue(new ReleaseCoral(storage));
 
@@ -74,6 +75,7 @@ public class OI /*GEVALD*/ {
                 District2CoralJoint.StoragePose.INTAKE));
         navigatorJoystick.getRightButton().onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
+//        driverJoystick.getR1Button().onTrue(new InstantCommand(drivetrain::resetGyro));
         new JoystickButton(rightJoystick, 1).onTrue(new InstantCommand(drivetrain::resetGyro));
 //
 //        navigatorJoystick.getR1Button().onTrue(new ConditionalCommand(
@@ -125,14 +127,17 @@ public class OI /*GEVALD*/ {
     }
 
     public double getLeftY() {
+//        return driverJoystick.getLeftY();
         return leftJoystick.getY();
     }
 
     public double getRightX() {
+//        return driverJoystick.getRightX();
         return rightJoystick.getX();
     }
 
     public double getRightY() {
+//        return driverJoystick.getRightY();
         return rightJoystick.getY();
     }
 }

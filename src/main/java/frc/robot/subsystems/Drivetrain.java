@@ -16,8 +16,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.Drive;
+import frc.robot.commands.IntakeAlgae;
 import frc.robot.util.VisionService;
 
 import java.util.function.Supplier;
@@ -255,5 +257,6 @@ public class Drivetrain extends DashboardedSubsystem {
         namespace.putCommand("quasistatic reverse", sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
         namespace.putCommand("dynamic forward", sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
         namespace.putCommand("dynamic reverse", sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
+        namespace.putCommand("set angle", new InstantCommand(() -> gyro.setAngleAdjustment(0)));
     }
 }

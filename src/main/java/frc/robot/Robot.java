@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.SparkMax;
 import com.spikes2212.dashboard.RootNamespace;
 import com.spikes2212.util.PlaystationControllerWrapper;
 import edu.wpi.first.wpilibj.DataLogManager;

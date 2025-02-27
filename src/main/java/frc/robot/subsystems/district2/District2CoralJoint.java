@@ -28,7 +28,7 @@ public class District2CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum StoragePose {
 
-        INTAKE(0.05), L1(-0.04), L2(-0.01), L3(0.13), RESTING(-0.125);
+        INTAKE(0.05), L1(-0.04), L2(0.005), L3(0.13), RESTING(-0.125);
 
         public final double neededPitch;
 

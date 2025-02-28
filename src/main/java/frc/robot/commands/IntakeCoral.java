@@ -26,17 +26,16 @@ public class IntakeCoral extends MoveGenericSubsystem {
     @Override
     public void initialize() {
         super.initialize();
-        storage.setRunning(true);
     }
 
     @Override
     public boolean isFinished() {
-        return (super.isFinished() && Timer.getFPGATimestamp() - startTime >= TIME_TO_INTAKE.get()) || !storage.isRunning();
+//        return false;
+        return super.isFinished() && Timer.getFPGATimestamp() - startTime >= TIME_TO_INTAKE.get();
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        storage.setRunning(false);
     }
 }

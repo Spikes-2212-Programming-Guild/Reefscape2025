@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkLowLevel;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
 import com.spikes2212.dashboard.SpikesLogger;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.ReleaseCoral;
 import frc.robot.util.SparkWrapper;
@@ -44,6 +45,10 @@ public class Storage extends MotoredGenericSubsystem {
         return !infrared.get();
     }
 
+    public void intake() {
+        motorController.set(0.5);
+    }
+
     public boolean isRunning() {
         return running;
     }
@@ -62,5 +67,7 @@ public class Storage extends MotoredGenericSubsystem {
         namespace.putBoolean("infrared", infrared::get);
         namespace.putCommand("intake coral", new IntakeCoral(this));
         namespace.putCommand("release coral", new ReleaseCoral(this));
+        namespace.putBoolean("can move", () -> canMove(getSpeed()));
+        namespace.putCommand("move", new InstantCommand(() -> motorController.set(0.2)));
     }
 }

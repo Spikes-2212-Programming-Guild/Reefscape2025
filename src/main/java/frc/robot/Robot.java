@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Drive;
 import frc.robot.commands.autonomous.DriveAndPlaceL2;
 import frc.robot.commands.autonomous.JustDrive;
+import frc.robot.subsystems.AlgaeJoint;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.district2.District2CoralJoint;
@@ -64,8 +65,8 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         drivetrain.resetGyro();
         drivetrain.resetRelativeEncoders();
-//        JustDrive auto = new JustDrive(drivetrain);
-        DriveAndPlaceL2 auto = new DriveAndPlaceL2(drivetrain, coralJoint, storage);
+        JustDrive auto = new JustDrive(drivetrain);
+//        DriveAndPlaceL2 auto = new DriveAndPlaceL2(drivetrain, coralJoint, storage);
         auto.schedule();
     }
 
@@ -78,7 +79,7 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         drivetrain.resetRelativeEncoders();
         drivetrain.setNeutralMode(NeutralModeValue.Coast);
-        drivetrain.setDefaultCommand(new Drive(drivetrain, () -> -oi.getLeftY() * 4, () -> -oi.getLeftX() * 4, () -> oi.getRightX() * 6,
+        drivetrain.setDefaultCommand(new Drive(drivetrain, () -> oi.getLeftY() * 4, () -> oi.getLeftX() * 4, () -> oi.getRightX() * 6,
                 true, false, false));
 //        algaeJoint.setDefaultCommand(new MoveGenericSubsystem(algaeJoint, AlgaeJoint.STABILIZATION_SPEED).onlyIf(gripper::hasAlgae));
     }

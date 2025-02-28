@@ -63,18 +63,17 @@ public class OI /*GEVALD*/ {
         });
         navigatorJoystick.getDownButton().whileTrue(new MoveGenericSubsystem(coralJoint,
                 CoralJoint.CORAL_JOINT_BACKWARD_SPEED) {
-            @Override
-            public void end(boolean interrupted) {
-                double setpoint = coralJoint.getPose();
-                new District2RotateStorage(coralJoint, () -> setpoint).schedule();
-            }
+//            @Override
+//            public void end(boolean interrupted) {
+//                double setpoint = coralJoint.getPose();
+//                new District2RotateStorage(coralJoint, () -> setpoint).schedule();
+//            }
         });
 
         navigatorJoystick.getCrossButton().onTrue(new District2Reset(coralJoint, algaeJoint));
         navigatorJoystick.getSquareButton().onTrue(new District2RotateStorage(coralJoint,
                 District2CoralJoint.StoragePose.INTAKE));
         navigatorJoystick.getRightButton().onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
-
 //        driverJoystick.getR1Button().onTrue(new InstantCommand(drivetrain::resetGyro));
         new JoystickButton(rightJoystick, 1).onTrue(new InstantCommand(drivetrain::resetGyro));
 //

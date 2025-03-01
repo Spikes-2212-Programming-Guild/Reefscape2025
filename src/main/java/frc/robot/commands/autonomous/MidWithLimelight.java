@@ -17,16 +17,16 @@ public class MidWithLimelight extends SequentialCommandGroup {
     private static final Supplier<Double> DRIVE_SPEED = () -> 1.5;
     private static final double DRIVE_TIMEOUT = 3;
 
-// @TODO add limelight command
+    // @TODO add limelight command
     public MidWithLimelight(Drivetrain drivetrain, District2CoralJoint coralJoint, Storage storage) {
         addCommands(new ParallelCommandGroup(
-                new Drive(drivetrain, DRIVE_SPEED, () -> 0.0, () -> 0.0, true, false,
-                        false).withTimeout(DRIVE_TIMEOUT),
-                new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.L2) {
-            @Override
-            public void end(boolean interrupted) {
-            }
-                    }),
+                        new Drive(drivetrain, DRIVE_SPEED, () -> 0.0, () -> 0.0, true, false,
+                                false).withTimeout(DRIVE_TIMEOUT),
+                        new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.L2) {
+                            @Override
+                            public void end(boolean interrupted) {
+                            }
+                        }),
                 new InstantCommand(), new ReleaseCoral(storage),
                 new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.RESTING));
     }

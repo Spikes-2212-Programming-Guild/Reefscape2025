@@ -22,36 +22,41 @@ public class CenterOnReef extends Command {
     private final OI.Side side;
     private final Drivetrain drivetrain;
 
-    private final PIDController pidController;
-    private final FeedForwardController feedForwardController;
+    private final PIDController xPIDController;
+    private final FeedForwardController xFeedForwardController;
+    private final PIDController yPIDController;
+    private final FeedForwardController yFeedForwardController;
 
     private double lastTimeNotOnTarget;
 
     public CenterOnReef(Drivetrain drivetrain, OI.Side side) {
         this.drivetrain = drivetrain;
         this.side = side;
-        pidController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
-        pidController.setTolerance(pidSettings.getTolerance());
-        feedForwardController = new FeedForwardController(feedForwardSettings);
+        xPIDController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
+        xPIDController.setTolerance(pidSettings.getTolerance());
+        xFeedForwardController = new FeedForwardController(feedForwardSettings);
+        yPIDController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
+        yPIDController.setTolerance(pidSettings.getTolerance());
+        yFeedForwardController = new FeedForwardController(feedForwardSettings);
     }
 
     @Override
     public void execute() {
-        pidController.setPID(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
-        pidController.setTolerance(pidSettings.getTolerance());
-        feedForwardController.setGains(feedForwardSettings);
+        xPIDController.setPID(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
+        xPIDController.setTolerance(pidSettings.getTolerance());
+        xFeedForwardController.setGains(feedForwardSettings);
         // @TODO make sure this is correct
         double setpoint = side == OI.Side.LEFT ? DISTANCE_FROM_TARGET : -DISTANCE_FROM_TARGET;
-        drivetrain.drive(pidController.calculate(drivetrain.getPose2d().getX(), setpoint) +
-                        feedForwardController.calculate(drivetrain.getPose2d().getX(), setpoint),
-                pidController.calculate(drivetrain.getPose2d().getY(), setpoint) +
-                        feedForwardController.calculate(drivetrain.getPose2d().getY(), setpoint),
+        drivetrain.drive(xPIDController.calculate(drivetrain.getPose2d().getX(), setpoint) +
+                        xFeedForwardController.calculate(drivetrain.getPose2d().getX(), setpoint),
+                yPIDController.calculate(drivetrain.getPose2d().getY(), setpoint) +
+                        yFeedForwardController.calculate(drivetrain.getPose2d().getY(), setpoint),
                 0, true, true, 0.02);
     }
 
     @Override
     public boolean isFinished() {
-        if (!pidController.atSetpoint()) {
+        if (!xPIDController.atSetpoint()) {
             lastTimeNotOnTarget = Timer.getFPGATimestamp();
         }
         return pidSettings.getWaitTime() >= lastTimeNotOnTarget - Timer.getFPGATimestamp();

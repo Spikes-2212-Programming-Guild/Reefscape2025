@@ -34,7 +34,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        DataLogManager.start();
         drivetrain = Drivetrain.getInstance();
         namespace.putNumber("left x", oi::getLeftX);
         namespace.putNumber("left y", oi::getLeftY);
@@ -54,6 +53,7 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         CommandScheduler.getInstance().cancelAll();
         drivetrain.setNeutralMode(NeutralModeValue.Brake);
+        coralJoint.brake();
     }
 
     @Override

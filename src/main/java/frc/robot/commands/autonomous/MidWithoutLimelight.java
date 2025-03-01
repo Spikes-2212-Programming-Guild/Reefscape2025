@@ -13,8 +13,8 @@ import java.util.function.Supplier;
 
 public class MidWithoutLimelight extends SequentialCommandGroup {
 
-    private final Supplier<Double> DRIVE_SPEED = () -> 1.5;
-    private final double DRIVE_TIMEOUT = 4;
+    private static final Supplier<Double> DRIVE_SPEED = () -> 1.5;
+    private static final double DRIVE_TIMEOUT = 4;
 
     public MidWithoutLimelight(Drivetrain drivetrain, District2CoralJoint coralJoint, Storage storage){
         addCommands(new ParallelCommandGroup(

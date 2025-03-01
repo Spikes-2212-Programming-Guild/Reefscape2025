@@ -14,8 +14,8 @@ import java.util.function.Supplier;
 
 public class MidWithLimelight extends SequentialCommandGroup {
 
-    private final Supplier<Double> DRIVE_SPEED = () -> 0.5;
-    private final double DRIVE_TIMEOUT = 1.0;
+    private static final Supplier<Double> DRIVE_SPEED = () -> 1.5;
+    private static final double DRIVE_TIMEOUT = 3;
 
 // @TODO add limelight command
     public MidWithLimelight(Drivetrain drivetrain, District2CoralJoint coralJoint, Storage storage) {

@@ -4,7 +4,6 @@ import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import com.spikes2212.util.PlaystationControllerWrapper;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
@@ -57,7 +56,7 @@ public class OI /*GEVALD*/ {
                 CoralJoint.CORAL_JOINT_FORWARD_SPEED) {
             @Override
             public void end(boolean interrupted) {
-                double setpoint = coralJoint.getPose();
+                double setpoint = coralJoint.getPosition();
                 new District2RotateStorage(coralJoint, () -> setpoint).schedule();
             }
         });

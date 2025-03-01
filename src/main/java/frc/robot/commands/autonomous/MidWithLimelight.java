@@ -20,7 +20,7 @@ public class MidWithLimelight extends SequentialCommandGroup {
 // @TODO add limelight command
     public MidWithLimelight(Drivetrain drivetrain, District2CoralJoint coralJoint, Storage storage) {
         addCommands(new ParallelCommandGroup(
-                new Drive(drivetrain, DRIVE_SPEED, () -> 0.0, () -> 0.0, false, false,
+                new Drive(drivetrain, DRIVE_SPEED, () -> 0.0, () -> 0.0, true, false,
                         false).withTimeout(DRIVE_TIMEOUT),
                 new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.L2)),
                 new InstantCommand(), new ReleaseCoral(storage));

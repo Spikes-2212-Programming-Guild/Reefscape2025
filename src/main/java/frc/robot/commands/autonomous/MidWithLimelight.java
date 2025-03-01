@@ -3,6 +3,8 @@ package frc.robot.commands.autonomous;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.OI;
+import frc.robot.commands.CenterOnReef;
 import frc.robot.commands.Drive;
 import frc.robot.commands.ReleaseCoral;
 import frc.robot.commands.district2.District2RotateStorage;
@@ -17,7 +19,6 @@ public class MidWithLimelight extends SequentialCommandGroup {
     private static final Supplier<Double> DRIVE_SPEED = () -> 1.5;
     private static final double DRIVE_TIMEOUT = 3;
 
-    // @TODO add limelight command
     public MidWithLimelight(Drivetrain drivetrain, District2CoralJoint coralJoint, Storage storage) {
         addCommands(new ParallelCommandGroup(
                         new Drive(drivetrain, DRIVE_SPEED, () -> 0.0, () -> 0.0, true, false,
@@ -27,7 +28,7 @@ public class MidWithLimelight extends SequentialCommandGroup {
                             public void end(boolean interrupted) {
                             }
                         }),
-                new InstantCommand(), new ReleaseCoral(storage),
+                new CenterOnReef(drivetrain, OI.Side.RIGHT), new ReleaseCoral(storage),
                 new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.RESTING));
     }
 }

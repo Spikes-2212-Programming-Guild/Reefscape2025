@@ -30,6 +30,7 @@ public class CenterOnReef extends Command {
     private double lastTimeNotOnTarget;
 
     public CenterOnReef(Drivetrain drivetrain, OI.Side side) {
+        addRequirements(drivetrain);
         this.drivetrain = drivetrain;
         this.side = side;
         xPIDController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());

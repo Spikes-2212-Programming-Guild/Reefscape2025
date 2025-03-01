@@ -7,6 +7,7 @@ import com.spikes2212.dashboard.RootNamespace;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.OI;
 import frc.robot.subsystems.Drivetrain;
 
 public class CenterOnReef extends Command {
@@ -18,17 +19,17 @@ public class CenterOnReef extends Command {
     private static final FeedForwardSettings feedForwardSettings =
             namespace.addFeedForwardNamespace("center on reef", FeedForwardController.ControlMode.LINEAR_POSITION);
 
+    private final OI.Side side;
     private final Drivetrain drivetrain;
-    private final boolean goLeft;
 
     private final PIDController pidController;
     private final FeedForwardController feedForwardController;
 
     private double lastTimeNotOnTarget;
 
-    public CenterOnReef(Drivetrain drivetrain, boolean goLeft) {
+    public CenterOnReef(Drivetrain drivetrain, OI.Side side) {
         this.drivetrain = drivetrain;
-        this.goLeft = goLeft;
+        this.side = side;
         pidController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
         pidController.setTolerance(pidSettings.getTolerance());
         feedForwardController = new FeedForwardController(feedForwardSettings);
@@ -40,9 +41,12 @@ public class CenterOnReef extends Command {
         pidController.setTolerance(pidSettings.getTolerance());
         feedForwardController.setGains(feedForwardSettings);
         // @TODO make sure this is correct
-        double setpoint = goLeft ? DISTANCE_FROM_TARGET : -DISTANCE_FROM_TARGET;
-        drivetrain.drive(0, pidController.calculate(drivetrain.getPose2d().getX(), setpoint) +
-                feedForwardController.calculate(drivetrain.getPose2d().getX(), setpoint), 0, false, false, 0.02);
+        double setpoint = side == OI.Side.LEFT ? DISTANCE_FROM_TARGET : -DISTANCE_FROM_TARGET;
+        drivetrain.drive(pidController.calculate(drivetrain.getPose2d().getY(), setpoint) +
+                        feedForwardController.calculate(drivetrain.getPose2d().getY(), setpoint),
+                pidController.calculate(drivetrain.getPose2d().getX(), setpoint) +
+                        feedForwardController.calculate(drivetrain.getPose2d().getX(), setpoint),
+                0, false, false, 0.02);
     }
 
     @Override

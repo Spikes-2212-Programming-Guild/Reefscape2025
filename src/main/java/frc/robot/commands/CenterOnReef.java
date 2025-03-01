@@ -46,7 +46,7 @@ public class CenterOnReef extends Command {
                         feedForwardController.calculate(drivetrain.getPose2d().getX(), setpoint),
                 pidController.calculate(drivetrain.getPose2d().getY(), setpoint) +
                         feedForwardController.calculate(drivetrain.getPose2d().getY(), setpoint),
-                0, false, false, 0.02);
+                0, true, true, 0.02);
     }
 
     @Override

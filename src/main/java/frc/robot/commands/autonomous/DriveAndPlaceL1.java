@@ -11,20 +11,19 @@ import frc.robot.subsystems.district2.District2CoralJoint;
 
 import java.util.function.Supplier;
 
-public class DriveAndPlaceL2 extends SequentialCommandGroup {
+public class DriveAndPlaceL1 extends SequentialCommandGroup {
 
     private static final Supplier<Double> DRIVE_SPEED = () -> 1.0;
-    private static final double DRIVE_TIMEOUT = 3.0;
+    private static final double DRIVE_TIMEOUT = 4.0;
 
-    public DriveAndPlaceL2(Drivetrain drivetrain, District2CoralJoint coralJoint, Storage storage) {
+    public DriveAndPlaceL1(Drivetrain drivetrain, District2CoralJoint coralJoint, Storage storage) {
         addCommands(
-                new Drive(drivetrain, DRIVE_SPEED, () -> 0.0, () -> 0.0, true,
-                        false, false).withTimeout(DRIVE_TIMEOUT),
+                new Drive(drivetrain, DRIVE_SPEED, () -> 0.0, () -> 0.0, false, false, false).withTimeout(DRIVE_TIMEOUT),
                 new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.L1) {
                     @Override
                     public void end(boolean interrupted) {
                     }
-                }.withTimeout(DRIVE_TIMEOUT),
+                },
                 new ReleaseCoral(storage),
                 new InstantCommand(coralJoint::finish));
     }

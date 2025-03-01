@@ -20,7 +20,11 @@ public class MidWithoutLimelight extends SequentialCommandGroup {
         addCommands(new ParallelCommandGroup(
                 new Drive(drivetrain, DRIVE_SPEED, () -> 0.0, () -> 0.0, true, false,
                         false).withTimeout(DRIVE_TIMEOUT),
-                new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.L2)),
-                new ReleaseCoral(storage));
+                new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.L2){
+                    @Override
+                    public void end(boolean interrupted){}
+                }),
+                new ReleaseCoral(storage),
+                new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.RESTING));
     }
 }

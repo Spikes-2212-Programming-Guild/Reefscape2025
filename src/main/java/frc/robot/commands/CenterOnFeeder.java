@@ -7,19 +7,30 @@ import com.spikes2212.dashboard.RootNamespace;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.OI;
 import frc.robot.subsystems.Drivetrain;
 
-public class CenterOnReef extends Command {
+public class CenterOnFeeder extends Command {
 
-    private static final double DISTANCE_FROM_TARGET = 0;
+    public enum PossiblePose {
 
-    private static final RootNamespace namespace = new RootNamespace("center on reef");
-    private static final PIDSettings pidSettings = namespace.addPIDNamespace("center on reef");
+        FAR_LEFT(0, 0), MIDDLE_LEFT(0, 0), CLOSE_LEFT(0, 0),
+        CENTER(0, 0), CLOSE_RIGHT(0, 0), MIDDLE_RIGHT(0, 0), FAR_RIGHT(0, 0);
+
+        public final double xPose;
+        public final double yPose;
+
+        PossiblePose(double xPose, double yPose) {
+            this.xPose = xPose;
+            this.yPose = yPose;
+        }
+    }
+
+    private static final RootNamespace namespace = new RootNamespace("center on feeder");
+    private static final PIDSettings pidSettings = namespace.addPIDNamespace("center on feeder");
     private static final FeedForwardSettings feedForwardSettings =
-            namespace.addFeedForwardNamespace("center on reef", FeedForwardController.ControlMode.LINEAR_POSITION);
+            namespace.addFeedForwardNamespace("center on feeder",
+                    FeedForwardController.ControlMode.LINEAR_POSITION);
 
-    private final OI.Side side;
     private final Drivetrain drivetrain;
 
     private final PIDController xPIDController;
@@ -29,10 +40,9 @@ public class CenterOnReef extends Command {
 
     private double lastTimeNotOnTarget;
 
-    public CenterOnReef(Drivetrain drivetrain, OI.Side side) {
+    public CenterOnFeeder(Drivetrain drivetrain) {
         addRequirements(drivetrain);
         this.drivetrain = drivetrain;
-        this.side = side;
         xPIDController = new PIDController(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
         xPIDController.setTolerance(pidSettings.getTolerance());
         xFeedForwardController = new FeedForwardController(feedForwardSettings);
@@ -49,14 +59,23 @@ public class CenterOnReef extends Command {
         yPIDController.setPID(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
         yPIDController.setTolerance(pidSettings.getTolerance());
         yFeedForwardController.setGains(feedForwardSettings);
-        // @TODO make sure this is correct
-        double ySetpoint = side == OI.Side.LEFT ? DISTANCE_FROM_TARGET : -DISTANCE_FROM_TARGET;
-        double xSetpoint = drivetrain.getPose2d().getX();
-        drivetrain.drive(xPIDController.calculate(drivetrain.getPose2d().getX(), xSetpoint) +
-                        xFeedForwardController.calculate(drivetrain.getPose2d().getX(), xSetpoint),
-                yPIDController.calculate(drivetrain.getPose2d().getY(), ySetpoint) +
-                        yFeedForwardController.calculate(drivetrain.getPose2d().getY(), ySetpoint),
+        double shortestDistance = getDistanceFrom(PossiblePose.FAR_LEFT.xPose, PossiblePose.FAR_LEFT.yPose);
+        PossiblePose pose = PossiblePose.FAR_LEFT;
+        for (PossiblePose possiblePose : PossiblePose.values()) {
+            if (shortestDistance > getDistanceFrom(possiblePose.xPose, possiblePose.yPose)) {
+                shortestDistance = getDistanceFrom(possiblePose.xPose, possiblePose.yPose);
+                pose = possiblePose;
+            }
+        }
+        drivetrain.drive(xPIDController.calculate(drivetrain.getPose2d().getX(), pose.xPose) +
+                        xFeedForwardController.calculate(drivetrain.getPose2d().getX(), pose.xPose),
+                yPIDController.calculate(drivetrain.getPose2d().getY(), pose.yPose) +
+                        yFeedForwardController.calculate(drivetrain.getPose2d().getY(), pose.yPose),
                 0, true, true, 0.02);
+    }
+
+    private double getDistanceFrom(double x, double y) {
+        return Math.sqrt(Math.pow(x - drivetrain.getPose2d().getX(), 2) + Math.pow(y - drivetrain.getPose2d().getY(), 2));
     }
 
     @Override

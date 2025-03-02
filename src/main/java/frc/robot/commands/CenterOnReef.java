@@ -60,7 +60,7 @@ public class CenterOnReef extends Command {
 
     @Override
     public boolean isFinished() {
-        if (!xPIDController.atSetpoint()) {
+        if (!xPIDController.atSetpoint() && yPIDController.atSetpoint()) {
             lastTimeNotOnTarget = Timer.getFPGATimestamp();
         }
         return pidSettings.getWaitTime() >= lastTimeNotOnTarget - Timer.getFPGATimestamp();

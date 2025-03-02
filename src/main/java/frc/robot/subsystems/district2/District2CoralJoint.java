@@ -110,7 +110,7 @@ public class District2CoralJoint extends SmartMotorControllerGenericSubsystem {
         });
         namespace.putNumber("voltage", talonFX::get);
         namespace.putCommand("pid", new District2RotateStorage(this, setpoint));
-        namespace.putCommand("dont kys", new District2RotateStorage(this, () -> -70.0));
+        namespace.putCommand("dont kys", new MoveGenericSubsystem(this, 0.02));
 //        namespace.putCommand("pid", new MoveGenericSubsystemWithPID(this, setpoint, talonFX::getPosition,
 //                pidSettings, feedForwardSettings));
     }

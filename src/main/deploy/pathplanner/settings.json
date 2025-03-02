@@ -5,10 +5,15 @@
   "pathFolders": [
     "mirror best paths",
     "just rp paths",
+    "dis 4 paths",
     "best paths",
     "algae paths"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "dis 4",
+    "dis 2",
+    "l4 elevator"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 5.0,
   "defaultMaxAngVel": 540.0,

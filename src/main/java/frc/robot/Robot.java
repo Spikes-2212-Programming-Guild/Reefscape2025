@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.spikes2212.dashboard.RootNamespace;
@@ -12,9 +13,13 @@ import com.spikes2212.util.PlaystationControllerWrapper;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.Drive;
+import frc.robot.commands.IntakeCoral;
+import frc.robot.commands.ReleaseCoral;
 import frc.robot.commands.autonomous.DriveAndPlaceL2;
 import frc.robot.commands.autonomous.JustDrive;
+import frc.robot.commands.district2.District2RotateStorage;
 import frc.robot.subsystems.AlgaeJoint;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Storage;
@@ -110,12 +115,18 @@ public class Robot extends TimedRobot {
     }
 
     private void registerNamedCommands() {
+        NamedCommands.registerCommand("OuttakeCoralAngleL2",
+                new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.L2));
+        NamedCommands.registerCommand("LimelightRight", new InstantCommand());
+        NamedCommands.registerCommand("LimelightLeft", new InstantCommand());
+        NamedCommands.registerCommand("LimelightFeeder", new InstantCommand());
+        NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
+        NamedCommands.registerCommand("IntakeCoralAngle",
+                new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.INTAKE));
+        NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(storage));
 //        NamedCommands.registerCommand("OuttakeCoralAngle",
 //                new RotateStorage(coralJoint, CoralJoint.StoragePose.PLACEMENT));
-//        NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
-//        NamedCommands.registerCommand("ElevateToFeeder", new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER));
-//        NamedCommands.registerCommand("IntakeCoralAngle", new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE));
-//        NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(storage));
+        //        NamedCommands.registerCommand("ElevateToFeeder", new MoveToHeight(elevator, Elevator.ElevatorLevel.FEEDER));
 //        NamedCommands.registerCommand("IntakeAlgaeAngle", new RotateAlgaeJointToBottom(algaeJoint));
 //        NamedCommands.registerCommand("ElevateToL3", new MoveToHeight(elevator, Elevator.ElevatorLevel.L3));
 //        NamedCommands.registerCommand("TakeAlgae", new IntakeAlgae(gripper));

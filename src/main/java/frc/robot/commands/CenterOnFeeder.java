@@ -11,7 +11,7 @@ import frc.robot.subsystems.Drivetrain;
 
 public class CenterOnFeeder extends Command {
 
-    public enum PossiblePosses {
+    public enum PossiblePoses {
 
         FAR_LEFT(0, 0), MIDDLE_LEFT(0, 0), CLOSE_LEFT(0, 0),
         CENTER(0, 0), CLOSE_RIGHT(0, 0), MIDDLE_RIGHT(0, 0), FAR_RIGHT(0, 0);
@@ -19,7 +19,7 @@ public class CenterOnFeeder extends Command {
         public final double xPose;
         public final double yPose;
 
-        PossiblePosses(double xPose, double yPose) {
+        PossiblePoses(double xPose, double yPose) {
             this.xPose = xPose;
             this.yPose = yPose;
         }
@@ -59,12 +59,12 @@ public class CenterOnFeeder extends Command {
         yPIDController.setPID(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
         yPIDController.setTolerance(pidSettings.getTolerance());
         yFeedForwardController.setGains(feedForwardSettings);
-        double shortestDistance = getDistanceFrom(PossiblePosses.FAR_LEFT.xPose, PossiblePosses.FAR_LEFT.yPose);
-        PossiblePosses pose = PossiblePosses.FAR_LEFT;
-        for (PossiblePosses possiblePosses : PossiblePosses.values()) {
-            if (shortestDistance > getDistanceFrom(possiblePosses.xPose, possiblePosses.yPose)) {
-                shortestDistance = getDistanceFrom(possiblePosses.xPose, possiblePosses.yPose);
-                pose = possiblePosses;
+        double shortestDistance = getDistanceFrom(PossiblePoses.FAR_LEFT.xPose, PossiblePoses.FAR_LEFT.yPose);
+        PossiblePoses pose = PossiblePoses.FAR_LEFT;
+        for (PossiblePoses possiblePoses : PossiblePoses.values()) {
+            if (shortestDistance > getDistanceFrom(possiblePoses.xPose, possiblePoses.yPose)) {
+                shortestDistance = getDistanceFrom(possiblePoses.xPose, possiblePoses.yPose);
+                pose = possiblePoses;
             }
         }
         drivetrain.drive(xPIDController.calculate(drivetrain.getPose2d().getX(), pose.xPose) +

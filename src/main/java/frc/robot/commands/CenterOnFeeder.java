@@ -13,7 +13,8 @@ public class CenterOnFeeder extends Command {
 
     public enum PossiblePosses {
 
-        FIRST(0, 0), SECOND(0, 0), THIRD(0, 0), FOURTH(0, 0), FIFTH(0, 0), SIXTH(0, 0), SEVENTH(0, 0);
+        FAR_LEFT(0, 0), MIDDLE_LEFT(0, 0), CLOSE_LEFT(0, 0),
+        CENTER(0, 0), CLOSE_RIGHT(0, 0), MIDDLE_RIGHT(0, 0), FAR_RIGHT(0, 0);
 
         public final double xPose;
         public final double yPose;
@@ -58,8 +59,8 @@ public class CenterOnFeeder extends Command {
         yPIDController.setPID(pidSettings.getkP(), pidSettings.getkI(), pidSettings.getkD());
         yPIDController.setTolerance(pidSettings.getTolerance());
         yFeedForwardController.setGains(feedForwardSettings);
-        double shortestDistance = getDistanceFrom(PossiblePosses.FIRST.xPose, PossiblePosses.FIRST.yPose);
-        PossiblePosses pose = PossiblePosses.FIRST;
+        double shortestDistance = getDistanceFrom(PossiblePosses.FAR_LEFT.xPose, PossiblePosses.FAR_LEFT.yPose);
+        PossiblePosses pose = PossiblePosses.FAR_LEFT;
         for (PossiblePosses possiblePosses : PossiblePosses.values()) {
             if (shortestDistance > getDistanceFrom(possiblePosses.xPose, possiblePosses.yPose)) {
                 shortestDistance = getDistanceFrom(possiblePosses.xPose, possiblePosses.yPose);

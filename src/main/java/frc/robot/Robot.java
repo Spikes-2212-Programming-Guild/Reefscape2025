@@ -10,9 +10,7 @@ import com.spikes2212.dashboard.RootNamespace;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.Drive;
-import frc.robot.commands.IntakeCoral;
-import frc.robot.commands.ReleaseCoral;
+import frc.robot.commands.*;
 import frc.robot.commands.autonomous.JustDrive;
 import frc.robot.commands.district2.District2RotateStorage;
 import frc.robot.subsystems.Drivetrain;
@@ -111,9 +109,9 @@ public class Robot extends TimedRobot {
     private void registerNamedCommands() {
         NamedCommands.registerCommand("OuttakeCoralAngleL2",
                 new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.L2));
-        NamedCommands.registerCommand("LimelightRight", new InstantCommand());
-        NamedCommands.registerCommand("LimelightLeft", new InstantCommand());
-        NamedCommands.registerCommand("LimelightFeeder", new InstantCommand());
+        NamedCommands.registerCommand("LimelightRight", new CenterOnReef(drivetrain, OI.Side.RIGHT));
+        NamedCommands.registerCommand("LimelightLeft", new CenterOnReef(drivetrain, OI.Side.LEFT));
+        NamedCommands.registerCommand("LimelightFeeder", new CenterOnFeeder(drivetrain));
         NamedCommands.registerCommand("ReleaseCoral", new ReleaseCoral(storage));
         NamedCommands.registerCommand("IntakeCoralAngle",
                 new District2RotateStorage(coralJoint, District2CoralJoint.StoragePose.INTAKE));

@@ -51,8 +51,9 @@ public class CenterOnReef extends Command {
         yFeedForwardController.setGains(feedForwardSettings);
         // @TODO make sure this is correct
         double ySetpoint = side == OI.Side.LEFT ? DISTANCE_FROM_TARGET : -DISTANCE_FROM_TARGET;
-        drivetrain.drive(xPIDController.calculate(drivetrain.getPose2d().getX(), drivetrain.getPose2d().getX()) +
-                        xFeedForwardController.calculate(drivetrain.getPose2d().getX(), drivetrain.getPose2d().getX()),
+        double xSetpoint = drivetrain.getPose2d().getX();
+        drivetrain.drive(xPIDController.calculate(drivetrain.getPose2d().getX(), xSetpoint) +
+                        xFeedForwardController.calculate(drivetrain.getPose2d().getX(), xSetpoint),
                 yPIDController.calculate(drivetrain.getPose2d().getY(), ySetpoint) +
                         yFeedForwardController.calculate(drivetrain.getPose2d().getY(), ySetpoint),
                 0, true, true, 0.02);

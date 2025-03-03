@@ -38,7 +38,6 @@ public class Storage extends MotoredGenericSubsystem {
     public void periodic() {
         super.periodic();
         SpikesLogger logger = new SpikesLogger();
-        logger.log("a, " + isRunning());
     }
 
     public boolean hasCoral() {

@@ -7,22 +7,24 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.spikes2212.command.DashboardedSubsystem;
+import com.spikes2212.control.FeedForwardController;
+import com.spikes2212.control.FeedForwardSettings;
 import com.studica.frc.AHRS;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.Drive;
-import frc.robot.commands.IntakeAlgae;
 import frc.robot.util.VisionService;
-
-import java.util.function.Supplier;
 
 public class Drivetrain extends DashboardedSubsystem {
 
@@ -142,7 +144,7 @@ public class Drivetrain extends DashboardedSubsystem {
         );
         sysIdRoutine = new SysIdRoutine(
                 new SysIdRoutine.Config(null, null, null, state -> SignalLogger.writeString("state", state.toString())),
-                new SysIdRoutine.Mechanism(this::voltageMove, null, this)
+                new SysIdRoutine.Mechanism(this::sysID, null, this)
         );
         configureDashboard();
     }
@@ -191,11 +193,18 @@ public class Drivetrain extends DashboardedSubsystem {
         desiredStates.set(states);
     }
 
-    public void voltageMove(Voltage voltage) {
-        frontLeft.sysID(voltage);
-        frontRight.sysID(voltage);
-        backLeft.sysID(voltage);
-        backRight.sysID(voltage);
+    private final PIDController turnPIDController = new PIDController(0, 0, 0);
+    private final FeedForwardController turnFeedForwardController = new FeedForwardController(
+            new FeedForwardSettings(0, 0, 0, FeedForwardController.ControlMode.LINEAR_POSITION)
+    );
+    public void sysID(Voltage voltage) {
+        drive((voltage.in(Units.Volts) / RobotController.getBatteryVoltage()) * MAX_SPEED, 0,
+                turnPIDController.calculate(getYaw(), 0) + turnFeedForwardController.calculate(getYaw(), 0),
+                true, false, 0.02);
+    }
+
+    public void sysIDNoAngle(Voltage voltage) {
+        drive((voltage.in(Units.Volts) / RobotController.getBatteryVoltage()) * MAX_SPEED, 0, 0, true, false, 0.02);
     }
 
     public void stop() {

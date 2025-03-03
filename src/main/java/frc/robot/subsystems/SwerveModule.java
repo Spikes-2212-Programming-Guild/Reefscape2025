@@ -109,11 +109,6 @@ public class SwerveModule extends DashboardedSubsystem {
         driveMotor.setIdleMode(neutralMode);
     }
 
-    public void sysID(Voltage voltage) {
-        setSpeed(voltage.in(Volts), false);
-        setAngle(0);
-    }
-
     private void setAngle(double angle) {
         turnMotor.pidSet(UnifiedControlMode.POSITION, angle, turnPIDSettings, turnFeedForwardSettings, false);
     }

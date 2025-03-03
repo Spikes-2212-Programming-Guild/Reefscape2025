@@ -1,6 +1,7 @@
 package frc.robot.subsystems.district2;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystemWithPID;
@@ -23,7 +24,7 @@ public class District2CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum StoragePose {
 
-        INTAKE(0.06 * DEGREES_IN_ROTATIONS), L1(-0.075 * DEGREES_IN_ROTATIONS), L2(-0.018 * DEGREES_IN_ROTATIONS),
+        INTAKE(-22), L1(-0.075 * DEGREES_IN_ROTATIONS), L2(-44),
         L3(0.13 * DEGREES_IN_ROTATIONS), RESTING(-0.2075 * DEGREES_IN_ROTATIONS);
 //        RESTING(0.0);
 
@@ -110,7 +111,7 @@ public class District2CoralJoint extends SmartMotorControllerGenericSubsystem {
         });
         namespace.putNumber("voltage", talonFX::get);
         namespace.putCommand("pid", new District2RotateStorage(this, setpoint));
-        namespace.putCommand("dont kys", new MoveGenericSubsystem(this, 0.02));
+        namespace.putCommand("dont kys", new MoveGenericSubsystem(this, 0.032));
 //        namespace.putCommand("pid", new MoveGenericSubsystemWithPID(this, setpoint, talonFX::getPosition,
 //                pidSettings, feedForwardSettings));
     }

@@ -5,6 +5,8 @@ import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.dashboard.RootNamespace;
+import com.spikes2212.dashboard.SpikesLogger;
+import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.district2.District2CoralJoint;
 
 import java.util.function.Supplier;
@@ -12,21 +14,25 @@ import java.util.function.Supplier;
 public class District2RotateStorage extends MoveGenericSubsystemWithPID {
 
     private static final RootNamespace namespace = new RootNamespace("district 2 rotate storage");
-    private static final PIDSettings intakePIDSettings = namespace.addPIDNamespace("rotate storage",
+    private static final PIDSettings intakePIDSettings = namespace.addPIDNamespace("intake rotate storage",
             new PIDSettings(0.11, 0, 0.005, 0, 3, 0.5));
-    private static final FeedForwardSettings intakeFeedForwardSettings = namespace.addFeedForwardNamespace("rotate storage",
+    private static final FeedForwardSettings intakeFeedForwardSettings = namespace.addFeedForwardNamespace("intake rotate storage",
             new FeedForwardSettings(0, 0, 0, 0.082, FeedForwardController.ControlMode.ANGULAR_POSITION));
-    private static final PIDSettings outtakePIDSettings = namespace.addPIDNamespace("rotate storage",
-            new PIDSettings(0.11, 0, 0.005, 0, 3, 0.5));
-    private static final FeedForwardSettings outtakeFeedForwardSettings = namespace.addFeedForwardNamespace("rotate storage",
-            new FeedForwardSettings(0, 0, 0, 0.082, FeedForwardController.ControlMode.ANGULAR_POSITION));
+    private static final PIDSettings outtakePIDSettings = namespace.addPIDNamespace("outtake rotate storage",
+            new PIDSettings(0.15, 0, 0.012, 0, 3, 0.5));
+    private static final FeedForwardSettings outtakeFeedForwardSettings = namespace.addFeedForwardNamespace("outtake rotate storage",
+            new FeedForwardSettings(0, 0, 0, 0.12, FeedForwardController.ControlMode.ANGULAR_POSITION));
 
     private final District2CoralJoint coralJoint;
+    private SpikesLogger logger = new SpikesLogger();
 
     public District2RotateStorage(District2CoralJoint coralJoint, Supplier<Double> setpoint) {
         super(coralJoint, () -> Math.toRadians(setpoint.get()), () -> Math.toRadians(coralJoint.getPosition()),
-                intakePIDSettings, intakeFeedForwardSettings);
+                Storage.getInstance().hasCoral() ? outtakePIDSettings : intakePIDSettings,
+                Storage.getInstance().hasCoral() ? outtakeFeedForwardSettings : intakeFeedForwardSettings);
+        pidSettings.setWaitTime(() -> 999.0);
         this.coralJoint = coralJoint;
+        logger.log("m" + pidSettings.getWaitTime());
     }
 
     public District2RotateStorage(District2CoralJoint coralJoint, District2CoralJoint.StoragePose pose) {
@@ -34,7 +40,27 @@ public class District2RotateStorage extends MoveGenericSubsystemWithPID {
     }
 
     @Override
+    protected double calculatePIDAndFFValues() {
+        if (Storage.getInstance().hasCoral()) {
+            pidController.setTolerance(Math.toRadians(outtakePIDSettings.getTolerance()));
+            pidController.setPID(outtakePIDSettings.getkP(), outtakePIDSettings.getkI(), outtakePIDSettings.getkD());
+            pidController.setIZone(outtakePIDSettings.getIZone());
+            feedForwardController.setGains(outtakeFeedForwardSettings);
+        } else {
+            pidController.setTolerance(Math.toRadians(intakePIDSettings.getTolerance()));
+            pidController.setPID(intakePIDSettings.getkP(), intakePIDSettings.getkI(), intakePIDSettings.getkD());
+            pidController.setIZone(intakePIDSettings.getIZone());
+            feedForwardController.setGains(intakeFeedForwardSettings);
+        }
+
+        double pidValue = pidController.calculate(source.get(), setpoint.get());
+        double svagValue = feedForwardController.calculate(source.get(), setpoint.get());
+        return pidValue + svagValue;
+    }
+
+    @Override
     public boolean isFinished() {
+        logger.log(source.get() + ", " + setpoint.get());
         return !(coralJoint.canMove(coralJoint.getSpeed())) || super.isFinished();
     }
 }

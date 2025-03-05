@@ -15,16 +15,15 @@ public class District2RotateStorage extends MoveGenericSubsystemWithPID {
 
     private static final RootNamespace namespace = new RootNamespace("district 2 rotate storage");
     private static final PIDSettings intakePIDSettings = namespace.addPIDNamespace("intake rotate storage",
-            new PIDSettings(0.11, 0, 0.005, 0, 3, 0.5));
+            new PIDSettings(0.2, 0.07, 0.012, 30, 4, 0.5));
     private static final FeedForwardSettings intakeFeedForwardSettings = namespace.addFeedForwardNamespace("intake rotate storage",
-            new FeedForwardSettings(0, 0, 0, 0.082, FeedForwardController.ControlMode.ANGULAR_POSITION));
+            new FeedForwardSettings(0, 0, 0, 0.13, FeedForwardController.ControlMode.ANGULAR_POSITION));
     private static final PIDSettings outtakePIDSettings = namespace.addPIDNamespace("outtake rotate storage",
-            new PIDSettings(0.15, 0, 0.012, 0, 3, 0.5));
+            new PIDSettings(0.2, 0.002, 0.018, 4, 4, 0.5));
     private static final FeedForwardSettings outtakeFeedForwardSettings = namespace.addFeedForwardNamespace("outtake rotate storage",
-            new FeedForwardSettings(0, 0, 0, 0.12, FeedForwardController.ControlMode.ANGULAR_POSITION));
+            new FeedForwardSettings(0, 0, 0, 0.13, FeedForwardController.ControlMode.ANGULAR_POSITION));
 
     private final District2CoralJoint coralJoint;
-    private SpikesLogger logger = new SpikesLogger();
 
     public District2RotateStorage(District2CoralJoint coralJoint, Supplier<Double> setpoint) {
         super(coralJoint, () -> Math.toRadians(setpoint.get()), () -> Math.toRadians(coralJoint.getPosition()),
@@ -32,7 +31,6 @@ public class District2RotateStorage extends MoveGenericSubsystemWithPID {
                 Storage.getInstance().hasCoral() ? outtakeFeedForwardSettings : intakeFeedForwardSettings);
         pidSettings.setWaitTime(() -> 999.0);
         this.coralJoint = coralJoint;
-        logger.log("m" + pidSettings.getWaitTime());
     }
 
     public District2RotateStorage(District2CoralJoint coralJoint, District2CoralJoint.StoragePose pose) {
@@ -60,7 +58,6 @@ public class District2RotateStorage extends MoveGenericSubsystemWithPID {
 
     @Override
     public boolean isFinished() {
-        logger.log(source.get() + ", " + setpoint.get());
         return !(coralJoint.canMove(coralJoint.getSpeed())) || super.isFinished();
     }
 }

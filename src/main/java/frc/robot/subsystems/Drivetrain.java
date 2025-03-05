@@ -57,9 +57,9 @@ public class Drivetrain extends DashboardedSubsystem {
     private final SwerveDriveOdometry odometry;
     private final VisionService visionService;
     private final SysIdRoutine sysIdRoutine;
-    StructArrayPublisher<SwerveModuleState> currentStates = NetworkTableInstance.getDefault()
+    private final StructArrayPublisher<SwerveModuleState> currentStates = NetworkTableInstance.getDefault()
             .getStructArrayTopic("current states", SwerveModuleState.struct).publish();
-    StructArrayPublisher<SwerveModuleState> desiredStates = NetworkTableInstance.getDefault()
+    private final StructArrayPublisher<SwerveModuleState> desiredStates = NetworkTableInstance.getDefault()
             .getStructArrayTopic("desired states", SwerveModuleState.struct).publish();
 
     private SwerveModulePosition[] swerveModulePositions;

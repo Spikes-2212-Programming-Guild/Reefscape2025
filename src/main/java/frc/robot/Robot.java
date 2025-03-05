@@ -9,25 +9,22 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.spikes2212.dashboard.RootNamespace;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.*;
 import frc.robot.commands.autonomous.JustDrive;
 import frc.robot.commands.district2.District2RotateStorage;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Storage;
+import frc.robot.subsystems.*;
 import frc.robot.subsystems.district2.District2CoralJoint;
 
 public class Robot extends TimedRobot {
 
     RootNamespace namespace = new RootNamespace("robot");
     private Drivetrain drivetrain;
-//    private Elevator elevator;
+    private Elevator elevator;
     private Storage storage;
-//    private Gripper gripper;
+    private Gripper gripper;
+    private AlgaeJoint algaeJoint;
     private District2CoralJoint coralJoint;
     OI oi = new OI();
-
-//    private AlgaeJoint algaeJoint;
 
     @Override
     public void robotInit() {
@@ -36,6 +33,7 @@ public class Robot extends TimedRobot {
         namespace.putNumber("left y", oi::getLeftY);
         namespace.putNumber("right x", oi::getRightX);
         namespace.putNumber("right y", oi::getRightY);
+        algaeJoint = AlgaeJoint.getInstance();
         getInstances();
     }
 
@@ -43,6 +41,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
         coralJoint.calibrateEncoderPosition();
+//        elevator.calibratePosition();
         namespace.update();
     }
 
@@ -74,6 +73,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        coralJoint.coast();
         drivetrain.resetRelativeEncoders();
         drivetrain.setNeutralMode(NeutralModeValue.Coast);
         drivetrain.setDefaultCommand(new Drive(drivetrain, () -> oi.getLeftY() * 4, () -> oi.getLeftX() * 4, () -> oi.getRightX() * 6,
@@ -127,10 +127,10 @@ public class Robot extends TimedRobot {
     }
 
     private void getInstances() {
-//        elevator = Elevator.getInstance();
+        elevator = Elevator.getInstance();
         storage = Storage.getInstance();
-//        gripper = Gripper.getInstance();
+        gripper = Gripper.getInstance();
         coralJoint = District2CoralJoint.getInstance();
-//        algaeJoint = AlgaeJoint.getInstance();
+        algaeJoint = AlgaeJoint.getInstance();
     }
 }

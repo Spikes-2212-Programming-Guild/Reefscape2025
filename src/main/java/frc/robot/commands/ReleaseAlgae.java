@@ -4,6 +4,7 @@ import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import com.spikes2212.dashboard.RootNamespace;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.Gripper;
+
 import java.util.function.Supplier;
 
 public class ReleaseAlgae extends MoveGenericSubsystem {

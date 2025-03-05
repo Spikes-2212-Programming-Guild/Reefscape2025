@@ -1,10 +1,7 @@
 package frc.robot.subsystems.district2;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
-import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystemWithPID;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
 import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
@@ -25,7 +22,8 @@ public class District2CoralJoint extends SmartMotorControllerGenericSubsystem {
     public enum StoragePose {
 
         INTAKE(-22), L1(-0.075 * DEGREES_IN_ROTATIONS), L2(-44),
-        L3(0.13 * DEGREES_IN_ROTATIONS), RESTING(-0.2075 * DEGREES_IN_ROTATIONS);
+        L3(0.13 * DEGREES_IN_ROTATIONS),
+        RESTING(-43);
 //        RESTING(0.0);
 
         public final double neededPitch;
@@ -34,9 +32,6 @@ public class District2CoralJoint extends SmartMotorControllerGenericSubsystem {
             this.neededPitch = neededPitch;
         }
     }
-
-    PIDSettings pidSettings = namespace.addPIDNamespace("dis 2 coral joint");
-    FeedForwardSettings feedForwardSettings = namespace.addFeedForwardNamespace("dis 2 coral joint", FeedForwardController.ControlMode.ANGULAR_POSITION);
 
     public static final double CORAL_JOINT_FORWARD_SPEED = 0.5;
     public static final double CORAL_JOINT_BACKWARD_SPEED = 0.5;
@@ -69,12 +64,16 @@ public class District2CoralJoint extends SmartMotorControllerGenericSubsystem {
         this.bottomLimit = bottomLimit;
         talonFX.setEncoderConversionFactor(DISTANCE_PER_PULSE / DEGREES_IN_ROTATIONS);
         talonFX.setIdleMode(NeutralModeValue.Brake);
-        talonFX.setInverted(true);
+        talonFX.setInverted(false);
         configureDashboard();
     }
 
     public void brake() {
         talonFX.setIdleMode(NeutralModeValue.Brake);
+    }
+
+    public void coast() {
+        talonFX.setIdleMode(NeutralModeValue.Coast);
     }
 
     private void voltageMove(Voltage voltage) {

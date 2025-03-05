@@ -26,7 +26,7 @@ public class Drive extends Command {
     private final SlewRateLimiter yLimiter;
     private final SlewRateLimiter rotationLimiter;
 
-    double time;
+    private double time;
 
     public Drive(Drivetrain drivetrain, Supplier<Double> xSpeed, Supplier<Double> ySpeed,
                  Supplier<Double> rotationSpeed, boolean fieldRelative, boolean usePID,
@@ -62,7 +62,6 @@ public class Drive extends Command {
         }
 
         drivetrain.drive(xSpeed, ySpeed, rotationSpeed, fieldRelative, usePID, Timer.getFPGATimestamp() - time);
-//        logger.log(Timer.getFPGATimestamp() - time);
         time = Timer.getFPGATimestamp();
     }
 

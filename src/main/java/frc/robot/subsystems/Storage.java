@@ -37,11 +37,11 @@ public class Storage extends MotoredGenericSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        SpikesLogger logger = new SpikesLogger();
     }
 
     public boolean hasCoral() {
-        return !infrared.get();
+        return true;
+//        return !infrared.get();
     }
 
     public void intake() {

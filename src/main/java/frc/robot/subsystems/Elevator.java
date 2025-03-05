@@ -1,10 +1,12 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
-import frc.robot.util.SparkWrapper;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
+import frc.robot.util.SparkWrapper;
 
 import java.util.function.Supplier;
 
@@ -12,7 +14,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ElevatorLevel {
 
-        BOTTOM(-1), PROCESSOR(-1), FEEDER(-1), L1(-1), L2(-1), L3(-1), L4(-1), TOP(-1);
+        BOTTOM(0), PROCESSOR(-1), FEEDER(-1), L1(-1), L2(-1), L3(-1), L4(-1), TOP(-1);
 
         public final double height;
 
@@ -26,8 +28,8 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     private static final String NAMESPACE_NAME = "elevator";
 
-    private static final double GEAR_RATIO = (14 / 50.0) * (16 / 50.0);
-    private static final double HEIGHT_PER_ROTATION = 2 / (GEAR_RATIO * 41.2 * Math.PI);
+    private static final double GEAR_RATIO = (12 / 50.0) * (16 / 50.0) * (35 / 50.0) / 2;
+    private static final double HEIGHT_PER_ROTATION = GEAR_RATIO * 2 * Math.PI * 1.625 * 0.0254;
     private static final double SECONDS_IN_MINUTES = 60;
 
     private final SparkWrapper master;
@@ -55,7 +57,8 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         this.bottomLimit = bottomLimit;
         master.setPositionConversionFactor(HEIGHT_PER_ROTATION);
         master.setVelocityConversionFactor(HEIGHT_PER_ROTATION / SECONDS_IN_MINUTES);
-        slave.setInverted(true);
+        master.setIdleMode(SparkBaseConfig.IdleMode.kBrake);
+        slave.setIdleMode(SparkBaseConfig.IdleMode.kBrake);
         configureDashboard();
     }
 
@@ -93,5 +96,8 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         namespace.putBoolean("bottom limit", bottomLimit::get);
         namespace.putNumber("elevator height", this::getPosition);
         namespace.putNumber("velocity", this::getVelocity);
+        Supplier<Double> speed = namespace.addConstantDouble("speed", 0);
+        namespace.putCommand("go up", new MoveGenericSubsystem(this, speed));
+        namespace.putCommand("go down", new MoveGenericSubsystem(this, ELEVATOR_BACKWARD_SPEED));
     }
 }

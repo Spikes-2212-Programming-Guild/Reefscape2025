@@ -30,7 +30,6 @@ public class IntakeCoral extends MoveGenericSubsystem {
 
     @Override
     public boolean isFinished() {
-//        return false;
         return super.isFinished() && Timer.getFPGATimestamp() - startTime >= TIME_TO_INTAKE.get();
     }
 

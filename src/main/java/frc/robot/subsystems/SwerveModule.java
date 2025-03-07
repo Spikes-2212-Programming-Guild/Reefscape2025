@@ -31,6 +31,9 @@ public class SwerveModule extends DashboardedSubsystem {
     private static final double DEGREES_TO_FLIP = 180;
     private static final double ABSOLUTE_POSITION_DISCONTINUITY_POINT = 1;
 
+    private static final double DRIVE_CURRENT_LIMIT = 40;
+    private static final double TURN_CURRENT_LIMIT = 40;
+
     private final TalonFXWrapper driveMotor;
     private final SparkWrapper turnMotor;
     private final CANcoder absoluteEncoder;
@@ -62,10 +65,10 @@ public class SwerveModule extends DashboardedSubsystem {
         this.turnPIDSettings = turnPIDSettings;
         this.driveFeedForwardSettings = driveFeedForwardSettings;
         this.turnFeedForwardSettings = turnFeedForwardSettings;
+        driveMotor.restoreFactoryDefaults();
+        turnMotor.restoreFactoryDefaults();
         turnMotor.configureLoop(turnPIDSettings, turnFeedForwardSettings,
                 TrapezoidProfileSettings.EMPTY_TRAPEZOID_PROFILE_SETTINGS);
-        driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(40));
-        turnMotor.setCurrentLimit(40);
         configureDriveController();
         configureTurnController();
         configureAbsoluteEncoder();
@@ -77,12 +80,14 @@ public class SwerveModule extends DashboardedSubsystem {
         driveMotor.setEncoderConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES
                 * INCHES_TO_METERS * Math.PI);
         driveMotor.setInverted(driveInverted);
+//                driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(DRIVE_CURRENT_LIMIT));
     }
 
     public void configureTurnController() {
         turnMotor.setPositionConversionFactor(TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS);
         turnMotor.setVelocityConversionFactor((TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS) / SECONDS_IN_MINUTE);
         turnMotor.setInverted(cancoderInverted);
+        //        turnMotor.setCurrentLimit(TURN_CURRENT_LIMIT);
     }
 
     public void configureAbsoluteEncoder() {
@@ -114,10 +119,6 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     public void set(SwerveModuleState state, boolean usePID, boolean limitSpeed) {
-        if (Math.abs(state.speedMetersPerSecond) < Drivetrain.MIN_SPEED && limitSpeed) {
-            stop();
-            return;
-        }
         state = optimize(state, turnMotor.getPosition());
 //        state.speedMetersPerSecond *= state.angle.minus(Rotation2d.fromDegrees(turnMotor.getPosition())).getCos();
         setAngle(state.angle.getDegrees());

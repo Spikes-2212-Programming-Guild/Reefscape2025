@@ -10,10 +10,9 @@ import java.util.function.Supplier;
 
 public class Drive extends Command {
 
-    private static final double DRIVE_ACCELERATION_LIMIT = 2;
-    private static final double TURN_ACCELERATION_LIMIT = 4;
+    private static final double DRIVE_ACCELERATION_LIMIT = 12;
+    private static final double TURN_ACCELERATION_LIMIT = 15;
 
-    SpikesLogger logger = new SpikesLogger();
     private final Drivetrain drivetrain;
     private final Supplier<Double> xSpeed;
     private final Supplier<Double> ySpeed;

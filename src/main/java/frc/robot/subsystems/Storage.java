@@ -13,6 +13,7 @@ import frc.robot.RobotMap;
 public class Storage extends MotoredGenericSubsystem {
 
     private static final String NAMESPACE_NAME = "storage";
+    private static final int CURRENT_LIMIT = 40;
 
     private final DigitalInput infrared;
 
@@ -31,6 +32,7 @@ public class Storage extends MotoredGenericSubsystem {
     private Storage(String namespaceName, SparkWrapper motor, DigitalInput infrared) {
         super(namespaceName, motor);
         this.infrared = infrared;
+//        motor.applyConfiguration(motor.getSparkConfiguration().smartCurrentLimit(CURRENT_LIMIT));
         configureDashboard();
     }
 
@@ -40,8 +42,8 @@ public class Storage extends MotoredGenericSubsystem {
     }
 
     public boolean hasCoral() {
-        return true;
-//        return !infrared.get();
+//        return true;
+        return !infrared.get();
     }
 
     public void intake() {

@@ -24,12 +24,15 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.Drive;
+import frc.robot.commands.RotateWithPID;
 import frc.robot.util.VisionService;
+
+import java.util.function.Supplier;
 
 public class Drivetrain extends DashboardedSubsystem {
 
     public static final double MAX_SPEED = 4;
-    public static final double MIN_SPEED = 0.06;
+    public static final double MIN_SPEED = 0.0025;
     public static final double MAX_TURN_SPEED = 3;
 
     private static final double TRACK_WIDTH = 0.6;
@@ -178,6 +181,12 @@ public class Drivetrain extends DashboardedSubsystem {
         speeds = ChassisSpeeds.discretize(speeds, timestep);
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds, CENTER_OF_ROBOT);
         SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_SPEED);
+        for (SwerveModuleState state : states) {
+            if (Math.abs(state.speedMetersPerSecond) < Drivetrain.MIN_SPEED) {
+                stop();
+                return;
+            }
+        }
         frontLeft.set(states[0], usePID);
         frontRight.set(states[1], usePID);
         backLeft.set(states[2], usePID);
@@ -266,6 +275,7 @@ public class Drivetrain extends DashboardedSubsystem {
         namespace.putCommand("quasistatic reverse", sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
         namespace.putCommand("dynamic forward", sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
         namespace.putCommand("dynamic reverse", sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
-        namespace.putCommand("set angle", new InstantCommand(() -> gyro.setAngleAdjustment(0)));
+        Supplier<Double> angle = namespace.addConstantDouble("angle", 0);
+        namespace.putCommand("set angle", new RotateWithPID(this, angle));
     }
 }

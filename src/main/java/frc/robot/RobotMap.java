@@ -32,8 +32,8 @@ public class RobotMap {
         int ELEVATOR_TOP_LIMIT = 2;
         int ELEVATOR_BOTTOM_LIMIT = 6;
         int CORAL_JOINT_BOTTOM_LIMIT = 4;
-        int GRIPPER_LIMIT = 0;
-        int STORAGE_INFRARED = 9;
+        int GRIPPER_LIMIT = 9;
+        int STORAGE_INFRARED = 0;
     }
 
     public interface PWM {

@@ -13,13 +13,10 @@ public class IntakeCoral extends MoveGenericSubsystem {
     private static final Supplier<Double> INTAKE_SPEED = NAMESPACE.addConstantDouble("intake speed", 0.5);
     private static final Supplier<Double> TIME_TO_INTAKE = NAMESPACE.addConstantDouble("time to intake", 0.2);
 
-    private final Storage storage;
-
     private double startTime;
 
     public IntakeCoral(Storage storage) {
         super(storage, INTAKE_SPEED);
-        this.storage = storage;
         startTime = Timer.getFPGATimestamp();
     }
 

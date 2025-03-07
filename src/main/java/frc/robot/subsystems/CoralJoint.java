@@ -1,15 +1,27 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
 import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.RobotMap;
+import frc.robot.commands.RotateStorage;
+
+import java.util.function.Supplier;
 
 public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum StoragePose {
 
-        INTAKE(-1), PLACEMENT(-1), RESTING(-1);
+        INTAKE(15), L1(-10), L2(-42),
+        L3(0.13 * DEGREES_IN_ROTATIONS),
+        RESTING(-30);
+//        RESTING(0.0);
 
         public final double neededPitch;
 
@@ -18,18 +30,21 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         }
     }
 
-    public static final double CORAL_JOINT_FORWARD_SPEED = 0.15;
-    public static final double CORAL_JOINT_BACKWARD_SPEED = -0.15;
+    public static final double CORAL_JOINT_FORWARD_SPEED = 0.5;
+    public static final double CORAL_JOINT_BACKWARD_SPEED = 0.5;
 
-    private static final String NAMESPACE_NAME = "coral joint";
-    private static final double GEAR_RATIO = 1;
+    private static final String NAMESPACE_NAME = "district 2 coral joint";
+    private static final double GEAR_RATIO = 1 / 25.0;
     private static final double DEGREES_IN_ROTATIONS = 360;
+    private static final double DEGREES_TO_RADIANS = Math.PI / 180;
     private static final double DISTANCE_PER_PULSE = GEAR_RATIO * DEGREES_IN_ROTATIONS;
 
     private final TalonFXWrapper talonFX;
     private final DigitalInput bottomLimit;
 
     private static CoralJoint instance;
+
+    private boolean running;
 
     public static CoralJoint getInstance() {
         if (instance == null) {
@@ -45,7 +60,17 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         this.talonFX = talonFX;
         this.bottomLimit = bottomLimit;
         talonFX.setEncoderConversionFactor(DISTANCE_PER_PULSE);
+        talonFX.setIdleMode(NeutralModeValue.Brake);
+        talonFX.setInverted(false);
         configureDashboard();
+    }
+
+    private void voltageMove(Voltage voltage) {
+        talonFX.set(voltage.in(Units.Volts) / RobotController.getBatteryVoltage());
+    }
+
+    public double getPosition() {
+        return talonFX.getPosition();
     }
 
     @Override
@@ -55,12 +80,27 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public void calibrateEncoderPosition() {
         if (bottomLimit.get()) {
-            talonFX.setPosition(StoragePose.PLACEMENT.neededPitch);
+            talonFX.setPosition(StoragePose.RESTING.neededPitch);
         }
     }
 
     public void configureDashboard() {
         namespace.putBoolean("bottom limit", bottomLimit::get);
         namespace.putNumber("storage pose", talonFX::getPosition);
+        namespace.putRunnable("reset encoder", () -> talonFX.setPosition(0));
+        namespace.putCommand("rotate pos", new MoveGenericSubsystem(this, 0.15));
+        namespace.putCommand("rotate neg", new MoveGenericSubsystem(this, -0.15));
+        Supplier<Double> setpoint = namespace.addConstantDouble("setpoint", 0);
+        namespace.putCommand("set voltage", new RunCommand(() -> talonFX.setVoltage(setpoint.get())) {
+            @Override
+            public void end(boolean True) {
+                talonFX.stopMotor();
+            }
+        });
+        namespace.putNumber("voltage", talonFX::get);
+        namespace.putCommand("pid", new RotateStorage(this, setpoint));
+        namespace.putCommand("dont kys", new MoveGenericSubsystem(this, 0.032));
+//        namespace.putCommand("pid", new MoveGenericSubsystemWithPID(this, setpoint, talonFX::getPosition,
+//                pidSettings, feedForwardSettings));
     }
 }

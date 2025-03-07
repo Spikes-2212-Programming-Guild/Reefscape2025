@@ -6,6 +6,7 @@ import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
+import frc.robot.commands.MoveToHeight;
 import frc.robot.util.SparkWrapper;
 
 import java.util.function.Supplier;
@@ -14,7 +15,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ElevatorLevel {
 
-        BOTTOM(0), PROCESSOR(-1), FEEDER(-1), L1(-1), L2(-1), L3(-1), L4(-1), TOP(-1);
+        BOTTOM(0), PROCESSOR(-1), FEEDER(0.16), L1(0), L2(0.37), L3(0.7), L4(-1), TOP(0.72);
 
         public final double height;
 
@@ -59,6 +60,8 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         master.setVelocityConversionFactor(HEIGHT_PER_ROTATION / SECONDS_IN_MINUTES);
         master.setIdleMode(SparkBaseConfig.IdleMode.kBrake);
         slave.setIdleMode(SparkBaseConfig.IdleMode.kBrake);
+//        master.applyConfiguration(master.getSparkConfiguration().smartCurrentLimit(40));
+        master.applyConfiguration(master.getSparkConfiguration().closedLoopRampRate(0.4));
         configureDashboard();
     }
 
@@ -99,5 +102,6 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         Supplier<Double> speed = namespace.addConstantDouble("speed", 0);
         namespace.putCommand("go up", new MoveGenericSubsystem(this, speed));
         namespace.putCommand("go down", new MoveGenericSubsystem(this, ELEVATOR_BACKWARD_SPEED));
+        namespace.putCommand("pid", new MoveToHeight(this, speed));
     }
 }

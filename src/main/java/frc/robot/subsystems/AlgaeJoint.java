@@ -2,11 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkBaseConfig;
+import com.spikes2212.command.genericsubsystem.commands.MoveGenericSubsystem;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
-import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
-import frc.robot.commands.RotateAlgaeJointToBottom;
-import frc.robot.commands.RotateAlgaeJointToTop;
 import frc.robot.util.SparkWrapper;
 
 public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
@@ -36,8 +34,7 @@ public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
 
     @Override
     public void configureDashboard() {
-        namespace.putCommand("rotate to top", new RotateAlgaeJointToTop(this));
-        namespace.putCommand("rotate to bottom", new RotateAlgaeJointToBottom(this));
         namespace.putNumber("encoder", spark::getPosition);
+        namespace.putCommand("remove algae", new MoveGenericSubsystem(this, 0.7).withTimeout(0.8));
     }
 }

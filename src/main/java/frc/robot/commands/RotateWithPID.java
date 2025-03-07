@@ -14,9 +14,10 @@ import java.util.function.Supplier;
 public class RotateWithPID extends Command {
 
     private static final RootNamespace namespace = new RootNamespace("rotate with pid");
-    private static final PIDSettings pidSettings = namespace.addPIDNamespace("rotate with pid");
+    private static final PIDSettings pidSettings = namespace.addPIDNamespace("rotate with pid",
+            new PIDSettings(0.06, 0, 0.001, 0, 0.5, 0.5));
     private static final FeedForwardSettings feedForwardSettings = namespace.addFeedForwardNamespace("rotate with pid",
-            FeedForwardController.ControlMode.LINEAR_POSITION);
+            new FeedForwardSettings(0.13, 0, 0, 0, FeedForwardController.ControlMode.LINEAR_POSITION));
 
     private final Drivetrain drivetrain;
     private final Supplier<Double> setpoint;

@@ -18,8 +18,8 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum StoragePose {
 
-        INTAKE(15), L1(-10), L2(-42),
-        L3(0.13 * DEGREES_IN_ROTATIONS),
+        INTAKE(12), L1(-10), L2(-30),
+        L3(-15),
         RESTING(-30);
 //        RESTING(0.0);
 
@@ -30,8 +30,8 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
         }
     }
 
-    public static final double CORAL_JOINT_FORWARD_SPEED = 0.5;
-    public static final double CORAL_JOINT_BACKWARD_SPEED = 0.5;
+    public static final double CORAL_JOINT_FORWARD_SPEED = 0.05;
+    public static final double CORAL_JOINT_BACKWARD_SPEED = -0.05;
 
     private static final String NAMESPACE_NAME = "district 2 coral joint";
     private static final double GEAR_RATIO = 1 / 25.0;

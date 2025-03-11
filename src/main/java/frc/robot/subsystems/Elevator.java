@@ -15,7 +15,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
 
     public enum ElevatorLevel {
 
-        BOTTOM(0), PROCESSOR(-1), FEEDER(0.16), L1(0), L2(0.37), L3(0.7), L4(-1), TOP(0.72);
+        BOTTOM(0), LOWER_ALGAE(0.02), UPPER_ALGAE(0.5) ,PROCESSOR(-1), FEEDER(0.2), L1(0.02), L2(0.375), L3(0.7), L4(-1), TOP(0.72);
 
         public final double height;
 
@@ -24,8 +24,8 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         }
     }
 
-    public static final double ELEVATOR_FORWARD_SPEED = 0.175;
-    public static final double ELEVATOR_BACKWARD_SPEED = -0.175;
+    public static final double ELEVATOR_FORWARD_SPEED = 0.275;
+    public static final double ELEVATOR_BACKWARD_SPEED = -0.275;
 
     private static final String NAMESPACE_NAME = "elevator";
 
@@ -61,7 +61,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         master.setIdleMode(SparkBaseConfig.IdleMode.kBrake);
         slave.setIdleMode(SparkBaseConfig.IdleMode.kBrake);
 //        master.applyConfiguration(master.getSparkConfiguration().smartCurrentLimit(40));
-        master.applyConfiguration(master.getSparkConfiguration().closedLoopRampRate(0.4));
+        master.applyConfiguration(master.getSparkConfiguration().closedLoopRampRate(0.075));
         configureDashboard();
     }
 
@@ -101,7 +101,7 @@ public class Elevator extends SmartMotorControllerGenericSubsystem {
         namespace.putNumber("velocity", this::getVelocity);
         Supplier<Double> speed = namespace.addConstantDouble("speed", 0);
         namespace.putCommand("go up", new MoveGenericSubsystem(this, speed));
-        namespace.putCommand("go down", new MoveGenericSubsystem(this, ELEVATOR_BACKWARD_SPEED));
+        namespace.putCommand("go down", new MoveGenericSubsystem(this, speed));
         namespace.putCommand("pid", new MoveToHeight(this, speed));
     }
 }

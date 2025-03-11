@@ -18,6 +18,10 @@ public class IntakeFromFeeder extends SequentialCommandGroup {
                         new RotateStorage(coralJoint, CoralJoint.StoragePose.INTAKE)
                 ).andThen(logger.logCommand("finished")),
                 new IntakeCoral(storage),
+                new ParallelCommandGroup(
+                        new MoveToHeight(elevator, Elevator.ElevatorLevel.BOTTOM),
+                        new RotateStorage(coralJoint, CoralJoint.StoragePose.RESTING).withTimeout(0.5)
+                ),
                 new InstantCommand( () -> {
                     coralJoint.finish();
                     elevator.finish();

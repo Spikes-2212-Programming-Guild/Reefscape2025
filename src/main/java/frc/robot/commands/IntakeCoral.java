@@ -23,6 +23,7 @@ public class IntakeCoral extends MoveGenericSubsystem {
     @Override
     public void initialize() {
         super.initialize();
+        startTime = Timer.getFPGATimestamp();
     }
 
     @Override

@@ -38,6 +38,7 @@ public class CenterOnFeeder extends Command {
     private final PIDController yPIDController;
     private final FeedForwardController yFeedForwardController;
 
+    private PossiblePose pose;
     private double lastTimeNotOnTarget;
 
     public CenterOnFeeder(Drivetrain drivetrain) {
@@ -60,30 +61,32 @@ public class CenterOnFeeder extends Command {
         yPIDController.setTolerance(pidSettings.getTolerance());
         yFeedForwardController.setGains(feedForwardSettings);
         double shortestDistance = getDistanceFrom(PossiblePose.FAR_LEFT.xPose, PossiblePose.FAR_LEFT.yPose);
-        PossiblePose pose = PossiblePose.FAR_LEFT;
+        pose = PossiblePose.FAR_LEFT;
         for (PossiblePose possiblePose : PossiblePose.values()) {
             if (shortestDistance > getDistanceFrom(possiblePose.xPose, possiblePose.yPose)) {
                 shortestDistance = getDistanceFrom(possiblePose.xPose, possiblePose.yPose);
                 pose = possiblePose;
             }
         }
-        drivetrain.drive(xPIDController.calculate(drivetrain.getPose2d().getX(), pose.xPose) +
-                        xFeedForwardController.calculate(drivetrain.getPose2d().getX(), pose.xPose),
-                yPIDController.calculate(drivetrain.getPose2d().getY(), pose.yPose) +
-                        yFeedForwardController.calculate(drivetrain.getPose2d().getY(), pose.yPose),
+        drivetrain.drive(xPIDController.calculate(drivetrain.getRobotRelativePose().getX(), pose.xPose) +
+                        xFeedForwardController.calculate(drivetrain.getRobotRelativePose().getX(), pose.xPose),
+                yPIDController.calculate(drivetrain.getRobotRelativePose().getY(), pose.yPose) +
+                        yFeedForwardController.calculate(drivetrain.getRobotRelativePose().getY(), pose.yPose),
                 0, true, true, 0.02);
     }
 
     private double getDistanceFrom(double x, double y) {
-        return Math.sqrt(Math.pow(x - drivetrain.getPose2d().getX(), 2) + Math.pow(y - drivetrain.getPose2d().getY(), 2));
+        return Math.sqrt(Math.pow(x - drivetrain.getRobotRelativePose().getX(), 2) + Math.pow(y - drivetrain.getRobotRelativePose().getY(), 2));
     }
 
     @Override
     public boolean isFinished() {
-        if (!xPIDController.atSetpoint() || !yPIDController.atSetpoint()) {
+        if (
+                Math.abs(pose.xPose - drivetrain.getRobotRelativePose().getX()) >= pidSettings.getTolerance() ||
+                        Math.abs(pose.yPose - drivetrain.getRobotRelativePose().getY()) >= pidSettings.getTolerance()) {
             lastTimeNotOnTarget = Timer.getFPGATimestamp();
         }
-        return pidSettings.getWaitTime() <= lastTimeNotOnTarget - Timer.getFPGATimestamp();
+        return pidSettings.getWaitTime() <= Timer.getFPGATimestamp() - lastTimeNotOnTarget;
     }
 
     @Override

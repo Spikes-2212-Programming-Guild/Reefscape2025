@@ -3,7 +3,7 @@ package frc.robot.commands.autonomous;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.OI;
-import frc.robot.commands.CenterOnReef;
+import frc.robot.commands.DriveToReef;
 import frc.robot.commands.Drive;
 import frc.robot.commands.ReleaseCoral;
 import frc.robot.commands.RotateStorage;
@@ -27,7 +27,7 @@ public class MidWithLimelight extends SequentialCommandGroup {
                             public void end(boolean interrupted) {
                             }
                         }),
-                new CenterOnReef(drivetrain, OI.Side.RIGHT), new ReleaseCoral(storage),
+                new DriveToReef(drivetrain, OI.Side.RIGHT), new ReleaseCoral(storage),
                 new RotateStorage(coralJoint, CoralJoint.StoragePose.RESTING));
     }
 }

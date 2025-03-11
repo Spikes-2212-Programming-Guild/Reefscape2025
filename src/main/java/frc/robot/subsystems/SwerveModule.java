@@ -118,15 +118,11 @@ public class SwerveModule extends DashboardedSubsystem {
         turnMotor.stopMotor();
     }
 
-    public void set(SwerveModuleState state, boolean usePID, boolean limitSpeed) {
+    public void set(SwerveModuleState state, boolean usePID) {
         state = optimize(state, turnMotor.getPosition());
 //        state.speedMetersPerSecond *= state.angle.minus(Rotation2d.fromDegrees(turnMotor.getPosition())).getCos();
         setAngle(state.angle.getDegrees());
         setSpeed(state.speedMetersPerSecond, usePID);
-    }
-
-    public void set(SwerveModuleState state, boolean usePID) {
-        set(state, usePID, true);
     }
 
     private double normalizeAngleRelativeToEncoder(double currentAngle, double desiredAngle) {

@@ -25,10 +25,10 @@ public class VisionService {
     }
 
     public Pose2d getTargetRelativePose() {
-        double[] result =  limelight.getEntry("targetpose_robotspace").getDoubleArray(new double[0]);
+        double[] result =  limelight.getEntry("botpose_targetspace").getDoubleArray(new double[0]);
         if (limelight.getID() >= 0) {
-            Translation2d translation2d = new Translation2d(result[0], result[1]);
-            Rotation2d rotation2d = new Rotation2d(result[2]);
+            Translation2d translation2d = new Translation2d(result[2], -result[0]);
+            Rotation2d rotation2d = new Rotation2d(-Math.toRadians(result[4]));
             return new Pose2d(translation2d, rotation2d);
         }
         return null;
@@ -39,6 +39,10 @@ public class VisionService {
             return null;
         }
         return limelight.getRobotPose().toPose2d();
+    }
+
+    public long getID() {
+        return limelight.getID();
     }
 
     public boolean hasTarget() {

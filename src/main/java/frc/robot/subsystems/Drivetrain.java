@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -9,8 +10,8 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.spikes2212.command.DashboardedSubsystem;
 import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
-import com.studica.frc.AHRS;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,8 +22,11 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.OI;
+import frc.robot.RobotMap;
+import frc.robot.commands.DriveToReef;
 import frc.robot.commands.Drive;
 import frc.robot.commands.RotateWithPID;
 import frc.robot.util.VisionService;
@@ -32,7 +36,7 @@ import java.util.function.Supplier;
 public class Drivetrain extends DashboardedSubsystem {
 
     public static final double MAX_SPEED = 4;
-    public static final double MIN_SPEED = 0.0025;
+    public static final double MIN_SPEED = 0.025;
     public static final double MAX_TURN_SPEED = 3;
 
     private static final double TRACK_WIDTH = 0.6;
@@ -54,7 +58,8 @@ public class Drivetrain extends DashboardedSubsystem {
     private final SwerveModule frontRight;
     private final SwerveModule backLeft;
     private final SwerveModule backRight;
-    private final AHRS gyro;
+//    private final AHRS gyro;
+    private final PigeonIMU gyro;
     private final SwerveDriveKinematics kinematics;
 
     private final SwerveDriveOdometry odometry;
@@ -75,13 +80,15 @@ public class Drivetrain extends DashboardedSubsystem {
         if (instance == null) {
             instance = new Drivetrain(SwerveModuleHolder.getFrontLeft(), SwerveModuleHolder.getFrontRight(),
                     SwerveModuleHolder.getBackLeft(), SwerveModuleHolder.getBackRight(),
-                    new AHRS(AHRS.NavXComType.kMXP_SPI), VisionService.getInstance());
+//                    new AHRS(AHRS.NavXComType.kMXP_SPI), VisionService.getInstance());
+                    new PigeonIMU(RobotMap.CAN.DRIVETRAIN_PIGEON), VisionService.getInstance());
         }
         return instance;
     }
 
     private Drivetrain(SwerveModule frontLeft, SwerveModule frontRight, SwerveModule backLeft,
-                       SwerveModule backRight, AHRS gyro, VisionService visionService) {
+//                       SwerveModule backRight, AHRS gyro, VisionService visionService) {
+                       SwerveModule backRight, PigeonIMU gyro, VisionService visionService) {
         super(NAMESPACE_NAME);
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
@@ -107,7 +114,7 @@ public class Drivetrain extends DashboardedSubsystem {
 
         // Configure AutoBuilder last
         AutoBuilder.configure(
-                this::getPose2d, // Robot pose supplier
+                this::getRobotRelativePose, // Robot pose supplier
                 this::resetPose2d, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
@@ -163,28 +170,30 @@ public class Drivetrain extends DashboardedSubsystem {
                         visionService.getTargetRelativePose());
             }
         }
-        currentPose = odometry.update(getRotation2d(), new SwerveModulePosition[] {
+        currentPose = odometry.update(getRotation2d(), new SwerveModulePosition[]{
                 frontLeft.getPosition(), frontRight.getPosition(),
                 backLeft.getPosition(), backRight.getPosition()
         });
     }
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative,
-                      boolean usePID, double timestep) {
+                      boolean usePID, double timestep, boolean limitSpeed, Rotation2d robotAngle) {
         ChassisSpeeds speeds;
         if (fieldRelative) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed,
-                    getRotation2d());
+                    robotAngle);
         } else {
             speeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
         }
         speeds = ChassisSpeeds.discretize(speeds, timestep);
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds, CENTER_OF_ROBOT);
         SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_SPEED);
-        for (SwerveModuleState state : states) {
-            if (Math.abs(state.speedMetersPerSecond) < Drivetrain.MIN_SPEED) {
-                stop();
-                return;
+        if (limitSpeed) {
+            for (SwerveModuleState state : states) {
+                if (Math.abs(state.speedMetersPerSecond) < Drivetrain.MIN_SPEED) {
+                    stop();
+                    return;
+                }
             }
         }
         frontLeft.set(states[0], usePID);
@@ -202,10 +211,45 @@ public class Drivetrain extends DashboardedSubsystem {
         desiredStates.set(states);
     }
 
-    private final PIDController turnPIDController = new PIDController(0, 0, 0);
+    public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative,
+                      boolean usePID, double timestep, boolean limitSpeed) {
+        drive(xSpeed, ySpeed, rotationSpeed, fieldRelative, usePID, timestep, limitSpeed, getRotation2d());
+    }
+
+    public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative,
+                      boolean usePID, double timestep) {
+        drive(xSpeed, ySpeed, rotationSpeed, fieldRelative, usePID, timestep, true);
+    }
+
+    public boolean seesReef() {
+        if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
+            for (int i = 17; i <= 22; i++) {
+                if (visionService.getID() == i) return true;
+            }
+        } else {
+            for (int i = 6; i <= 11; i++) {
+                if (visionService.getID() == i) return true;
+            }
+        }
+        return false;
+    }
+
+    private final PIDController turnPIDController = new PIDController(0.06, 0, 0.001);
     private final FeedForwardController turnFeedForwardController = new FeedForwardController(
-            new FeedForwardSettings(0, 0, 0, FeedForwardController.ControlMode.LINEAR_POSITION)
+            new FeedForwardSettings(0.13, 0, 0, FeedForwardController.ControlMode.LINEAR_POSITION)
     );
+
+    public void stayAtAngle(double xSpeed, double ySpeed, double angle, boolean usePID, double timestep,
+                            Rotation2d robotAngle) {
+        drive(xSpeed, ySpeed, Math.abs(angle - getYaw()) >= 1.5 ? turnPIDController.calculate(robotAngle.getDegrees(), angle) +
+                        turnFeedForwardController.calculate(robotAngle.getDegrees(), angle) : 0,
+                true, usePID, timestep, true, robotAngle);
+    }
+
+    public void stayAtAngle(double xSpeed, double ySpeed, double angle, boolean usePID, double timestep) {
+        stayAtAngle(xSpeed, ySpeed, angle, usePID, timestep, getRotation2d());
+    }
+
     public void sysID(Voltage voltage) {
         drive((voltage.in(Units.Volts) / RobotController.getBatteryVoltage()) * MAX_SPEED, 0,
                 turnPIDController.calculate(getYaw(), 0) + turnFeedForwardController.calculate(getYaw(), 0),
@@ -230,7 +274,7 @@ public class Drivetrain extends DashboardedSubsystem {
         backRight.resetRelativeEncoder();
     }
 
-    public Pose2d getPose2d() {
+    public Pose2d getRobotRelativePose() {
         return odometry.getPoseMeters();
     }
 
@@ -247,13 +291,15 @@ public class Drivetrain extends DashboardedSubsystem {
         drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond,
                 false, true, 0.02);
     }
-      
+
     public void resetGyro() {
-        gyro.reset();
+//        gyro.reset();
+        gyro.setYaw(0);
     }
 
     public double getYaw() {
-        return -gyro.getAngle();
+//        return -gyro.getAngle();
+        return gyro.getYaw();
     }
 
     public Rotation2d getRotation2d() {
@@ -277,5 +323,16 @@ public class Drivetrain extends DashboardedSubsystem {
         namespace.putCommand("dynamic reverse", sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
         Supplier<Double> angle = namespace.addConstantDouble("angle", 0);
         namespace.putCommand("set angle", new RotateWithPID(this, angle));
+        namespace.putRunnable("reset odometry", () -> odometry.resetPosition(getRotation2d(), new SwerveModulePosition[]{
+                frontLeft.getPosition(), frontRight.getPosition(),
+                backLeft.getPosition(), backRight.getPosition()
+        }, new Pose2d()));
+        namespace.putNumber("x", () -> this.getRobotRelativePose().getX());
+        namespace.putNumber("y", () -> this.getRobotRelativePose().getY());
+        namespace.putNumber("odometry yaw", () -> this.getRobotRelativePose().getRotation().getDegrees());
+        namespace.putCommand("drive to left", new DriveToReef(this, OI.Side.LEFT));
+        namespace.putCommand("drive to right", new DriveToReef(this, OI.Side.RIGHT));
+        namespace.putBoolean("sees target", visionService::hasTarget);
+        namespace.putBoolean("sees reef", this::seesReef);
     }
 }

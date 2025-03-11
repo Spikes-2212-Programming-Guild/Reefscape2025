@@ -19,21 +19,21 @@ public class RobotMap {
         int BACK_LEFT_ABSOLUTE_ENCODER = 9;
         int BACK_RIGHT_ABSOLUTE_ENCODER = 12;
 
+        int DRIVETRAIN_PIGEON = 15;
+
         int ELEVATOR_MASTER_SPARK = 18;
         int ELEVATOR_SLAVE_SPARK = 19;
         int ALGAE_JOINT_SPARK = 13;
         int CORAL_JOINT_TALON = 16;
-        int GRIPPER_VICTOR = 17;
         int STORAGE_SPARK = 14;
     }
 
     public interface DIO {
 
-        int ELEVATOR_TOP_LIMIT = 2;
-        int ELEVATOR_BOTTOM_LIMIT = 6;
-        int CORAL_JOINT_BOTTOM_LIMIT = 4;
-        int GRIPPER_LIMIT = 9;
-        int STORAGE_INFRARED = 0;
+        int ELEVATOR_TOP_LIMIT = 0;
+        int ELEVATOR_BOTTOM_LIMIT = 5;
+        int CORAL_JOINT_BOTTOM_LIMIT = 3;
+        int STORAGE_INFRARED = 2;
     }
 
     public interface PWM {

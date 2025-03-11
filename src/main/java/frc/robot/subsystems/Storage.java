@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel;
 import com.spikes2212.command.genericsubsystem.MotoredGenericSubsystem;
-import com.spikes2212.dashboard.SpikesLogger;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.ReleaseCoral;
@@ -14,7 +13,9 @@ public class Storage extends MotoredGenericSubsystem {
 
     private static final String NAMESPACE_NAME = "storage";
     private static final int CURRENT_LIMIT = 40;
+    private static final int CORAL_CURRENT_THRESHOLD = 15;
 
+    private final SparkWrapper spark;
     private final DigitalInput infrared;
 
     private boolean running;
@@ -32,6 +33,7 @@ public class Storage extends MotoredGenericSubsystem {
     private Storage(String namespaceName, SparkWrapper motor, DigitalInput infrared) {
         super(namespaceName, motor);
         this.infrared = infrared;
+        spark = motor;
 //        motor.applyConfiguration(motor.getSparkConfiguration().smartCurrentLimit(CURRENT_LIMIT));
         configureDashboard();
     }
@@ -44,6 +46,10 @@ public class Storage extends MotoredGenericSubsystem {
     public boolean hasCoral() {
 //        return true;
         return !infrared.get();
+    }
+
+    public double getCurrent() {
+        return spark.getCurrent();
     }
 
     public void intake() {
@@ -60,7 +66,9 @@ public class Storage extends MotoredGenericSubsystem {
 
     @Override
     public boolean canMove(double speed) {
-        return !(speed > 0 && hasCoral());
+//        return !(speed > 0 && hasCoral());
+        return !(speed > 0 && getCurrent() > CORAL_CURRENT_THRESHOLD);
+//        return true;
     }
 
     @Override
@@ -70,5 +78,6 @@ public class Storage extends MotoredGenericSubsystem {
         namespace.putCommand("release coral", new ReleaseCoral(this));
         namespace.putBoolean("can move", () -> canMove(getSpeed()));
         namespace.putCommand("move", new InstantCommand(() -> motorController.set(0.2)));
+        namespace.putNumber("current", this::getCurrent);
     }
 }

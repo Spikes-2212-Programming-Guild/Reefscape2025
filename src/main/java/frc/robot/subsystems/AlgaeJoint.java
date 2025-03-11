@@ -35,6 +35,6 @@ public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
     @Override
     public void configureDashboard() {
         namespace.putNumber("encoder", spark::getPosition);
-        namespace.putCommand("remove algae", new MoveGenericSubsystem(this, 0.7).withTimeout(0.8));
+        namespace.putCommand("remove algae", new MoveGenericSubsystem(this, -0.7)   );
     }
 }

@@ -31,7 +31,7 @@ public class SwerveModule extends DashboardedSubsystem {
     private static final double DEGREES_TO_FLIP = 180;
     private static final double ABSOLUTE_POSITION_DISCONTINUITY_POINT = 1;
 
-    private static final double DRIVE_CURRENT_LIMIT = 40;
+    private static final double DRIVE_CURRENT_LIMIT = 70;
     private static final double TURN_CURRENT_LIMIT = 40;
 
     private final TalonFXWrapper driveMotor;
@@ -80,7 +80,7 @@ public class SwerveModule extends DashboardedSubsystem {
         driveMotor.setEncoderConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES
                 * INCHES_TO_METERS * Math.PI);
         driveMotor.setInverted(driveInverted);
-//                driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(DRIVE_CURRENT_LIMIT));
+                driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(DRIVE_CURRENT_LIMIT));
     }
 
     public void configureTurnController() {
@@ -188,5 +188,7 @@ public class SwerveModule extends DashboardedSubsystem {
                 driveMotor.stopMotor();
             }
         });
+        namespace.putNumber("drive current", driveMotor::getCurrent);
+        namespace.putNumber("turn current", turnMotor::getCurrent);
     }
 }

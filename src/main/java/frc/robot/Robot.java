@@ -75,9 +75,9 @@ public class Robot extends TimedRobot {
         drivetrain.resetGyro();
         drivetrain.resetRelativeEncoders();
 //        JustDrive auto = new JustDrive(drivetrain);
-//        DriveAndPlaceL1 auto = new DriveAndPlaceL1(drivetrain, coralJoint, storage);
+        DriveAndPlaceL1 auto = new DriveAndPlaceL1(drivetrain, coralJoint, storage);
 //        IBelieve auto = new IBelieve(drivetrain, coralJoint, storage);
-        DriveWithAngle auto = new DriveWithAngle(drivetrain, coralJoint, storage);
+//        DriveWithAngle auto = new DriveWithAngle(drivetrain, coralJoint, storage);
         auto.schedule();
     }
 

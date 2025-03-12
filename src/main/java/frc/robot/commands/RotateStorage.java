@@ -62,7 +62,7 @@ public class RotateStorage extends MoveGenericSubsystemWithPID {
 
     @Override
     public void end(boolean interrupted) {
-        coralJoint.setDefaultCommand(new RotateStorage(coralJoint, coralJoint::getPosition));
+        coralJoint.setDefaultCommand(new RotateStorage(coralJoint, setpoint));
     }
 }
 

@@ -18,7 +18,7 @@ public class CoralJoint extends SmartMotorControllerGenericSubsystem {
 
     public enum StoragePose {
 
-        INTAKE(12), L1(-10), L2(-30),
+        INTAKE(12), L1(-11.5), L2(-30),
         L3(-15),
         RESTING(-30);
 //        RESTING(0.0);

@@ -29,6 +29,7 @@ import frc.robot.subsystems.district2.District2CoralJoint;
 
 public class Robot extends TimedRobot {
 
+//    @TODO remove all necessary actions that are useless to drive tests
     private PlaystationControllerWrapper ps = new PlaystationControllerWrapper(0);
 //    private Joystick left = new Joystick(1);
 //    private Joystick right = new Joystick(2);

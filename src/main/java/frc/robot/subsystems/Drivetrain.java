@@ -240,20 +240,20 @@ public class Drivetrain extends DashboardedSubsystem {
         return Rotation2d.fromDegrees(getYaw());
     }
 
-    public void setNeutralMode(NeutralModeValue neutralMode) {
-        frontLeft.setIdleMode(neutralMode);
-        frontRight.setIdleMode(neutralMode);
-        backLeft.setIdleMode(neutralMode);
-        backRight.setIdleMode(neutralMode);
-    }
+//    public void setNeutralMode(NeutralModeValue neutralMode) {
+//        frontLeft.setIdleMode(neutralMode);
+//        frontRight.setIdleMode(neutralMode);
+//        backLeft.setIdleMode(neutralMode);
+//        backRight.setIdleMode(neutralMode);
+//    }
 
     @Override
     public void configureDashboard() {
         namespace.putNumber("gyro yaw", this::getYaw);
         namespace.putCommand("check skew", new Drive(this, () -> 0.0, () -> 0.5, () -> 1.0, true, false, false));
-        namespace.putCommand("quasistatic forward", sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
-        namespace.putCommand("quasistatic reverse", sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
-        namespace.putCommand("dynamic forward", sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
-        namespace.putCommand("dynamic reverse", sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
+//        namespace.putCommand("quasistatic forward", sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
+//        namespace.putCommand("quasistatic reverse", sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
+//        namespace.putCommand("dynamic forward", sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
+//        namespace.putCommand("dynamic reverse", sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
     }
 }

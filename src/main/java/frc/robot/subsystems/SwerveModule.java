@@ -36,7 +36,7 @@ public class SwerveModule extends DashboardedSubsystem {
     private static final double DEGREES_TO_FLIP = 180;
     private static final double ABSOLUTE_POSITION_DISCONTINUITY_POINT = 1;
 
-    private final TalonFXWrapper driveMotor;
+    private final SparkWrapper driveMotor;
     private final SparkWrapper turnMotor;
     private final CANcoder absoluteEncoder;
 
@@ -51,7 +51,7 @@ public class SwerveModule extends DashboardedSubsystem {
     SpikesLogger logger = new SpikesLogger();
 
 
-    public SwerveModule(String namespace, TalonFXWrapper driveMotor, SparkWrapper turnMotor, CANcoder absoluteEncoder,
+    public SwerveModule(String namespace, SparkWrapper driveMotor, SparkWrapper turnMotor, CANcoder absoluteEncoder,
                         boolean cancoderInverted, boolean driveInverted, double offset,
                         PIDSettings drivePIDSettings, PIDSettings turnPIDSettings,
                         FeedForwardSettings driveFeedForwardSettings,
@@ -69,7 +69,9 @@ public class SwerveModule extends DashboardedSubsystem {
         this.turnFeedForwardSettings = turnFeedForwardSettings;
         turnMotor.configureLoop(turnPIDSettings, turnFeedForwardSettings,
                 TrapezoidProfileSettings.EMPTY_TRAPEZOID_PROFILE_SETTINGS);
-        driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(40));
+        driveMotor.configureLoop(drivePIDSettings, driveFeedForwardSettings,
+                TrapezoidProfileSettings.EMPTY_TRAPEZOID_PROFILE_SETTINGS);
+        driveMotor.setCurrentLimit(40);
         turnMotor.setCurrentLimit(40);
         configureDriveController();
         configureTurnController();
@@ -78,9 +80,9 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     public void configureDriveController() {
-        //@TODO check if this is correct
-        driveMotor.setEncoderConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES
-                * INCHES_TO_METERS * Math.PI);
+        driveMotor.setPositionConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES * INCHES_TO_METERS);
+        driveMotor.setVelocityConversionFactor((DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES * INCHES_TO_METERS) /
+                SECONDS_IN_MINUTE);
         driveMotor.setInverted(driveInverted);
     }
 
@@ -105,9 +107,9 @@ public class SwerveModule extends DashboardedSubsystem {
         } else driveMotor.set(speed / Drivetrain.MAX_SPEED);
     }
 
-    public void setIdleMode(NeutralModeValue neutralMode) {
-        driveMotor.setIdleMode(neutralMode);
-    }
+//    public void setIdleMode(NeutralModeValue neutralMode) {
+//        driveMotor.setIdleMode(neutralMode);
+//    }
 
     public void sysID(Voltage voltage) {
         setSpeed(voltage.in(Volts), false);

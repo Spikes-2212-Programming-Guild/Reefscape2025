@@ -29,6 +29,7 @@ import frc.robot.subsystems.district2.District2CoralJoint;
 
 public class Robot extends TimedRobot {
 
+//    @TODO remove all necessary actions that are useless to drive tests
     private PlaystationControllerWrapper ps = new PlaystationControllerWrapper(0);
 //    private Joystick left = new Joystick(1);
 //    private Joystick right = new Joystick(2);
@@ -65,7 +66,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         CommandScheduler.getInstance().cancelAll();
-        drivetrain.setNeutralMode(NeutralModeValue.Brake);
+//        drivetrain.setNeutralMode(NeutralModeValue.Brake);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         OI oi = new OI();
         drivetrain.resetRelativeEncoders();
-        drivetrain.setNeutralMode(NeutralModeValue.Coast);
+//        drivetrain.setNeutralMode(NeutralModeValue.Coast);
         drivetrain.setDefaultCommand(new Drive(drivetrain, () -> -oi.getLeftY() * 4, () -> -oi.getLeftX() * 4, () -> oi.getRightX() * 6,
                 true, false, false));
 //        algaeJoint.setDefaultCommand(new MoveGenericSubsystem(algaeJoint, AlgaeJoint.STABILIZATION_SPEED).onlyIf(gripper::hasAlgae));

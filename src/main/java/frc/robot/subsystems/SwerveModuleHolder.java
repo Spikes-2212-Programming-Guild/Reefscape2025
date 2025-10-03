@@ -49,8 +49,10 @@ public class SwerveModuleHolder {
 
     public static SwerveModule getFrontLeft() {
         if (frontLeft == null) {
-            frontLeft = new SwerveModule(FRONT_LEFT_NAMESPACE_NAME, new TalonFXWrapper(RobotMap.CAN.FRONT_LEFT_DRIVE_TALON_FX),
-                    SparkWrapper.createSparkMax(RobotMap.CAN.FRONT_LEFT_TURN_SPARK_MAX, SparkLowLevel.MotorType.kBrushless),
+            frontLeft = new SwerveModule(FRONT_LEFT_NAMESPACE_NAME, SparkWrapper.createSparkMax(
+                    RobotMap.CAN.FRONT_LEFT_DRIVE_SPARK_MAX, SparkLowLevel.MotorType.kBrushless),
+                    SparkWrapper.createSparkMax(RobotMap.CAN.FRONT_LEFT_TURN_SPARK_MAX,
+                            SparkLowLevel.MotorType.kBrushless),
                     new CANcoder(RobotMap.CAN.FRONT_LEFT_ABSOLUTE_ENCODER),
                     FRONT_LEFT_CANCODER_INVERTED, FRONT_LEFT_DRIVE_INVERTED, FRONT_LEFT_OFFSET, drivePIDSettings,
                     turnPIDSettings, driveFeedForwardSettings, turnFeedForwardSettings);
@@ -60,8 +62,10 @@ public class SwerveModuleHolder {
 
     public static SwerveModule getFrontRight() {
         if (frontRight == null) {
-            frontRight = new SwerveModule(FRONT_RIGHT_NAMESPACE_NAME, new TalonFXWrapper(RobotMap.CAN.FRONT_RIGHT_DRIVE_TALON_FX),
-                    SparkWrapper.createSparkMax(RobotMap.CAN.FRONT_RIGHT_TURN_SPARK_MAX, SparkLowLevel.MotorType.kBrushless),
+            frontRight = new SwerveModule(FRONT_RIGHT_NAMESPACE_NAME, SparkWrapper.createSparkMax(
+                    RobotMap.CAN.FRONT_RIGHT_DRIVE_SPARK_MAX, SparkLowLevel.MotorType.kBrushless),
+                    SparkWrapper.createSparkMax(RobotMap.CAN.FRONT_RIGHT_TURN_SPARK_MAX,
+                            SparkLowLevel.MotorType.kBrushless),
                     new CANcoder(RobotMap.CAN.FRONT_RIGHT_ABSOLUTE_ENCODER),
                     FRONT_RIGHT_CANCODER_INVERTED, FRONT_RIGHT_DRIVE_INVERTED, FRONT_RIGHT_OFFSET, drivePIDSettings,
                     turnPIDSettings, driveFeedForwardSettings, turnFeedForwardSettings);
@@ -71,8 +75,10 @@ public class SwerveModuleHolder {
 
     public static SwerveModule getBackLeft() {
         if (backLeft == null) {
-            backLeft = new SwerveModule(BACK_LEFT_NAMESPACE_NAME, new TalonFXWrapper(RobotMap.CAN.BACK_LEFT_DRIVE_TALON_FX),
-                    SparkWrapper.createSparkMax(RobotMap.CAN.BACK_LEFT_TURN_SPARK_MAX, SparkLowLevel.MotorType.kBrushless),
+            backLeft = new SwerveModule(BACK_LEFT_NAMESPACE_NAME, SparkWrapper.createSparkMax(
+                    RobotMap.CAN.BACK_LEFT_DRIVE_SPARK_MAX, SparkLowLevel.MotorType.kBrushless),
+                    SparkWrapper.createSparkMax(RobotMap.CAN.BACK_LEFT_TURN_SPARK_MAX,
+                            SparkLowLevel.MotorType.kBrushless),
                     new CANcoder(RobotMap.CAN.BACK_LEFT_ABSOLUTE_ENCODER),
                     BACK_LEFT_CANCODER_INVERTED, BACK_LEFT_DRIVE_INVERTED, BACK_LEFT_OFFSET, drivePIDSettings,
                     turnPIDSettings, driveFeedForwardSettings, turnFeedForwardSettings);
@@ -82,8 +88,10 @@ public class SwerveModuleHolder {
 
     public static SwerveModule getBackRight() {
         if (backRight == null) {
-            backRight = new SwerveModule(BACK_RIGHT_NAMESPACE_NAME, new TalonFXWrapper(RobotMap.CAN.BACK_RIGHT_DRIVE_TALON_FX),
-                    SparkWrapper.createSparkMax(RobotMap.CAN.BACK_RIGHT_TURN_SPARK_MAX, SparkLowLevel.MotorType.kBrushless),
+            backRight = new SwerveModule(BACK_RIGHT_NAMESPACE_NAME, SparkWrapper.createSparkMax(
+                    RobotMap.CAN.BACK_RIGHT_DRIVE_SPARK_MAX, SparkLowLevel.MotorType.kBrushless),
+                    SparkWrapper.createSparkMax(RobotMap.CAN.BACK_RIGHT_TURN_SPARK_MAX,
+                            SparkLowLevel.MotorType.kBrushless),
                     new CANcoder(RobotMap.CAN.BACK_RIGHT_ABSOLUTE_ENCODER),
                     BACK_RIGHT_CANCODER_INVERTED, BACK_RIGHT_DRIVE_INVERTED, BACK_RIGHT_OFFSET, drivePIDSettings,
                     turnPIDSettings, driveFeedForwardSettings, turnFeedForwardSettings);

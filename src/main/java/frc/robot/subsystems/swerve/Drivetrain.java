@@ -118,7 +118,7 @@ public class Drivetrain extends DashboardedSubsystem implements OdometrySource {
     }
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean isFieldRelative,
-                      double timeStep, boolean usePIDVelocity) {
+                      boolean usePIDVelocity, double timeStep) {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(
                 getChassisSpeeds(isFieldRelative, xSpeed, ySpeed, rotationSpeed, timeStep)
         );

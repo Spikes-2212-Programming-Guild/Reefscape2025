@@ -1,10 +1,9 @@
 package frc.robot.commands;
 
-import com.spikes2212.dashboard.SpikesLogger;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.swerve.Drivetrain;
 
 import java.util.function.Supplier;
 
@@ -13,7 +12,6 @@ public class Drive extends Command {
     private static final double DRIVE_ACCELERATION_LIMIT = 2;
     private static final double TURN_ACCELERATION_LIMIT = 4;
 
-    SpikesLogger logger = new SpikesLogger();
     private final Drivetrain drivetrain;
     private final Supplier<Double> xSpeed;
     private final Supplier<Double> ySpeed;
@@ -29,8 +27,8 @@ public class Drive extends Command {
     double time;
 
     public Drive(Drivetrain drivetrain, Supplier<Double> xSpeed, Supplier<Double> ySpeed,
-                 Supplier<Double> rotationSpeed, boolean fieldRelative, boolean usePID,
-                 boolean limitAcceleration) {
+                 Supplier<Double> rotationSpeed,
+                 boolean fieldRelative, boolean usePID, boolean limitAcceleration) {
         addRequirements(drivetrain);
         this.drivetrain = drivetrain;
         this.xSpeed = xSpeed;
@@ -62,7 +60,6 @@ public class Drive extends Command {
         }
 
         drivetrain.drive(xSpeed, ySpeed, rotationSpeed, fieldRelative, usePID, Timer.getFPGATimestamp() - time);
-//        logger.log(Timer.getFPGATimestamp() - time);
         time = Timer.getFPGATimestamp();
     }
 

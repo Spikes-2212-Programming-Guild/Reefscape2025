@@ -3,11 +3,11 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.spikes2212.command.genericsubsystem.smartmotorcontrollersubsystem.SmartMotorControllerGenericSubsystem;
+import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.RobotMap;
 import frc.robot.commands.RotateAlgaeJointToBottom;
 import frc.robot.commands.RotateAlgaeJointToTop;
 import frc.robot.util.SparkWrapper;
-import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.RobotMap;
 
 public class AlgaeJoint extends SmartMotorControllerGenericSubsystem {
 

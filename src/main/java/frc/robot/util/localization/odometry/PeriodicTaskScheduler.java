@@ -47,12 +47,6 @@ public class PeriodicTaskScheduler {
      * Schedules a periodic task to run at a specified frequency.
      * Wraps {@link TimedRobot#addPeriodic(Runnable, double, double)} for convenience.
      *
-     * <p>Example usage:
-     * <pre>{@code
-     * PeriodicTaskScheduler.init(robot);
-     * PeriodicTaskScheduler.getInstance().schedule(this::updateSensors, 100, 0.0);
-     * }</pre>
-     *
      * @param task         the task to execute periodically
      * @param frequencyHz  how often to run the task, in Hertz (e.g., 100 → every 10ms)
      * @param delaySeconds the delay before the first execution, in seconds

@@ -6,9 +6,9 @@ import com.spikes2212.control.FeedForwardController;
 import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.dashboard.RootNamespace;
-import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
 import frc.robot.RobotMap;
 import frc.robot.util.SparkWrapper;
+import frc.robot.util.TalonFXWrapper;
 
 public class SwerveModuleHolder {
 

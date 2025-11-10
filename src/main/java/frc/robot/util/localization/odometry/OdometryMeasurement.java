@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 /**
- * Represents a single odometry measure.
+ * Represents a single odometry measurement.
  *
  * @param timestamp      measurement timestamp
  * @param heading        gyro heading at the timestamp

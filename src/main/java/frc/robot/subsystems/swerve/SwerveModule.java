@@ -10,12 +10,13 @@ import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.control.TrapezoidProfileSettings;
 import com.spikes2212.util.UnifiedControlMode;
-import com.spikes2212.util.smartmotorcontrollers.TalonFXWrapper;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.util.SparkWrapper;
+import frc.robot.util.TalonFXWrapper;
+import frc.robot.util.localization.odometry.OdometryManager;
 
 import static edu.wpi.first.units.Units.Volts;
 
@@ -61,10 +62,6 @@ public class SwerveModule extends DashboardedSubsystem {
         this.turnPIDSettings = turnPIDSettings;
         this.driveFeedForwardSettings = driveFeedForwardSettings;
         this.turnFeedForwardSettings = turnFeedForwardSettings;
-        turnMotor.configureLoop(turnPIDSettings, turnFeedForwardSettings,
-                TrapezoidProfileSettings.EMPTY_TRAPEZOID_PROFILE_SETTINGS);
-        driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(40));
-        turnMotor.setCurrentLimit(40);
         configureDriveController();
         configureTurnController();
         configureAbsoluteEncoder();
@@ -72,16 +69,21 @@ public class SwerveModule extends DashboardedSubsystem {
     }
 
     public void configureDriveController() {
+        driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(40));
         //@TODO check if this is correct
-        driveMotor.setEncoderConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES
-                * INCHES_TO_METERS * Math.PI);
+        driveMotor.setEncoderConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES * INCHES_TO_METERS * Math.PI);
         driveMotor.setInverted(driveInverted);
+        driveMotor.setUpdateFrequency(OdometryManager.ODOMETRY_FREQUENCY_HZ);
     }
 
     public void configureTurnController() {
+        turnMotor.configureLoop(turnPIDSettings, turnFeedForwardSettings,
+                TrapezoidProfileSettings.EMPTY_TRAPEZOID_PROFILE_SETTINGS);
+        turnMotor.setCurrentLimit(40);
         turnMotor.setPositionConversionFactor(TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS);
         turnMotor.setVelocityConversionFactor((TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS) / SECONDS_IN_MINUTE);
         turnMotor.setInverted(cancoderInverted);
+        turnMotor.setUpdateFrequency(OdometryManager.ODOMETRY_FREQUENCY_HZ);
     }
 
     public void configureAbsoluteEncoder() {
@@ -90,14 +92,13 @@ public class SwerveModule extends DashboardedSubsystem {
                 .withSensorDirection(cancoderInverted ? SensorDirectionValue.Clockwise_Positive :
                         SensorDirectionValue.CounterClockwise_Positive).withMagnetOffset(offset);
         absoluteEncoder.getConfigurator().apply(magnetConfigs);
+        absoluteEncoder.getAbsolutePosition().setUpdateFrequency(OdometryManager.ODOMETRY_FREQUENCY_HZ);
     }
-
 
     public void set(SwerveModuleState state, boolean usePID) {
         set(state, usePID, true);
     }
 
-    // see - https://docs.wpilib.org/en/stable/docs/software/kinematics-and-odometry/swerve-drive-kinematics.html
     public void set(SwerveModuleState state, boolean usePID, boolean limitSpeed) {
         if (limitSpeed && Math.abs(state.speedMetersPerSecond) < Drivetrain.MIN_SPEED) {
             stop();

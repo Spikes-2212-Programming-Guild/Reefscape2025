@@ -85,12 +85,9 @@ public class LimelightService {
      */
     private boolean isMeasurementReliable(double averageTagDistance, ChassisSpeeds speeds) {
         if (averageTagDistance >= MAX_DISTANCE) return false;
-
         double driveVelocity = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
         double turnVelocity = Math.abs(speeds.omegaRadiansPerSecond);
-
-        return driveVelocity <= MAX_DRIVE_SPEED &&
-                turnVelocity <= MAX_TURN_SPEED;
+        return driveVelocity <= MAX_DRIVE_SPEED && turnVelocity <= MAX_TURN_SPEED;
     }
 
     /**

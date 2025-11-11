@@ -16,7 +16,6 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.util.localization.RobotPoseEstimator;
-import frc.robot.util.localization.odometry.OdometryDrivetrain;
 import frc.robot.util.localization.odometry.OdometryManager;
 import frc.robot.util.localization.odometry.OdometryMeasurement;
 import frc.robot.util.localization.odometry.PeriodicTaskScheduler;
@@ -25,7 +24,7 @@ import frc.robot.util.vision.LimelightService;
 import java.util.Arrays;
 
 // TODO - add an "atRotation" and "atTranslation" methods, and a Field2d, to display on shuffleboard
-public class Drivetrain extends DashboardedSubsystem implements OdometryDrivetrain {
+public class Drivetrain extends DashboardedSubsystem {
 
     public static final double MAX_SPEED = 4;
     public static final double MIN_SPEED = 0.06;
@@ -81,7 +80,9 @@ public class Drivetrain extends DashboardedSubsystem implements OdometryDrivetra
                 BACK_LEFT_WHEEL_DISTANCE_FROM_CENTER, BACK_RIGHT_WHEEL_DISTANCE_FROM_CENTER
         );
         this.poseEstimator = new RobotPoseEstimator(
-                kinematics, getHeading(), getModulePositions(), new Pose2d(), this, periodicTaskScheduler
+                kinematics, getHeading(), getModulePositions(), new Pose2d(),
+                () -> new OdometryMeasurement(Timer.getFPGATimestamp(), getHeading(), getModulePositions()),
+                periodicTaskScheduler
         );
         configureGyro();
         configureAdvantageKit();
@@ -112,11 +113,6 @@ public class Drivetrain extends DashboardedSubsystem implements OdometryDrivetra
     public void periodic() {
         super.periodic();
         poseEstimator.periodic(visionService.getVisionMeasurement(getYaw(), getRobotSpeeds()));
-    }
-
-    @Override
-    public OdometryMeasurement takeOdometryMeasurement() {
-        return new OdometryMeasurement(Timer.getFPGATimestamp(), getHeading(), getModulePositions());
     }
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean isFieldRelative,

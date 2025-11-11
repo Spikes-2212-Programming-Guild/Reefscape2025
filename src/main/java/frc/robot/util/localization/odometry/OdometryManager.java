@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Supplier;
 
 /**
  * Manages odometry data collection and application for a {@link SwerveDrivePoseEstimator}.
@@ -24,19 +25,19 @@ public class OdometryManager {
 
     private final Queue<OdometryMeasurement> measures = new ConcurrentLinkedQueue<>();
     private final SwerveDrivePoseEstimator estimator;
-    private final OdometryDrivetrain drivetrain;
+    private final Supplier<OdometryMeasurement> getMeasurement;
 
     /**
      * Constructs a {@code OdometryManager}.
      *
-     * @param estimator  the {@link SwerveDrivePoseEstimator} used for pose estimation
-     * @param drivetrain the drivetrain used to get odometry data
-     * @param scheduler  the scheduler used for high-frequency odometry sampling
+     * @param estimator      the {@link SwerveDrivePoseEstimator} used for pose estimation
+     * @param getMeasurement the supplier used to get odometry data
+     * @param scheduler      the scheduler used for high-frequency odometry sampling
      */
-    public OdometryManager(SwerveDrivePoseEstimator estimator, OdometryDrivetrain drivetrain,
+    public OdometryManager(SwerveDrivePoseEstimator estimator, Supplier<OdometryMeasurement> getMeasurement,
                            PeriodicTaskScheduler scheduler) {
         this.estimator = estimator;
-        this.drivetrain = drivetrain;
+        this.getMeasurement = getMeasurement;
         scheduler.schedule(this::recordMeasurement, ODOMETRY_FREQUENCY_HZ, 0);
     }
 
@@ -62,7 +63,7 @@ public class OdometryManager {
      */
     private void recordMeasurement() {
         if (measures.size() >= MAX_QUEUE_SIZE) measures.poll(); // prevent overflow
-        measures.add(drivetrain.takeOdometryMeasurement());
+        measures.add(getMeasurement.get());
     }
 
     /**
@@ -71,7 +72,7 @@ public class OdometryManager {
      * @param newPose the new known pose to reset the estimator to
      */
     public void resetPose(Pose2d newPose) {
-        OdometryMeasurement measurement = drivetrain.takeOdometryMeasurement();
+        OdometryMeasurement measurement = getMeasurement.get();
         estimator.resetPosition(
                 measurement.heading(),
                 measurement.wheelPositions(),

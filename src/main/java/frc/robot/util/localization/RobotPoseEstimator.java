@@ -5,11 +5,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import frc.robot.util.localization.odometry.OdometryDrivetrain;
 import frc.robot.util.localization.odometry.OdometryManager;
+import frc.robot.util.localization.odometry.OdometryMeasurement;
 import frc.robot.util.localization.odometry.PeriodicTaskScheduler;
 import frc.robot.util.localization.vision.VisionManager;
 import frc.robot.util.localization.vision.VisionMeasurement;
+
+import java.util.function.Supplier;
 
 /**
  * High-level class that manages all robot localization systems.
@@ -27,12 +29,13 @@ public class RobotPoseEstimator {
 
     public RobotPoseEstimator(SwerveDriveKinematics kinematics, Rotation2d gyroAngle,
                               SwerveModulePosition[] modulePositions, Pose2d initPose,
-                              OdometryDrivetrain drivetrain, PeriodicTaskScheduler scheduler) {
+                              Supplier<OdometryMeasurement> odometryMeasurementSupplier,
+                              PeriodicTaskScheduler scheduler) {
         this.poseEstimator = new SwerveDrivePoseEstimator(
                 kinematics, gyroAngle, modulePositions, initPose
         );
         this.vision = new VisionManager(poseEstimator);
-        this.odometry = new OdometryManager(poseEstimator, drivetrain, scheduler);
+        this.odometry = new OdometryManager(poseEstimator, odometryMeasurementSupplier, scheduler);
     }
 
     /**

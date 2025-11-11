@@ -12,6 +12,7 @@ import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.control.TrapezoidProfileSettings;
 import com.spikes2212.util.UnifiedControlMode;
+import com.spikes2212.util.smartmotorcontrollers.SmartMotorController;
 
 /**
  * A {@link SmartMotorController} representation of a {@link TalonFX} motor controller.

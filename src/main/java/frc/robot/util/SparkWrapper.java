@@ -7,6 +7,7 @@ import com.spikes2212.control.FeedForwardSettings;
 import com.spikes2212.control.PIDSettings;
 import com.spikes2212.control.TrapezoidProfileSettings;
 import com.spikes2212.util.UnifiedControlMode;
+import com.spikes2212.util.smartmotorcontrollers.SmartMotorController;
 
 /**
  * A {@link SmartMotorController} representation of a {@link SparkBase} motor controller.
@@ -222,7 +223,6 @@ public class SparkWrapper implements SmartMotorController {
         sparkBase.getEncoder().setPosition(position);
     }
 
-    @Override
     public void setUpdateFrequency(int frequencyHz) {
         sparkBase.setControlFramePeriodMs(1000 / frequencyHz);
     }

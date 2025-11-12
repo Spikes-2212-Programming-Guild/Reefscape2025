@@ -16,18 +16,21 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.util.localization.RobotPoseEstimator;
-import frc.robot.util.localization.odometry.OdometryManager;
 import frc.robot.util.localization.odometry.OdometryMeasurement;
 import frc.robot.util.localization.odometry.PeriodicTaskScheduler;
 import frc.robot.util.vision.LimelightService;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 // TODO - add an "atRotation" and "atTranslation" methods, and a Field2d, to display on shuffleboard
 public class Drivetrain extends DashboardedSubsystem {
 
     public static final double MAX_SPEED = 4;
     public static final double MIN_SPEED = 0.06;
+
+    public static final int ODOMETRY_FREQUENCY_HZ = 100;
+    public static final int BASE_FREQUENCY_HZ = 50;
 
     private static final double ROBOT_WIDTH = 0.6;
     private static final double ROBOT_LENGTH = 0.6;
@@ -79,10 +82,12 @@ public class Drivetrain extends DashboardedSubsystem {
                 FRONT_LEFT_WHEEL_DISTANCE_FROM_CENTER, FRONT_RIGHT_WHEEL_DISTANCE_FROM_CENTER,
                 BACK_LEFT_WHEEL_DISTANCE_FROM_CENTER, BACK_RIGHT_WHEEL_DISTANCE_FROM_CENTER
         );
+        Supplier<OdometryMeasurement> measurementSupplier = () ->
+                new OdometryMeasurement(Timer.getFPGATimestamp(), getHeading(), getModulePositions());
+        int odometryStoredMeasurementsLimit = (ODOMETRY_FREQUENCY_HZ / BASE_FREQUENCY_HZ) * 5;
         this.poseEstimator = new RobotPoseEstimator(
                 kinematics, getHeading(), getModulePositions(), new Pose2d(),
-                () -> new OdometryMeasurement(Timer.getFPGATimestamp(), getHeading(), getModulePositions()),
-                periodicTaskScheduler
+                measurementSupplier, periodicTaskScheduler, BASE_FREQUENCY_HZ, odometryStoredMeasurementsLimit
         );
         configureGyro();
         configureAdvantageKit();
@@ -101,7 +106,7 @@ public class Drivetrain extends DashboardedSubsystem {
     }
 
     private void configureGyro() {
-        gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, OdometryManager.ODOMETRY_FREQUENCY_HZ);
+        gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, BASE_FREQUENCY_HZ);
     }
 
     @Override
@@ -112,7 +117,7 @@ public class Drivetrain extends DashboardedSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        poseEstimator.periodic(visionService.getVisionMeasurement(getYaw(), getRobotSpeeds()));
+        poseEstimator.periodic(visionService.captureMeasurement(getYaw(), getRobotSpeeds()));
     }
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean isFieldRelative,

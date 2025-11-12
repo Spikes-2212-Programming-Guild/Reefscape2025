@@ -29,10 +29,7 @@ public class LimelightService {
     private static LimelightService instance;
 
     public static LimelightService getInstance() {
-        if (instance == null) {
-            instance = new LimelightService();
-        }
-        return instance;
+        return instance != null ? instance : (instance = new LimelightService());
     }
 
     private LimelightService() {
@@ -40,39 +37,26 @@ public class LimelightService {
     }
 
     /**
-     * @param yaw    the current gyro yaw
-     * @param speeds the current robot speed
-     * @return the latest vision measurement {@link VisionMeasurement}, can be null
-     */
-    public VisionMeasurement getVisionMeasurement(double yaw, ChassisSpeeds speeds) {
-        LimelightHelpers.SetRobotOrientation(LIMELIGHT_NAME, yaw,
-                0.0, 0.0, 0.0, 0.0, 0.0);
-        LimelightHelpers.PoseEstimate measurement =
-                LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LIMELIGHT_NAME);
-
-        if (measurement == null || measurement.tagCount < 1 || measurement.tagSpan < MIN_TAG_SPAN) return null;
-
-        double avgTagDistance = measurement.avgTagDist;
-        if (!isMeasurementReliable(avgTagDistance, speeds)) return null;
-
-        return buildMeasurement(
-                measurement.timestampSeconds, measurement.avgTagDist, measurement.tagCount, measurement.pose
-        );
-    }
-
-    /**
-     * Builds a {@link VisionMeasurement} object made of an estimated robot pose and {@link StandardDeviations}
+     * Fetches and processes the latest Limelight pose estimate.
      *
-     * @param timestamp     the time when the measurement was taken
-     * @param distance      the average distance to visible tag(s)
-     * @param tagCount      the number of tag(s) contributing to the estimate
-     * @param estimatedPose the estimated robot pose
+     * @param yaw    current robot yaw (degrees)
+     * @param speeds current robot chassis speeds
+     * @return a {@link VisionMeasurement} if valid; otherwise {@code null}
      */
-    private VisionMeasurement buildMeasurement(double timestamp, double distance, int tagCount, Pose2d estimatedPose) {
-        double translationStdDev = calculateStandardDeviation(STD_DEV_DRIVE_EXPONENT, distance, tagCount);
-        double rotationStdDev = calculateStandardDeviation(STD_DEV_ROTATION_EXPONENT, distance, tagCount);
-        StandardDeviations standardDeviations = new StandardDeviations(translationStdDev, rotationStdDev);
-        return new VisionMeasurement(standardDeviations, estimatedPose, timestamp);
+    public VisionMeasurement captureMeasurement(double yaw, ChassisSpeeds speeds) {
+        LimelightHelpers.SetRobotOrientation(
+                LIMELIGHT_NAME, yaw, 0, 0, 0, 0, 0
+        );
+
+        var estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LIMELIGHT_NAME);
+        if (estimate == null || estimate.pose == null ||
+                estimate.tagCount < 1 || estimate.tagSpan < MIN_TAG_SPAN) return null;
+
+        if (!isReliable(estimate.avgTagDist, speeds)) return null;
+
+        return createMeasurement(
+                estimate.timestampSeconds, estimate.avgTagDist, estimate.tagCount, estimate.pose
+        );
     }
 
     /**
@@ -83,11 +67,27 @@ public class LimelightService {
      * @param speeds             the current robot speeds
      * @return if the measurement should be trusted
      */
-    private boolean isMeasurementReliable(double averageTagDistance, ChassisSpeeds speeds) {
+    private boolean isReliable(double averageTagDistance, ChassisSpeeds speeds) {
         if (averageTagDistance >= MAX_DISTANCE) return false;
         double driveVelocity = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
         double turnVelocity = Math.abs(speeds.omegaRadiansPerSecond);
         return driveVelocity <= MAX_DRIVE_SPEED && turnVelocity <= MAX_TURN_SPEED;
+    }
+
+    /**
+     * Creates a {@link VisionMeasurement} containing the estimated robot pose
+     * and computed standard deviations based on vision data quality.
+     *
+     * @param timestamp the time (in seconds) when the measurement was captured
+     * @param distance  the average distance to the visible AprilTag(s)
+     * @param tagCount  the number of AprilTag(s) contributing to the estimate
+     * @param pose      the estimated robot {@link Pose2d} from vision
+     * @return a constructed {@link VisionMeasurement} with associated uncertainty
+     */
+    private VisionMeasurement createMeasurement(double timestamp, double distance, int tagCount, Pose2d pose) {
+        double transStd = calculateStandardDeviation(STD_DEV_DRIVE_EXPONENT, distance, tagCount);
+        double rotStd = calculateStandardDeviation(STD_DEV_ROTATION_EXPONENT, distance, tagCount);
+        return new VisionMeasurement(new StandardDeviations(transStd, rotStd), pose, timestamp);
     }
 
     /**

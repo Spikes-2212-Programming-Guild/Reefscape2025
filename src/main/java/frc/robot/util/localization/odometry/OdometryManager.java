@@ -7,77 +7,78 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
+
 /**
- * Manages odometry data collection and application for a {@link SwerveDrivePoseEstimator}.
- * <p>
- * This class records high-frequency odometry snapshots from an {@link OdometryDrivetrain}
- * and applies them sequentially to the pose estimator.
- * </p>
+ * Collects and applies high-frequency odometry measurements to a {@link SwerveDrivePoseEstimator}.
  *
- * <p><b>Usage:</b> Call {@link #periodic()} periodically.</p>
+ * <p>Odometry is sampled asynchronously using a {@link PeriodicTaskScheduler}
+ * and applied sequentially during {@link #update()} calls.</p>
  *
  * @author Itay Zadok
  */
 public class OdometryManager {
 
-    public static final int ODOMETRY_FREQUENCY_HZ = 100;
-    private static final int MAX_QUEUE_SIZE = 1000;
-
-    private final Queue<OdometryMeasurement> measures = new ConcurrentLinkedQueue<>();
+    private final int storedMeasurementsLimit;
+    private final Queue<OdometryMeasurement> measurementsQueue = new ConcurrentLinkedQueue<>();
     private final SwerveDrivePoseEstimator estimator;
-    private final Supplier<OdometryMeasurement> getMeasurement;
+    private final Supplier<OdometryMeasurement> measurementSupplier;
 
     /**
-     * Constructs a {@code OdometryManager}.
+     * Constructs a new OdometryManager.
      *
-     * @param estimator      the {@link SwerveDrivePoseEstimator} used for pose estimation
-     * @param getMeasurement the supplier used to get odometry data
-     * @param scheduler      the scheduler used for high-frequency odometry sampling
+     * @param estimator               the shared pose estimator
+     * @param measurementSupplier     supplier that provides odometry data
+     * @param scheduler               scheduler for periodic sampling
+     * @param frequencyHz             sampling rate
+     * @param storedMeasurementsLimit limit on stored measurements to avoid overflow
      */
-    public OdometryManager(SwerveDrivePoseEstimator estimator, Supplier<OdometryMeasurement> getMeasurement,
-                           PeriodicTaskScheduler scheduler) {
+    public OdometryManager(SwerveDrivePoseEstimator estimator,
+                           Supplier<OdometryMeasurement> measurementSupplier,
+                           PeriodicTaskScheduler scheduler, int frequencyHz, int storedMeasurementsLimit) {
         this.estimator = estimator;
-        this.getMeasurement = getMeasurement;
-        scheduler.schedule(this::recordMeasurement, ODOMETRY_FREQUENCY_HZ, 0);
+        this.measurementSupplier = measurementSupplier;
+        this.storedMeasurementsLimit = storedMeasurementsLimit;
+        scheduler.schedule(this::recordMeasurement, frequencyHz, 0);
     }
 
     /**
-     * Applies all queued odometry measurements to the pose estimator in chronological order.
-     * <p>
-     * This should be called periodically from the localization update loop.
-     * </p>
+     * Applies all queued odometry samples to the estimator in order.
+     * Should be called once per robot update loop.
      */
-    public void periodic() {
-        while (!measures.isEmpty()) {
-            OdometryMeasurement m = measures.poll();
+    public void update() {
+        while (!measurementsQueue.isEmpty()) {
+            OdometryMeasurement m = measurementsQueue.poll();
             estimator.updateWithTime(m.timestamp(), m.heading(), m.wheelPositions());
         }
     }
 
     /**
-     * Captures a new odometry snapshot from the {@link OdometryDrivetrain} and stores it in the queue.
-     * <p>
-     * This method runs automatically at a high frequency (e.g., 100 Hz) to provide time-accurate motion data.
-     * The queue is bounded by {@link #MAX_QUEUE_SIZE} to prevent memory overflow.
-     * </p>
+     * Records a new odometry measurement at high frequency.
+     * This method is called automatically by the scheduler.
      */
     private void recordMeasurement() {
-        if (measures.size() >= MAX_QUEUE_SIZE) measures.poll(); // prevent overflow
-        measures.add(getMeasurement.get());
+        OdometryMeasurement m = measurementSupplier.get();
+        if (m == null) return;
+
+        if (measurementsQueue.size() >= storedMeasurementsLimit)
+            measurementsQueue.poll(); // drop oldest
+
+        measurementsQueue.add(m);
     }
 
     /**
-     * Resets the pose estimator and clears all queued odometry data.
+     * Resets the pose estimator and clears queued odometry data.
      *
-     * @param newPose the new known pose to reset the estimator to
+     * @param newPose the new known robot pose
      */
     public void resetPose(Pose2d newPose) {
-        OdometryMeasurement measurement = getMeasurement.get();
+        OdometryMeasurement m = measurementSupplier.get();
+        if (m == null) return;
         estimator.resetPosition(
-                measurement.heading(),
-                measurement.wheelPositions(),
+                m.heading(),
+                m.wheelPositions(),
                 newPose
         );
-        measures.clear();
+        measurementsQueue.clear();
     }
 }

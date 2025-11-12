@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.util.SparkWrapper;
 import frc.robot.util.TalonFXWrapper;
-import frc.robot.util.localization.odometry.OdometryManager;
 
 import static edu.wpi.first.units.Units.Volts;
 
@@ -73,7 +72,7 @@ public class SwerveModule extends DashboardedSubsystem {
         //@TODO check if this is correct
         driveMotor.setEncoderConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES * INCHES_TO_METERS * Math.PI);
         driveMotor.setInverted(driveInverted);
-        driveMotor.setUpdateFrequency(OdometryManager.ODOMETRY_FREQUENCY_HZ);
+        driveMotor.setUpdateFrequency(Drivetrain.BASE_FREQUENCY_HZ);
     }
 
     public void configureTurnController() {
@@ -83,7 +82,7 @@ public class SwerveModule extends DashboardedSubsystem {
         turnMotor.setPositionConversionFactor(TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS);
         turnMotor.setVelocityConversionFactor((TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS) / SECONDS_IN_MINUTE);
         turnMotor.setInverted(cancoderInverted);
-        turnMotor.setUpdateFrequency(OdometryManager.ODOMETRY_FREQUENCY_HZ);
+        turnMotor.setUpdateFrequency(Drivetrain.BASE_FREQUENCY_HZ);
     }
 
     public void configureAbsoluteEncoder() {
@@ -92,7 +91,7 @@ public class SwerveModule extends DashboardedSubsystem {
                 .withSensorDirection(cancoderInverted ? SensorDirectionValue.Clockwise_Positive :
                         SensorDirectionValue.CounterClockwise_Positive).withMagnetOffset(offset);
         absoluteEncoder.getConfigurator().apply(magnetConfigs);
-        absoluteEncoder.getAbsolutePosition().setUpdateFrequency(OdometryManager.ODOMETRY_FREQUENCY_HZ);
+        absoluteEncoder.getAbsolutePosition().setUpdateFrequency(Drivetrain.BASE_FREQUENCY_HZ);
     }
 
     public void set(SwerveModuleState state, boolean usePID) {

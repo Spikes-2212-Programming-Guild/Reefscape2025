@@ -87,7 +87,7 @@ public class Drivetrain extends DashboardedSubsystem {
         int odometryStoredMeasurementsLimit = (ODOMETRY_FREQUENCY_HZ / BASE_FREQUENCY_HZ) * 5;
         this.poseEstimator = new RobotPoseEstimator(
                 kinematics, getHeading(), getModulePositions(), new Pose2d(),
-                measurementSupplier, periodicTaskScheduler, BASE_FREQUENCY_HZ, odometryStoredMeasurementsLimit
+                measurementSupplier, periodicTaskScheduler, ODOMETRY_FREQUENCY_HZ, odometryStoredMeasurementsLimit
         );
         configureGyro();
         configureAdvantageKit();

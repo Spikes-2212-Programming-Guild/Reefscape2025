@@ -22,9 +22,10 @@ public class LimelightService {
 
     /**
      * Calibrated gains for standard deviation scaling.
+     * They control how strongly the distance and tag count influences the resulting uncertainty.
      */
-    private static final double STD_DEV_DRIVE_EXPONENT = -1;
-    private static final double STD_DEV_ROTATION_EXPONENT = -1;
+    private static final double STD_DEV_DRIVE_SCALING_FACTOR = -1;
+    private static final double STD_DEV_ROTATION_SCALING_FACTOR = -1;
 
     private static LimelightService instance;
 
@@ -85,8 +86,8 @@ public class LimelightService {
      * @return a constructed {@link VisionMeasurement} with associated uncertainty
      */
     private VisionMeasurement createMeasurement(double timestamp, double distance, int tagCount, Pose2d pose) {
-        double transStd = calculateStandardDeviation(STD_DEV_DRIVE_EXPONENT, distance, tagCount);
-        double rotStd = calculateStandardDeviation(STD_DEV_ROTATION_EXPONENT, distance, tagCount);
+        double transStd = calculateStandardDeviation(STD_DEV_DRIVE_SCALING_FACTOR, distance, tagCount);
+        double rotStd = calculateStandardDeviation(STD_DEV_ROTATION_SCALING_FACTOR, distance, tagCount);
         return new VisionMeasurement(new StandardDeviations(transStd, rotStd), pose, timestamp);
     }
 
@@ -97,12 +98,13 @@ public class LimelightService {
      * confident (larger standard deviation).
      * </p>
      *
-     * @param exponent a calibrated gain
-     * @param distance the average distance to the visible tag(s).
-     * @param tagCount the number of visible tag(s)
+     * @param scalingFactor a tuned multiplier controlling how strongly
+     *                      the distance and tagCount influence the resulting uncertainty.
+     * @param distance      the average distance to the visible tag(s).
+     * @param tagCount      the number of visible tag(s)
      * @return the computed standard deviation
      */
-    private double calculateStandardDeviation(double exponent, double distance, int tagCount) {
-        return exponent * (distance * distance) / tagCount;
+    private double calculateStandardDeviation(double scalingFactor, double distance, int tagCount) {
+        return scalingFactor * Math.pow(distance, 2) / tagCount;
     }
 }

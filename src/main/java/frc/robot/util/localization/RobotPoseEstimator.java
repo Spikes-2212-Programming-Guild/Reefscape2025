@@ -33,25 +33,25 @@ public class RobotPoseEstimator {
     /**
      * Constructs a robot pose estimator combining odometry and vision.
      *
-     * @param kinematics                      the drivetrain kinematics
-     * @param gyroAngle                       the current gyro heading
-     * @param modulePositions                 the initial swerve module positions
-     * @param initPose                        the initial field-relative pose
-     * @param odometryMeasurementSupplier     supplier that provides current odometry data
-     * @param scheduler                       scheduler for periodic odometry sampling
-     * @param odometryFrequencyHz             the frequency of the odometry measurements
-     * @param odometryStoredMeasurementsLimit limit on stored odometry measurements to avoid overflow
+     * @param kinematics                  the drivetrain kinematics
+     * @param gyroAngle                   the current gyro heading
+     * @param modulePositions             the initial swerve module positions
+     * @param initPose                    the initial field-relative pose
+     * @param odometryMeasurementSupplier supplier that provides current odometry data
+     * @param scheduler                   scheduler for periodic odometry sampling
+     * @param odometryFrequencyHz         the frequency of the odometry measurements
+     * @param odometryMeasurementLimit    limit on amount of stored odometry measurements to avoid overflow
      */
     public RobotPoseEstimator(SwerveDriveKinematics kinematics, Rotation2d gyroAngle,
                               SwerveModulePosition[] modulePositions, Pose2d initPose,
                               Supplier<OdometryMeasurement> odometryMeasurementSupplier,
                               PeriodicTaskScheduler scheduler, int odometryFrequencyHz,
-                              int odometryStoredMeasurementsLimit) {
+                              int odometryMeasurementLimit) {
         this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, gyroAngle, modulePositions, initPose);
         this.visionManager = new VisionManager(poseEstimator);
         this.odometryManager = new OdometryManager(
                 poseEstimator, odometryMeasurementSupplier, scheduler,
-                odometryFrequencyHz, odometryStoredMeasurementsLimit
+                odometryFrequencyHz, odometryMeasurementLimit
         );
     }
 

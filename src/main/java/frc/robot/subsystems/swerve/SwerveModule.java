@@ -70,9 +70,11 @@ public class SwerveModule extends DashboardedSubsystem {
     public void configureDriveController() {
         driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimit(40));
         //@TODO check if this is correct
-        driveMotor.setEncoderConversionFactor(DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES * INCHES_TO_METERS * Math.PI);
+        driveMotor.setEncoderConversionFactor(
+                DRIVE_GEAR_RATIO * WHEEL_DIAMETER_INCHES * INCHES_TO_METERS * Math.PI
+        );
         driveMotor.setInverted(driveInverted);
-        driveMotor.setUpdateFrequency(Drivetrain.BASE_FREQUENCY_HZ);
+        driveMotor.setUpdateFrequency(Drivetrain.ODOMETRY_FREQUENCY_HZ);
     }
 
     public void configureTurnController() {
@@ -82,7 +84,7 @@ public class SwerveModule extends DashboardedSubsystem {
         turnMotor.setPositionConversionFactor(TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS);
         turnMotor.setVelocityConversionFactor((TURN_GEAR_RATIO * DEGREES_IN_ROTATIONS) / SECONDS_IN_MINUTE);
         turnMotor.setInverted(cancoderInverted);
-        turnMotor.setUpdateFrequency(Drivetrain.BASE_FREQUENCY_HZ);
+        turnMotor.setUpdateFrequency(Drivetrain.ODOMETRY_FREQUENCY_HZ);
     }
 
     public void configureAbsoluteEncoder() {

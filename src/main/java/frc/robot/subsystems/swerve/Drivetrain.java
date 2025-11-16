@@ -31,6 +31,7 @@ public class Drivetrain extends DashboardedSubsystem {
 
     public static final int ODOMETRY_FREQUENCY_HZ = 100;
     public static final int BASE_FREQUENCY_HZ = 50;
+    private static final int ODOMETRY_MEASUREMENT_LIMIT = (ODOMETRY_FREQUENCY_HZ / BASE_FREQUENCY_HZ) * 5;
 
     private static final double ROBOT_WIDTH = 0.6;
     private static final double ROBOT_LENGTH = 0.6;
@@ -84,10 +85,9 @@ public class Drivetrain extends DashboardedSubsystem {
         );
         Supplier<OdometryMeasurement> measurementSupplier = () ->
                 new OdometryMeasurement(Timer.getFPGATimestamp(), getHeading(), getModulePositions());
-        int odometryStoredMeasurementsLimit = (ODOMETRY_FREQUENCY_HZ / BASE_FREQUENCY_HZ) * 5;
         this.poseEstimator = new RobotPoseEstimator(
                 kinematics, getHeading(), getModulePositions(), new Pose2d(),
-                measurementSupplier, periodicTaskScheduler, ODOMETRY_FREQUENCY_HZ, odometryStoredMeasurementsLimit
+                measurementSupplier, periodicTaskScheduler, ODOMETRY_FREQUENCY_HZ, ODOMETRY_MEASUREMENT_LIMIT
         );
         configureGyro();
         configureAdvantageKit();
@@ -106,7 +106,7 @@ public class Drivetrain extends DashboardedSubsystem {
     }
 
     private void configureGyro() {
-        gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, BASE_FREQUENCY_HZ);
+        gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, ODOMETRY_FREQUENCY_HZ);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class Drivetrain extends DashboardedSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        poseEstimator.periodic(visionService.captureMeasurement(getYaw(), getRobotSpeeds()));
+        poseEstimator.periodic(visionService.captureMeasurement(getYaw(), getRobotRelativeSpeeds()));
     }
 
     public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean isFieldRelative,
@@ -136,14 +136,8 @@ public class Drivetrain extends DashboardedSubsystem {
     }
 
     private void updateAdvantageScope(SwerveModuleState[] states) {
-        currentStates.set(getSwerveModuleStates()); // the states measured by the sensors
+        currentStates.set(getSwerveModuleStates()); // the states measured by the module sensors
         desiredStates.set(states);
-    }
-
-    public void stop() {
-        for (SwerveModule module : swerveModules) {
-            module.stop();
-        }
     }
 
     public Pose2d getPose2d() {
@@ -155,7 +149,7 @@ public class Drivetrain extends DashboardedSubsystem {
     }
 
     public double getYaw() {
-        return -gyro.getYaw(); // fix navX's inverted angle
+        return -gyro.getYaw(); // fix pigeon's inverted angle
     }
 
     public SwerveModuleState[] getSwerveModuleStates() {
@@ -170,7 +164,7 @@ public class Drivetrain extends DashboardedSubsystem {
                 .toArray(SwerveModulePosition[]::new);
     }
 
-    public ChassisSpeeds getRobotSpeeds() {
+    public ChassisSpeeds getRobotRelativeSpeeds() {
         return kinematics.toChassisSpeeds(Arrays.stream(swerveModules)
                 .map(SwerveModule::getState)
                 .toArray(SwerveModuleState[]::new)
@@ -206,6 +200,12 @@ public class Drivetrain extends DashboardedSubsystem {
     public void setNeutralMode(NeutralModeValue neutralMode) {
         for (SwerveModule module : swerveModules) {
             module.setIdleMode(neutralMode);
+        }
+    }
+
+    public void stop() {
+        for (SwerveModule module : swerveModules) {
+            module.stop();
         }
     }
 }

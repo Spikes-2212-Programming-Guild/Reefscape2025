@@ -93,7 +93,7 @@ public class SwerveModule extends DashboardedSubsystem {
                 .withSensorDirection(cancoderInverted ? SensorDirectionValue.Clockwise_Positive :
                         SensorDirectionValue.CounterClockwise_Positive).withMagnetOffset(offset);
         absoluteEncoder.getConfigurator().apply(magnetConfigs);
-        absoluteEncoder.getAbsolutePosition().setUpdateFrequency(Drivetrain.BASE_FREQUENCY_HZ);
+        absoluteEncoder.getAbsolutePosition().setUpdateFrequency(Drivetrain.ODOMETRY_FREQUENCY_HZ);
     }
 
     public void set(SwerveModuleState state, boolean usePID) {

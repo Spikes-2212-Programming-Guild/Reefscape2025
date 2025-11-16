@@ -29,9 +29,16 @@ public class Drivetrain extends DashboardedSubsystem {
     public static final double MAX_SPEED = 4;
     public static final double MIN_SPEED = 0.06;
 
+    /**
+     * The frequency the odometry updates at
+     */
     public static final int ODOMETRY_FREQUENCY_HZ = 100;
-    public static final int BASE_FREQUENCY_HZ = 50;
-    private static final int ODOMETRY_MEASUREMENT_LIMIT = (ODOMETRY_FREQUENCY_HZ / BASE_FREQUENCY_HZ) * 5;
+
+    /**
+     * The limit of odometry measurements at a given time, to prevent overflow
+     * since it runs on a high frequency
+     */
+    private static final int ODOMETRY_MEASUREMENT_LIMIT = (ODOMETRY_FREQUENCY_HZ / 50) * 5;
 
     private static final double ROBOT_WIDTH = 0.6;
     private static final double ROBOT_LENGTH = 0.6;

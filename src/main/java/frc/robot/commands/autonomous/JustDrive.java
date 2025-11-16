@@ -2,7 +2,7 @@ package frc.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.Drive;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.swerve.Drivetrain;
 
 import java.util.function.Supplier;
 

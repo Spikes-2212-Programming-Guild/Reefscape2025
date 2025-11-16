@@ -223,6 +223,10 @@ public class SparkWrapper implements SmartMotorController {
         sparkBase.getEncoder().setPosition(position);
     }
 
+    public void setUpdateFrequency(int frequencyHz) {
+        sparkBase.setControlFramePeriodMs(1000 / frequencyHz);
+    }
+
     @Override
     public void pidSet(UnifiedControlMode controlMode, double setpoint, PIDSettings pidSettings,
                        FeedForwardSettings feedForwardSettings, TrapezoidProfileSettings trapezoidProfileSettings,
